@@ -20,6 +20,7 @@ def main():
 
 if __name__ == '__main__':
     import django
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movies.settings')
     django.setup()
     main()
 
