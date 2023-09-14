@@ -14,13 +14,15 @@ class MovieSerializerTestCase(TestCase):
                 'id': movie_1.id,
                 'name': 'Avengers',
                 'year': 2012,
-                'country': 'USA'
+                'country': 'USA',
+                'owner': None
             },
             {
                 'id': movie_2.id,
                 'name': 'LOL',
                 'year': 2001,
-                'country': 'Russia'
+                'country': 'Russia',
+                'owner': None
             }
         ]
         self.assertEqual(serializer_data, expected_data)
