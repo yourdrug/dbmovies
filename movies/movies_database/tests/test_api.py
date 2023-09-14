@@ -45,6 +45,14 @@ class MovieApiTestCase(APITestCase):
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual(4, Movie.objects.all().count())
 
+    def test_delete(self):
+        url = reverse('movie-detail', args=(self.movie_1.id,))
+        self.assertEqual(3, Movie.objects.all().count())
+        self.client.force_login(self.user)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(2, Movie.objects.all().count())
+
     def test_update(self):
         url = reverse('movie-detail', args=(self.movie_1.id,))
         data = {
