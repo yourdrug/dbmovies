@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'movies_database',
     'rest_framework',
+    'social_django',
     'django_filters',
 ]
 
@@ -59,7 +60,7 @@ ROOT_URLCONF = 'movies.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -89,7 +90,10 @@ DATABASES = {
     }
 }
 
-
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -140,3 +144,9 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     )
 }
+
+
+SOCIAL_AUTH_POSTGRES_JSON_FIELD = True
+
+SOCIAL_AUTH_GITHUB_KEY = '1089f62b6debbc986058'
+SOCIAL_AUTH_GITHUB_SECRET = '353c6bd9928a9a3031999674ad9b86f59219d747'
