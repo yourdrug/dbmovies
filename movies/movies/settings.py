@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import movies
@@ -148,5 +150,7 @@ REST_FRAMEWORK = {
 
 SOCIAL_AUTH_POSTGRES_JSON_FIELD = True
 
-SOCIAL_AUTH_GITHUB_KEY = '1089f62b6debbc986058'
-SOCIAL_AUTH_GITHUB_SECRET = '353c6bd9928a9a3031999674ad9b86f59219d747'
+load_dotenv()
+
+SOCIAL_AUTH_GITHUB_KEY = os.getenv('SOCIAL_AUTH_GITHUB_KEY')
+SOCIAL_AUTH_GITHUB_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_SECRET')
