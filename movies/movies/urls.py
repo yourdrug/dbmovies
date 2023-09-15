@@ -21,10 +21,11 @@ from django.template.defaulttags import url
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
-from movies_database.views import MovieViewSet, auth
+from movies_database.views import MovieViewSet, auth, UserMovieRelationViews
 
 router = SimpleRouter()
 router.register(r'movie', MovieViewSet)
+router.register(r'movie_relation', UserMovieRelationViews)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

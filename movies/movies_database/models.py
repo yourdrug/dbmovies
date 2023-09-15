@@ -18,7 +18,7 @@ class UserMovieRelation(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     like = models.BooleanField(default=False)
     in_bookmarks = models.BooleanField(default=False)
-    rate = models.PositiveSmallIntegerField()
+    rate = models.PositiveSmallIntegerField(null=True)
 
     def __str__(self):
         return f'{self.user.username}: {self.movie.name}, Rating: {self.rate}'
