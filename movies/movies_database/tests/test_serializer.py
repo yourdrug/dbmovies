@@ -16,15 +16,16 @@ class MovieSerializerTestCase(TestCase):
 
         UserMovieRelation.objects.create(user=user1, movie=movie_1, like=True, rate=10)
         UserMovieRelation.objects.create(user=user2, movie=movie_1, like=True, rate=10)
-        UserMovieRelation.objects.create(user=user3, movie=movie_1, like=True, rate=10)
+        user_movie_3 = UserMovieRelation.objects.create(user=user3, movie=movie_1, like=True)
+        user_movie_3.rate = 10
+        user_movie_3.save()
 
         UserMovieRelation.objects.create(user=user1, movie=movie_2, like=True, rate=5)
         UserMovieRelation.objects.create(user=user2, movie=movie_2, like=False, rate=10)
         UserMovieRelation.objects.create(user=user3, movie=movie_2, like=True)
 
         movies = Movie.objects.all().annotate(
-            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
-            rating=Avg('usermovierelation__rate')
+            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1)))
         ).order_by('id')
         serializer_data = MovieSerializer(movies, many=True).data
         expected_data = [

@@ -13,8 +13,7 @@ from movies_database.serializers import MovieSerializer, UserMovieRelationSerial
 
 class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all().annotate(
-            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
-            rating=Avg('usermovierelation__rate')
+            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1)))
         ).select_related('owner').prefetch_related('watchers').order_by('id')
     serializer_class = MovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
