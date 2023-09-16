@@ -1,9 +1,12 @@
 import json
 
 from django.contrib.auth.models import User
+from django.db import connection
+from django.db.models import Count, Case, When, Avg
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from django.test.utils import CaptureQueriesContext
 
 from movies_database.models import Movie, UserMovieRelation
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer
@@ -16,17 +19,31 @@ class MovieApiTestCase(APITestCase):
         self.movie_2 = Movie.objects.create(name='LOL', year=2001, country='Russia')
         self.movie_3 = Movie.objects.create(name='Mainstream', year=1235, country='Slovenia')
 
+        UserMovieRelation.objects.create(user=self.user, movie=self.movie_1, like=True, rate=5)
+
     def test_get(self):
         url = reverse('movie-list')
-        response = self.client.get(url)
-        serializer_data = MovieSerializer([self.movie_1, self.movie_2, self.movie_3], many=True).data
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get(url)
+            self.assertEqual(2, len(queries))
+        movies = Movie.objects.all().annotate(
+            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
+            rating=Avg('usermovierelation__rate')
+        ).order_by('id')
+        serializer_data = MovieSerializer(movies, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data[0]['rating'], 5)
+        self.assertEqual(serializer_data[0]['annotated_likes'], 1)
 
     def test_get_filter(self):
         url = reverse('movie-list')
         response = self.client.get(url, data={'search': 'LOL'})
-        serializer_data = MovieSerializer([self.movie_1, self.movie_2], many=True).data
+        movies = Movie.objects.filter(id__in=[self.movie_1.id, self.movie_2.id]).annotate(
+            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
+            rating=Avg('usermovierelation__rate')
+        ).order_by('id')
+        serializer_data = MovieSerializer(movies, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
 
@@ -162,7 +179,7 @@ class MovieRelationTestCase(APITestCase):
         self.movie_1.refresh_from_db()
         self.assertEqual(8, relation.rate)
 
-    def test_bookmarks(self):
+    def test_rate_negative(self):
         url = reverse('usermovierelation-detail', args=(self.movie_1.id,))
 
         data = {
@@ -173,8 +190,4 @@ class MovieRelationTestCase(APITestCase):
         self.client.force_login(self.user)
         response = self.client.patch(url, data=json_data,
                                      content_type='application/json')
-        self.assertEqual(status.HTTP_200_OK, response.status_code)
-        relation = UserMovieRelation.objects.get(user=self.user,
-                                                 movie=self.movie_1)
-        self.movie_1.refresh_from_db()
-        self.assertEqual(8, relation.rate)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
