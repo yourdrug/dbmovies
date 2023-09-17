@@ -33,5 +33,5 @@ class UserMovieRelation(models.Model):
 
         new_rating = self.rate
 
-        if old_rating != new_rating or creating:
+        if old_rating == new_rating or creating:
             set_rating(self.movie)

@@ -11,13 +11,14 @@ class MovieSerializerTestCase(TestCase):
         user1 = User.objects.create(username='test_username1', first_name='Ivan', last_name='Petrov')
         user2 = User.objects.create(username='test_username2', first_name='Ivan', last_name='Sidorov')
         user3 = User.objects.create(username='test_username3', first_name='Ivan', last_name='Digorov')
+
         movie_1 = Movie.objects.create(name='Avengers', year=2012, country='USA', owner=user1)
         movie_2 = Movie.objects.create(name='LOL', year=2001, country='Russia')
 
         UserMovieRelation.objects.create(user=user1, movie=movie_1, like=True, rate=10)
         UserMovieRelation.objects.create(user=user2, movie=movie_1, like=True, rate=10)
         user_movie_3 = UserMovieRelation.objects.create(user=user3, movie=movie_1, like=True)
-        user_movie_3.rate = 10
+        user_movie_3.rate = 8
         user_movie_3.save()
 
         UserMovieRelation.objects.create(user=user1, movie=movie_2, like=True, rate=5)
@@ -35,7 +36,7 @@ class MovieSerializerTestCase(TestCase):
                 'year': 2012,
                 'country': 'USA',
                 'annotated_likes': 3,
-                'rating': 10,
+                'rating': 9.333333333333334,
                 'owner_name': 'test_username1',
                 'watchers': [
                     {

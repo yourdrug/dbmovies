@@ -10,9 +10,9 @@
 
 </head>
 <body>
-
-    {% verbatim %}
     <a href="{% url "social:begin" "github" %}">GitHub+</a>
+    {% verbatim %}
+
     <div class="container" id="movies">
         <div class="btn btn-success btn-lg" v-for="movie in movies_list">
             Movie-name: {{ movie.name }}
