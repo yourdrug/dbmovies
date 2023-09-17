@@ -13,8 +13,8 @@ from movies_database.serializers import MovieSerializer, UserMovieRelationSerial
 
 class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all().annotate(
-            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1)))
-        ).select_related('owner').prefetch_related('watchers').order_by('id')
+        annotated_likes=Count(Case(When(usermovierelation__like=True, then=1)))
+    ).select_related('owner').prefetch_related('watchers').order_by('id')
     serializer_class = MovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffOrReadOnly]
@@ -39,4 +39,8 @@ class UserMovieRelationViews(UpdateModelMixin, GenericViewSet):
 
 
 def auth(request):
+    return render(request, 'index.html')
+
+
+def movie_info(request):
     return render(request, 'index.html')
