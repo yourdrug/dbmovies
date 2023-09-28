@@ -2,10 +2,45 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+class Actor(models.Model):
+    name = models.CharField(max_length=100)
+    photo = models.URLField()
+
+
+class Director(models.Model):
+    name = models.CharField(max_length=100)
+    photo = models.URLField()
+
+
+class Producer(models.Model):
+    name = models.CharField(max_length=100)
+    photo = models.URLField()
+
+
+class Screenwriter(models.Model):
+    name = models.CharField(max_length=100)
+    photo = models.URLField()
+
+
+class Genre(models.Model):
+    name = models.CharField(max_length=50)
+
+
 class Movie(models.Model):
     name = models.CharField(max_length=80)
+    description = models.CharField(max_length=255, default="")
+    tagline = models.CharField(max_length=255, default="")
     year = models.SmallIntegerField()
     country = models.CharField(max_length=80)
+    genres = models.ManyToManyField(Genre, related_name='film_genres')
+    watch_time = models.CharField(max_length=40, default="")
+    poster = models.URLField(default="")
+
+    actors = models.ManyToManyField(Actor, related_name='film_actor')
+    director = models.ManyToManyField(Director, related_name='film_director')
+    producer = models.ManyToManyField(Producer, related_name='film_producer')
+    screenwriter = models.ManyToManyField(Screenwriter, related_name='film_screenwriter')
+
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='my_movies')
     watchers = models.ManyToManyField(User, through='UserMovieRelation', related_name='my_watched_movies')
     rating = models.FloatField(default=None, null=True)
