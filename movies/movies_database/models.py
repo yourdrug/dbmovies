@@ -6,24 +6,39 @@ class Actor(models.Model):
     name = models.CharField(max_length=100)
     photo = models.URLField()
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class Director(models.Model):
     name = models.CharField(max_length=100)
     photo = models.URLField()
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Producer(models.Model):
     name = models.CharField(max_length=100)
     photo = models.URLField()
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class Screenwriter(models.Model):
     name = models.CharField(max_length=100)
     photo = models.URLField()
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Movie(models.Model):

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:social="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -15,10 +15,11 @@
 
     <div class="container" id="movies">
         <div class="btn btn-success btn-lg" v-for="movie in movies_list">
-            Movie-name: {{ movie.name }}
+            Movie-name: {{ movie.actors[0].name}}
             <br>
             Movie-rating: {{ movie.rating }}
-
+            <br>
+            <img v-bind:src="movie.poster" width="400" height="600"/>
         </div>
 
     </div>
