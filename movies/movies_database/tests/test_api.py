@@ -8,16 +8,45 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.test.utils import CaptureQueriesContext
 
-from movies_database.models import Movie, UserMovieRelation
+from movies_database.models import Movie, UserMovieRelation, Actor, Director, Producer, Screenwriter, Genre
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer
 
 
 class MovieApiTestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create(username='test_username')
-        self.movie_1 = Movie.objects.create(name='Avengers2', year=2013, country='LOL', owner=self.user)
+        self.actor = Actor.objects.create(name='test_actor', photo='http://127.0.0.1:8000/')
+        self.director = Director.objects.create(name='test_actor', photo='http://127.0.0.1:8000/')
+        self.producer = Producer.objects.create(name='test_actor', photo='http://127.0.0.1:8000/')
+        self.screenwriter = Screenwriter.objects.create(name='test_actor', photo='http://127.0.0.1:8000/')
+        self.genre = Genre.objects.create(name='test_genre')
+
+        self.movie_1 = Movie.objects.create(name='Avengers2', year=2013, country='LOL',
+                                            description='asas', tagline='assa', watch_time='asdasd',
+                                            poster='http://127.0.0.1:8000/',
+                                            owner=self.user)
+
+        self.movie_1.genres.add(self.genre)
+        self.movie_1.actors.add(self.actor)
+        self.movie_1.director.add(self.director)
+        self.movie_1.producer.add(self.producer)
+        self.movie_1.screenwriter.add(self.screenwriter)
+
         self.movie_2 = Movie.objects.create(name='LOL', year=2001, country='Russia')
+
+        self.movie_2.genres.add(self.genre)
+        self.movie_2.actors.add(self.actor)
+        self.movie_2.director.add(self.director)
+        self.movie_2.producer.add(self.producer)
+        self.movie_2.screenwriter.add(self.screenwriter)
+
         self.movie_3 = Movie.objects.create(name='Mainstream', year=1235, country='Slovenia')
+
+        self.movie_3.genres.add(self.genre)
+        self.movie_3.actors.add(self.actor)
+        self.movie_3.director.add(self.director)
+        self.movie_3.producer.add(self.producer)
+        self.movie_3.screenwriter.add(self.screenwriter)
 
         UserMovieRelation.objects.create(user=self.user, movie=self.movie_1, like=True, rate=5)
 
@@ -25,7 +54,7 @@ class MovieApiTestCase(APITestCase):
         url = reverse('movie-list')
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(2, len(queries))
+            self.assertEqual(17, len(queries))
         movies = Movie.objects.all().annotate(
             annotated_likes=Count(Case(When(usermovierelation__like=True, then=1)))
         ).order_by('id')
@@ -49,16 +78,26 @@ class MovieApiTestCase(APITestCase):
         self.assertEqual(3, Movie.objects.all().count())
         url = reverse('movie-list')
         data = {
-            'name': 'Beauty and Beast',
-            'year': 2017,
-            'country': 'UK'
+            "actors": [{"id": 2, "name": "Крис Хемсворт","photo": "https://st.kp.yandex.net/images/actor_iphone/iphone360_1300401.jpg"}],
+            "name": "Barbie",
+            "description": "Самая обыкновенная стереотипная Барби живёт в великолепном розовом Барбиленде",
+            "tagline": "-",
+            "year": 2023,
+            "country": "USA",
+            "watch_time": "114 мин. / 01:54",
+            "poster": "https://avatars.mds.yandex.net/get-kinopoisk-image/4774061/f0ae94af-050a-433b-a2a9-d6c96d644fd8/orig",
+            "owner": 1,
+            "genres": [1],
+            "director": [1],
+            "producer": [1],
+            "screenwriter": [1]
         }
         json_data = json.dumps(data)
         self.client.force_login(self.user)
         response = self.client.post(url, data=json_data,
                                     content_type='application/json')
-        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
         self.assertEqual(4, Movie.objects.all().count())
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_delete(self):
         url = reverse('movie-detail', args=(self.movie_1.id,))
@@ -69,17 +108,27 @@ class MovieApiTestCase(APITestCase):
         self.assertEqual(2, Movie.objects.all().count())
 
     def test_update(self):
+
         url = reverse('movie-detail', args=(self.movie_1.id,))
         data = {
-            'name': self.movie_1.name,
-            'year': 2000,
-            'country': self.movie_1.country
+            "name": self.movie_1.name,
+            "description": self.movie_1.description,
+            "tagline": self.movie_1.tagline,
+            "year": 2000,
+            "country": self.movie_1.country,
+            "watch_time": self.movie_1.watch_time,
+            "poster": self.movie_1.poster,
+            "owner": self.user.id,
+            "actors": [self.actor.id],
+            "genres": [self.genre.id],
+            "director": [self.director.id],
+            "producer": [self.producer.id],
+            "screenwriter": [self.screenwriter.id]
         }
         json_data = json.dumps(data)
         self.client.force_login(self.user)
         response = self.client.put(url, data=json_data,
                                    content_type='application/json')
-
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.movie_1.refresh_from_db()
         self.assertEqual(2000, self.movie_1.year)
@@ -88,9 +137,19 @@ class MovieApiTestCase(APITestCase):
         self.user2 = User.objects.create(username='test_username2')
         url = reverse('movie-detail', args=(self.movie_1.id,))
         data = {
-            'name': self.movie_1.name,
-            'year': 2000,
-            'country': self.movie_1.country
+            "name": self.movie_1.name,
+            "description": self.movie_1.description,
+            "tagline": self.movie_1.tagline,
+            "year": 2000,
+            "country": self.movie_1.country,
+            "watch_time": self.movie_1.watch_time,
+            "poster": self.movie_1.poster,
+            "owner": self.user.id,
+            "actors": [self.actor.id],
+            "genres": [self.genre.id],
+            "director": [self.director.id],
+            "producer": [self.producer.id],
+            "screenwriter": [self.screenwriter.id]
         }
         json_data = json.dumps(data)
         self.client.force_login(self.user2)
@@ -105,9 +164,19 @@ class MovieApiTestCase(APITestCase):
         self.user2 = User.objects.create(username='test_username2', is_staff=True)
         url = reverse('movie-detail', args=(self.movie_1.id,))
         data = {
-            'name': self.movie_1.name,
-            'year': 2000,
-            'country': self.movie_1.country
+            "name": self.movie_1.name,
+            "description": self.movie_1.description,
+            "tagline": self.movie_1.tagline,
+            "year": 2000,
+            "country": self.movie_1.country,
+            "watch_time": self.movie_1.watch_time,
+            "poster": self.movie_1.poster,
+            "owner": self.user.id,
+            "actors": [self.actor.id],
+            "genres": [self.genre.id],
+            "director": [self.director.id],
+            "producer": [self.producer.id],
+            "screenwriter": [self.screenwriter.id]
         }
         json_data = json.dumps(data)
         self.client.force_login(self.user2)

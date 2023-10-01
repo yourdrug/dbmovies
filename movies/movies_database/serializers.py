@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from movies_database.models import Movie, UserMovieRelation, Actor
+from movies_database.models import Movie, UserMovieRelation, Actor, Director, Producer, Screenwriter
 
 
 class MovieWatcherSerializer(ModelSerializer):
@@ -14,7 +14,25 @@ class MovieWatcherSerializer(ModelSerializer):
 class MovieActorsSerializer(ModelSerializer):
     class Meta:
         model = Actor
-        fields = (['name'])
+        fields = ('__all__')
+
+
+class MovieDirectorSerializer(ModelSerializer):
+    class Meta:
+        model = Director
+        fields = ('__all__')
+
+
+class MovieProducerSerializer(ModelSerializer):
+    class Meta:
+        model = Producer
+        fields = ('__all__')
+
+
+class MovieScreenwriterSerializer(ModelSerializer):
+    class Meta:
+        model = Screenwriter
+        fields = ('__all__')
 
 
 class MovieSerializer(ModelSerializer):
@@ -23,6 +41,9 @@ class MovieSerializer(ModelSerializer):
     owner_name = serializers.CharField(read_only=True, source='owner.username', default="")
     watchers = MovieWatcherSerializer(many=True, read_only=True)
     actors = MovieActorsSerializer(many=True, read_only=True)
+    directors = MovieDirectorSerializer(many=True, read_only=True)
+    producers = MovieProducerSerializer(many=True, read_only=True)
+    screenwriters = MovieScreenwriterSerializer(many=True, read_only=True)
 
     class Meta:
         model = Movie
