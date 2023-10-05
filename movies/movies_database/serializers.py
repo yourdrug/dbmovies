@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from movies_database.models import Movie, UserMovieRelation, Actor, Director, Producer, Screenwriter
+from movies_database.models import Movie, UserMovieRelation, Actor, Director, Producer, Screenwriter, Genre
 
 
 class MovieWatcherSerializer(ModelSerializer):
@@ -35,15 +35,22 @@ class MovieScreenwriterSerializer(ModelSerializer):
         fields = ('__all__')
 
 
+class MovieGenreSerializer(ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ('__all__')
+
+
 class MovieSerializer(ModelSerializer):
     annotated_likes = serializers.IntegerField(read_only=True)
     rating = serializers.FloatField(read_only=True)
     owner_name = serializers.CharField(read_only=True, source='owner.username', default="")
     watchers = MovieWatcherSerializer(many=True, read_only=True)
     actors = MovieActorsSerializer(many=True, read_only=True)
-    directors = MovieDirectorSerializer(many=True, read_only=True)
-    producers = MovieProducerSerializer(many=True, read_only=True)
-    screenwriters = MovieScreenwriterSerializer(many=True, read_only=True)
+    director = MovieDirectorSerializer(many=True, read_only=True)
+    producer = MovieProducerSerializer(many=True, read_only=True)
+    screenwriter = MovieScreenwriterSerializer(many=True, read_only=True)
+    genres = MovieGenreSerializer(many=True, read_only=True)
 
     class Meta:
         model = Movie

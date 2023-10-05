@@ -29,8 +29,8 @@ class MovieSerializerTestCase(TestCase):
         movie_1.screenwriter.add(self.screenwriter)
         # movie_2 = Movie.objects.create(name='LOL', year=2001, country='Russia')
 
-        UserMovieRelation.objects.create(user=user1, movie=movie_1, like=True, rate=10)
-        UserMovieRelation.objects.create(user=user2, movie=movie_1, like=True, rate=10)
+        UserMovieRelation.objects.create(user=user1, movie=movie_1, like=True, rate=8)
+        UserMovieRelation.objects.create(user=user2, movie=movie_1, like=True, rate=8)
         user_movie_3 = UserMovieRelation.objects.create(user=user3, movie=movie_1, like=True)
         user_movie_3.rate = 8
         user_movie_3.save()
@@ -48,16 +48,16 @@ class MovieSerializerTestCase(TestCase):
             'annotated_likes': 3,
             'country': 'USA',
             'description': 'asas',
-            'director': [self.director.id],
-            'genres': [self.genre.id],
+            'director': [{'id': self.director.id, 'name': 'test_actor', 'photo': 'http://127.0.0.1:8000/'}],
+            'genres': [{'id': self.genre.id, 'name': 'test_genre'}],
             'id': movie_1.id,
             'owner': user1.id,
             'name': 'Avengers',
             'owner_name': 'test_username1',
             'poster': 'http://127.0.0.1:8000/',
-            'producer': [self.producer.id],
-            'rating': 9.333333333333334,
-            'screenwriter': [self.screenwriter.id],
+            'producer': [{'id': self.producer.id, 'name': 'test_actor', 'photo': 'http://127.0.0.1:8000/'}],
+            'rating': 8,
+            'screenwriter': [{'id': self.screenwriter.id, 'name': 'test_actor', 'photo': 'http://127.0.0.1:8000/'}],
             'tagline': 'assa',
             'watch_time': 'asdasd',
             'watchers': [{'first_name': 'Ivan', 'last_name': 'Petrov'},
