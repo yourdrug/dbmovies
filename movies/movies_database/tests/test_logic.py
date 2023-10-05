@@ -13,11 +13,11 @@ class SetRatingTestcase(TestCase):
 
         self.movie_1 = Movie.objects.create(name='Avengers', year=2012, country='USA', owner=user1)
 
-        UserMovieRelation.objects.create(user=user1, movie=self.movie_1, like=True, rate=10)
-        UserMovieRelation.objects.create(user=user2, movie=self.movie_1, like=True, rate=10)
-        UserMovieRelation.objects.create(user=user3, movie=self.movie_1, like=True, rate=10)
+        UserMovieRelation.objects.create(user=user1, movie=self.movie_1, like=True, rate=10.2)
+        UserMovieRelation.objects.create(user=user2, movie=self.movie_1, like=True, rate=10.2)
+        UserMovieRelation.objects.create(user=user3, movie=self.movie_1, like=True, rate=10.2)
 
     def test_ok(self):
         set_rating(self.movie_1)
         self.movie_1.refresh_from_db()
-        self.assertEqual(10, self.movie_1.rating)
+        self.assertEqual(10.2, self.movie_1.rating)

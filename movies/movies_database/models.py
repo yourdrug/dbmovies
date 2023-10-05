@@ -58,7 +58,7 @@ class Movie(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='my_movies')
     watchers = models.ManyToManyField(User, through='UserMovieRelation', related_name='my_watched_movies')
-    rating = models.FloatField(default=None, null=True)
+    rating = models.DecimalField(max_digits=4, decimal_places=2, default=None, null=True)
 
     def __str__(self):
         return f'Id {self.id}: {self.name} {self.year}'
