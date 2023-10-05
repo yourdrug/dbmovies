@@ -44,3 +44,7 @@ def auth(request):
 
 def movie_info(request):
     return render(request, 'index.html')
+
+
+def current_movie_info(request):
+    return render(request, 'currentFilm.html')

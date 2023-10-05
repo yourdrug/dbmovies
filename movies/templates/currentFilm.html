@@ -24,36 +24,21 @@
 
         <!-- /.wrapper-col-1 -->
         <h1 class="title"> {{ movie.name }} </h1>
-        <h6 class="subtitle">Logan 18+</h6>
         <p class="description"> {{ movie.description }} </p>
 
-        <div class="mb-40">
-            <a href="#" class="btn">Смотреть</a>
-        </div>
-        <!-- /.mb-40 -->
-
-        <ul class="params mb-40">
-            <li><span class="text-muted">Аудиодорожки</span> Русский, Русский 5.1, Английский, Английский 5.1
-            </li>
-            <li><span class="text-muted">Субтитры</span> Русские, Английские</li>
-            <li><span class="text-muted">Качество видео</span> <span><span class="tag">Full HD</span></span>
-            </li>
-        </ul>
-
         <h2>О фильме</h2>
-
         <ul class="params">
-            <li><span class="text-muted">Год производства</span> 2017</li>
-            <li><span class="text-muted">Страна</span> США</li>
-            <li><span class="text-muted">Жанр</span> <span><a href="#">фантастика</a>, <a
-                    href="#">боевик</a>, <a href="#">триллер</a>, <a href="#">драма</a></span></li>
-            <li><span class="text-muted">Слоган</span> <span class="text-muted">«Его время пришло»</span></li>
-            <li><span class="text-muted">Режиссер</span> Джеймс Мэнголд</li>
+            <li><span class="text-muted">Год производства</span> {{ movie.year }}</li>
+            <li><span class="text-muted">Страна</span> {{ movie.country }}</li>
+
+            <span class="text-muted" >Жанр</span><li v-for="genre in movie.genres"><span style="margin-left: 100px;"><a href="#">{{ genre.name }}</a>,</span></li>
+            <li><span class="text-muted">Слоган</span> <span class="text-muted">{{ movie.tagline }} </span></li>
+            <li><span class="text-muted">Режиссер</span> {{ movie.director[0].name }} </li>
             <li><span class="text-muted">Время</span>
-                <time class="text-muted">137 мин. / 02:17</time>
+                <time class="text-muted">{{ movie. watch_time }}</time>
             </li>
         </ul>
-        <span class="rathing-main">7.6</span>
+        <span class="rathing-main" maxlength="2"> {{ movie.rating }} </span>
         <span class="rathing-counts">296 824 оценки</span>
         <a href="#" class="rathing-details">459 рецензий</a>
     </div>
@@ -65,3 +50,4 @@
 <script src="/static/app.js"></script>
 </body>
 </html>
+
