@@ -43,6 +43,7 @@ class MovieGenreSerializer(ModelSerializer):
 
 class MovieSerializer(ModelSerializer):
     annotated_likes = serializers.IntegerField(read_only=True)
+    annotated_count_rate = serializers.IntegerField(read_only=True)
     rating = serializers.FloatField(read_only=True)
     owner_name = serializers.CharField(read_only=True, source='owner.username', default="")
     watchers = MovieWatcherSerializer(many=True, read_only=True)
@@ -58,7 +59,7 @@ class MovieSerializer(ModelSerializer):
                   'year', 'country', 'poster',
                   'annotated_likes', 'rating', 'owner_name',
                   'watchers', 'actors', 'director', 'producer',
-                  'screenwriter', 'genres')
+                  'screenwriter', 'genres', 'annotated_count_rate')
 
 
 class UserMovieRelationSerializer(ModelSerializer):

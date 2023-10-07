@@ -49,7 +49,7 @@ class Genre(models.Model):
 class Movie(models.Model):
     name = models.CharField(max_length=80)
     description = models.CharField(max_length=255, default="")
-    tagline = models.CharField(max_length=255, default="")
+    tagline = models.CharField(max_length=255, default="-")
     year = models.SmallIntegerField()
     country = models.CharField(max_length=80)
     genres = models.ManyToManyField(Genre, related_name='film_genres')
@@ -74,7 +74,7 @@ class UserMovieRelation(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     like = models.BooleanField(default=False)
     in_bookmarks = models.BooleanField(default=False)
-    rate = models.PositiveSmallIntegerField(null=True, validators=[MaxValueValidator(10)])
+    rate = models.PositiveSmallIntegerField(blank=True, null=True, validators=[MaxValueValidator(10)])
 
     def __str__(self):
         return f'{self.user.username}: {self.movie.name}, Rating: {self.rate}'
