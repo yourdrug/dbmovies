@@ -1,34 +1,39 @@
+from datetime import date
+
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator
 from django.db import models
 
 
-class Actor(models.Model):
+class Person(models.Model):
     name = models.CharField(max_length=100)
     photo = models.URLField()
+    birth_day = models.DateField(default=date.today)
+    death_day = models.DateField(default=None, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class Actor(Person):
 
     def __str__(self):
         return f'{self.name}'
 
 
-class Director(models.Model):
-    name = models.CharField(max_length=100)
-    photo = models.URLField()
+class Director(Person):
 
     def __str__(self):
         return f'{self.name}'
 
 
-class Producer(models.Model):
-    name = models.CharField(max_length=100)
-    photo = models.URLField()
+class Producer(Person):
 
     def __str__(self):
         return f'{self.name}'
 
 
-class Screenwriter(models.Model):
-    name = models.CharField(max_length=100)
-    photo = models.URLField()
+class Screenwriter(Person):
 
     def __str__(self):
         return f'{self.name}'
@@ -69,7 +74,7 @@ class UserMovieRelation(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     like = models.BooleanField(default=False)
     in_bookmarks = models.BooleanField(default=False)
-    rate = models.PositiveSmallIntegerField(null=True)
+    rate = models.PositiveSmallIntegerField(null=True, validators=[MaxValueValidator(10)])
 
     def __str__(self):
         return f'{self.user.username}: {self.movie.name}, Rating: {self.rate}'
