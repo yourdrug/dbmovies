@@ -54,7 +54,11 @@ class MovieSerializer(ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ('__all__')
+        fields = ('id', 'name', 'description', 'tagline', 'watch_time',
+                  'year', 'country', 'poster',
+                  'annotated_likes', 'rating', 'owner_name',
+                  'watchers', 'actors', 'director', 'producer',
+                  'screenwriter', 'genres')
 
 
 class UserMovieRelationSerializer(ModelSerializer):

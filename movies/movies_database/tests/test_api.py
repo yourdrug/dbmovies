@@ -87,10 +87,10 @@ class MovieApiTestCase(APITestCase):
             "watch_time": "114 мин. / 01:54",
             "poster": "https://avatars.mds.yandex.net/get-kinopoisk-image/4774061/f0ae94af-050a-433b-a2a9-d6c96d644fd8/orig",
             "owner": 1,
-            "genres": [1],
-            "director": [1],
-            "producer": [1],
-            "screenwriter": [1]
+            "genres": [{"id": 2, "name": "Крис Хемсворт","photo": "https://st.kp.yandex.net/images/actor_iphone/iphone360_1300401.jpg"}],
+            "director": [{"id": 2, "name": "Крис Хемсворт","photo": "https://st.kp.yandex.net/images/actor_iphone/iphone360_1300401.jpg"}],
+            "producer": [{"id": 2, "name": "Крис Хемсворт","photo": "https://st.kp.yandex.net/images/actor_iphone/iphone360_1300401.jpg"}],
+            "screenwriter": [{"id": 2, "name": "Крис Хемсворт","photo": "https://st.kp.yandex.net/images/actor_iphone/iphone360_1300401.jpg"}]
         }
         json_data = json.dumps(data)
         self.client.force_login(self.user)
