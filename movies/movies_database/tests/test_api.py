@@ -56,19 +56,22 @@ class MovieApiTestCase(APITestCase):
             response = self.client.get(url)
             self.assertEqual(17, len(queries))
         movies = Movie.objects.all().annotate(
-            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1)))
+            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
+            annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
         ).order_by('id')
         serializer_data = MovieSerializer(movies, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data)
         self.assertEqual(serializer_data[0]['rating'], 5)
+        self.assertEqual(serializer_data[0]['annotated_count_rate'], 1)
         self.assertEqual(serializer_data[0]['annotated_likes'], 1)
 
     def test_get_filter(self):
         url = reverse('movie-list')
         response = self.client.get(url, data={'search': 'LOL'})
         movies = Movie.objects.filter(id__in=[self.movie_1.id, self.movie_2.id]).annotate(
-            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1)))
+            annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
+            annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
         ).order_by('id')
         serializer_data = MovieSerializer(movies, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
