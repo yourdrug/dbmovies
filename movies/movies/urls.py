@@ -21,7 +21,7 @@ from django.template.defaulttags import url
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
-from movies_database.views import MovieViewSet, auth, UserMovieRelationViews, movie_info, current_movie_info
+from movies_database.views import MovieViewSet, UserMovieRelationViews
 
 router = SimpleRouter()
 router.register(r'movie', MovieViewSet)
@@ -30,9 +30,6 @@ router.register(r'movie_relation', UserMovieRelationViews)
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', include('social_django.urls', namespace='social'), current_movie_info),
-    # path('movie/<int:pk>/', snippet_detail, name='snippet-detail'),
-    path('auth/', auth),
-    path('movies_page/', movie_info),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
 
