@@ -39,6 +39,6 @@ export default {
 }
 
 .photo {
-  width: 50px;
+  width: 250px;
 }
 </style>
