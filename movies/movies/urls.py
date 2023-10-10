@@ -30,7 +30,7 @@ router.register(r'movie_relation', UserMovieRelationViews)
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', include('social_django.urls', namespace='social'), current_movie_info),
-    path('', current_movie_info),
+    # path('movie/<int:pk>/', snippet_detail, name='snippet-detail'),
     path('auth/', auth),
     path('movies_page/', movie_info),
     path("__debug__/", include("debug_toolbar.urls")),

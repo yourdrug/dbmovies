@@ -29,7 +29,8 @@ SECRET_KEY = 'django-insecure-mun)*43dg(*c)q0sx%ra=)d4_)ryy3$b87(wk^*p_9zfq@sz6z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS=['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'debug_toolbar',
     'movies_database',
     'rest_framework',
@@ -58,6 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'debug_toolbar_force.middleware.ForceDebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 INTERNAL_IPS = [
