@@ -1,14 +1,13 @@
 from django.db.models import Count, Case, When, Avg
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from movies_database.models import Movie, UserMovieRelation
 from movies_database.permissions import IsOwnerOrStaffOrReadOnly
-from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer
+from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer, ShortInfoMovieSerializer
 
 
 class MovieViewSet(ModelViewSet):
@@ -37,3 +36,11 @@ class UserMovieRelationViews(UpdateModelMixin, GenericViewSet):
         obj, _ = UserMovieRelation.objects.get_or_create(user=self.request.user,
                                                          movie_id=self.kwargs['movie'])
         return obj
+
+
+class ShortInfoMovieViewSet(ModelViewSet):
+    queryset = Movie.objects.all().annotate(
+        annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
+    ).prefetch_related('actors', 'director', 'genres').order_by('-rating', '-annotated_count_rate')
+    serializer_class = ShortInfoMovieSerializer
+    permission_classes = [IsOwnerOrStaffOrReadOnly]
