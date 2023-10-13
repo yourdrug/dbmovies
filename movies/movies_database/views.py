@@ -1,5 +1,6 @@
 from django.db.models import Count, Case, When, Avg
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
@@ -18,6 +19,7 @@ class MovieViewSet(ModelViewSet):
     serializer_class = MovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffOrReadOnly]
+    authentication_classes = (TokenAuthentication,)
     filter_fields = ['year', 'name']
     search_fields = ['name', 'country']
 
@@ -28,6 +30,7 @@ class MovieViewSet(ModelViewSet):
 
 class UserMovieRelationViews(UpdateModelMixin, GenericViewSet):
     permission_classes = [IsAuthenticated]
+    authentication_classes = (TokenAuthentication,)
     queryset = UserMovieRelation.objects.all()
     serializer_class = UserMovieRelationSerializer
     lookup_field = 'movie'
@@ -44,3 +47,4 @@ class ShortInfoMovieViewSet(ModelViewSet):
     ).prefetch_related('actors', 'director', 'genres').order_by('-world_premier')
     serializer_class = ShortInfoMovieSerializer
     permission_classes = [IsOwnerOrStaffOrReadOnly]
+    authentication_classes = (TokenAuthentication,)

@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.template.defaulttags import url
 
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework.routers import SimpleRouter
 
 from movies_database.views import MovieViewSet, UserMovieRelationViews, ShortInfoMovieViewSet
@@ -32,6 +32,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', include('social_django.urls', namespace='social'), current_movie_info),
     path("__debug__/", include("debug_toolbar.urls")),
+    path('auth/', include('djoser.urls')),
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
 ]
 
 urlpatterns += router.urls
