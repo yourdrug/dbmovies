@@ -1,36 +1,53 @@
 <template>
-  <div>
-    <div v-for="movie in movies" :key="movie.id">
-      <div>Title {{ movie.name }}</div>
-      <img v-bind:src="movie.poster" class="photo" />
-    </div>
+  <div class="app">
+    <list-movies v-bind:short_movies="movies"> </list-movies>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import ListMovies from "@/components/ListMovies.vue";
+
 export default {
+  components: {
+    ListMovies,
+  },
+
   data() {
     return {
       movies: [],
     };
   },
 
-  created() {
-    fetch("http://127.0.0.1:8000/movie/", {
-      method: "GET",
-      "Access-Control-Allow-Origin": "*",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        this.movies = data;
-      });
+  methods: {
+    async fetchMovies() {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/movie/");
+        this.movies = response.data;
+      } catch (error) {
+        alert("erorr");
+      }
+    },
+
+    async fetchShortMovies() {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/movie_short/");
+        this.movies = response.data;
+      } catch (error) {
+        alert("erorr");
+      }
+    },
+  },
+
+  mounted() {
+    this.fetchShortMovies();
   },
 };
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Gabarito", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
