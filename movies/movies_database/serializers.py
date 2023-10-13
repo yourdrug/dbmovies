@@ -67,7 +67,7 @@ class MovieSerializer(ModelSerializer):
     class Meta:
         model = Movie
         fields = ('id', 'name', 'description', 'tagline', 'watch_time',
-                  'year', 'country', 'poster',
+                  'year', 'country', 'poster', 'world_premier',
                   'annotated_likes', 'rating', 'owner_name',
                   'watchers', 'actors', 'director', 'producer',
                   'screenwriter', 'genres', 'annotated_count_rate')
@@ -81,7 +81,7 @@ class ShortInfoMovieSerializer(ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ('id', 'name', 'watch_time',
+        fields = ('id', 'name', 'watch_time', 'world_premier',
                   'year', 'country', 'poster', 'rating', 'actors',
                   'director', 'genres', 'annotated_count_rate')
 

@@ -41,6 +41,6 @@ class UserMovieRelationViews(UpdateModelMixin, GenericViewSet):
 class ShortInfoMovieViewSet(ModelViewSet):
     queryset = Movie.objects.all().annotate(
         annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
-    ).prefetch_related('actors', 'director', 'genres').order_by('-rating', '-annotated_count_rate')
+    ).prefetch_related('actors', 'director', 'genres').order_by('-world_premier')
     serializer_class = ShortInfoMovieSerializer
     permission_classes = [IsOwnerOrStaffOrReadOnly]

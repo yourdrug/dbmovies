@@ -1,3 +1,4 @@
+import datetime
 from datetime import date
 
 from django.contrib.auth.models import User
@@ -9,7 +10,7 @@ class Person(models.Model):
     name = models.CharField(max_length=100)
     photo = models.URLField()
     birth_day = models.DateField(default=date.today)
-    death_day = models.DateField(default=None, null=True)
+    death_day = models.DateField(default=None, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -48,13 +49,14 @@ class Genre(models.Model):
 
 class Movie(models.Model):
     name = models.CharField(max_length=80)
-    description = models.CharField(max_length=255, default="")
+    description = models.CharField(max_length=1000, default="")
     tagline = models.CharField(max_length=255, default="-")
     year = models.SmallIntegerField()
     country = models.CharField(max_length=80)
     genres = models.ManyToManyField(Genre, related_name='film_genres')
     watch_time = models.CharField(max_length=40, default="")
     poster = models.URLField(default="")
+    world_premier = models.DateField(default=date.today)
 
     actors = models.ManyToManyField(Actor, related_name='film_actor')
     director = models.ManyToManyField(Director, related_name='film_director')
@@ -63,7 +65,7 @@ class Movie(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='my_movies')
     watchers = models.ManyToManyField(User, through='UserMovieRelation', related_name='my_watched_movies')
-    rating = models.DecimalField(max_digits=4, decimal_places=2, default=None, null=True)
+    rating = models.DecimalField(max_digits=4, decimal_places=2, default=None, null=True, blank=True)
 
     def __str__(self):
         return f'Id {self.id}: {self.name} {self.year}'
