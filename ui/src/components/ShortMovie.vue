@@ -1,5 +1,5 @@
 <template>
-  <div class="movie-card">
+  <div class="movie-card" @click="$router.push('/movies/' + this.movie.id)">
     <div class="number">{{ index + 1 }}</div>
     <div class="poster">
       <img :src="movie.poster" />
@@ -45,6 +45,8 @@ export default {
       required: false,
     },
   },
+
+  methods: {},
 };
 </script>
 
@@ -63,6 +65,7 @@ export default {
   text-align: center;
   border-bottom: 1px solid black;
   margin-top: 5px;
+  cursor: pointer;
   display: grid;
   grid-template-columns: 40px 150px 350px 260px;
 }
@@ -89,16 +92,15 @@ export default {
   margin-top: 15px;
   font-size: 20px;
   font-weight: bold;
-  float: left;
-  margin-top: 15px;
   width: 40px;
   display: inline-block;
 }
 
 .count-rates {
   display: inline-block;
-  margin-top: 20px;
-  float: left;
+  text-align: left;
+  margin-left: 10px;
+  margin-top: 17px;
   width: 50px;
   font-size: 12px;
   font-weight: 100;
