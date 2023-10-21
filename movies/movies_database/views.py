@@ -20,8 +20,8 @@ class MovieViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
-    filter_fields = ['year', 'name']
-    search_fields = ['name', 'country']
+    filterset_fields = ['year', 'name', 'genres__name']
+    search_fields = ['name', 'country', 'genres__name']
 
     def perform_create(self, serializer):
         serializer.validated_data['owner'] = self.request.user
@@ -46,5 +46,6 @@ class ShortInfoMovieViewSet(ModelViewSet):
         annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
     ).prefetch_related('actors', 'director', 'genres').order_by('-world_premier')
     serializer_class = ShortInfoMovieSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
