@@ -1,7 +1,9 @@
 <template>
   <div class="movies">
-    <list-movies v-bind:short_movies="movies"> </list-movies>
-    <div>{{ this.user.username }}</div>
+    <list-movies v-bind:short_movies="filterMovie"> </list-movies>
+    <div>
+      <my-select v-model="selectedFilter" :options="genreOptions" />
+    </div>
     <button @click="logout">ВЫЙТИ</button>
     <button @click="login">ВОЙТИ</button>
   </div>
@@ -20,6 +22,13 @@ export default {
     return {
       movies: [],
       user: {},
+      selectedFilter: "",
+      genreOptions: [
+        { value: "криминал", name: "Криминал" },
+        { value: "боевик", name: "Боевик" },
+        { value: "драма", name: "Драма" },
+        { value: "фэнтези", name: "Фэнтези" },
+      ],
     };
   },
 
@@ -87,6 +96,18 @@ export default {
 
   mounted() {
     this.fetchShortMovies();
+  },
+
+  computed: {
+    filterMovie() {
+      if (this.selectedFilter != "") {
+        return this.movies.filter(
+          (movie) => movie.genres[0].name == this.selectedFilter
+        );
+      } else {
+        return this.movies;
+      }
+    },
   },
 };
 </script>
