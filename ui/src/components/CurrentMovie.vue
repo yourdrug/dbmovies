@@ -75,7 +75,27 @@
       <!-- /.wrapper-col-2 -->
 
       <div class="wrapper-col-3">
-        <span class="rathing-main">{{ this.movie.rating }}</span>
+        <span
+          class="rathing-main"
+          v-if="movie.rating >= 7.5"
+          style="color: green"
+        >
+          {{ movie.rating }}
+        </span>
+        <span
+          class="rathing-main"
+          v-if="movie.rating <= 5.5"
+          style="color: red"
+        >
+          {{ movie.rating }}
+        </span>
+        <span
+          class="rathing-main"
+          v-if="movie.rating < 7.5 && movie.rating > 5.5"
+          style="color: grey"
+        >
+          {{ movie.rating }}
+        </span>
         <span class="rathing-counts">{{
           this.movie.annotated_count_rate
         }}</span>
@@ -218,7 +238,6 @@ h2 {
   font-weight: 900;
   font-size: 36px;
   line-height: 42px;
-  color: #44c916;
 }
 
 .rathing-counts {

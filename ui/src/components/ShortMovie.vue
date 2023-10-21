@@ -24,7 +24,11 @@
       <div class="movie-rate" v-if="movie.rating <= 5.5" style="color: red">
         {{ movie.rating }}
       </div>
-      <div class="movie-rate" v-if="movie.rating < 7.5 && movie.rating > 5.5">
+      <div
+        class="movie-rate"
+        v-if="movie.rating < 7.5 && movie.rating > 5.5"
+        style="color: grey"
+      >
         {{ movie.rating }}
       </div>
       <div class="count-rates">{{ movie.annotated_count_rate }}</div>
