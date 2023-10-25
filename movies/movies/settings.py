@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-mun)*43dg(*c)q0sx%ra=)d4_)ryy3$b87(wk^*p_9zfq@sz6z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     "corsheaders",
     'debug_toolbar',
     'rest_framework',
@@ -97,8 +98,8 @@ DATABASES = {
         'NAME': 'movies_db',
         'USER': 'movie_user',
         'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': 'pgdb',
+        'PORT': '5432',
     }
 }
 
