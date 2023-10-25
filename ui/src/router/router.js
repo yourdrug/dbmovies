@@ -1,6 +1,7 @@
 import StartPage from "@/pages/StartPage";
 import MoviesPage from "@/pages/MoviesPage";
 import MovieIdPage from "@/pages/MovieIdPage";
+import MovieByGenre from "@/pages/MovieByGenre";
 import {createRouter, createWebHistory} from "vue-router";
 
 const routes = [
@@ -15,6 +16,10 @@ const routes = [
     {
         path: '/movies/:id',
         component: MovieIdPage
+    },
+    {
+        path: '/movies/by-genre/:genre',
+        component: MovieByGenre
     },
 ]
 

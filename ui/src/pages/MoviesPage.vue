@@ -1,7 +1,7 @@
 <template>
   <div class="movies">
-    <list-movies v-bind:short_movies="filterMovie"> </list-movies>
-    <div>
+    <list-movies v-bind:short_movies="filterMovie" />
+    <div class="filters">
       <my-select v-model="selectedFilter" :options="genreOptions" />
     </div>
     <button @click="logout">ВЫЙТИ</button>
@@ -101,8 +101,8 @@ export default {
   computed: {
     filterMovie() {
       if (this.selectedFilter != "") {
-        return this.movies.filter(
-          (movie) => movie.genres[0].name == this.selectedFilter
+        return this.movies.filter((movie) =>
+          movie.genres.some((genre) => genre.name === this.selectedFilter)
         );
       } else {
         return this.movies;
@@ -120,5 +120,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.filters {
 }
 </style>

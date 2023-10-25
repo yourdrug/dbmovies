@@ -27,10 +27,14 @@
             <span>
               <div class="genre" v-for="genre in movie.genres" :key="genre.id">
                 <div v-if="genre != movie.genres[movie.genres.length - 1]">
-                  <a href="#"> {{ genre.name }},&nbsp;</a>
+                  <a @click="$router.push('/movies/by-genre/' + genre.en_name)">
+                    {{ genre.name }},&nbsp;</a
+                  >
                 </div>
                 <div v-else>
-                  <a href="#"> {{ genre.name }}</a>
+                  <a @click="$router.push('/movies/by-genre/' + genre.en_name)">
+                    {{ genre.name }}</a
+                  >
                 </div>
               </div>
             </span>

@@ -10,7 +10,7 @@
         {{ movie.year }}, {{ movie.watch_time.split("/")[0] }}
       </div>
       <div class="movie-more-desc">
-        {{ movie.country }} | {{ movie.genres[0].name }}
+        {{ movie.country.split(",")[0] }} | {{ movie.genres[0].name }}
         &nbsp;Режиссёр:
         {{ movie.director[0].name }} <br />
         <br />
