@@ -42,6 +42,7 @@ class Screenwriter(Person):
 
 class Genre(models.Model):
     name = models.CharField(max_length=50)
+    en_name = models.CharField(max_length=50, default=None, null=True)
 
     def __str__(self):
         return f'{self.name}'

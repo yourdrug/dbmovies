@@ -47,5 +47,6 @@ class ShortInfoMovieViewSet(ModelViewSet):
     ).prefetch_related('actors', 'director', 'genres').order_by('-world_premier')
     serializer_class = ShortInfoMovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['year', 'name', 'genres__en_name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
