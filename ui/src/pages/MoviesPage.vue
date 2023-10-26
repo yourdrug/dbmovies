@@ -1,11 +1,12 @@
 <template>
   <div class="movies">
+    <input v-model="idInput" placeholder="id фильма в кинопоиске" />
+    <button @click="getMoviesFromKinopoisk">Получить фильм</button>
+    <button @click="postMovies">Добавить Фильм в бд</button>
     <list-movies v-bind:short_movies="filterMovie" />
     <div class="filters">
       <my-select v-model="selectedFilter" :options="genreOptions" />
     </div>
-    <button @click="logout">ВЫЙТИ</button>
-    <button @click="login">ВОЙТИ</button>
   </div>
 </template>
 
@@ -21,7 +22,9 @@ export default {
   data() {
     return {
       movies: [],
+      moviesKP: {},
       user: {},
+      idInput: "",
       selectedFilter: "",
       genreOptions: [
         { value: "криминал", name: "Криминал" },
@@ -90,6 +93,47 @@ export default {
         alert(this.user.username);
       } catch (error) {
         alert("ошибка туть");
+      }
+    },
+
+    async getMoviesFromKinopoisk() {
+      let config = {
+        headers: {
+          "X-API-KEY": "3W0ZPKY-H5XM7X8-KRB88NB-QSF7VJ5",
+        },
+      };
+      try {
+        const response = await axios.get(
+          "https://api.kinopoisk.dev/v1.3/movie/" + this.idInput,
+          config
+        );
+        this.moviesKP = response.data;
+        console.log(this.moviesKP);
+        alert("Фильм получен");
+      } catch (error) {
+        alert("ошибка в парсе кп");
+      }
+    },
+
+    async postMovies() {
+      let data = {
+        movies: this.moviesKP,
+      };
+      let config = {
+        headers: {
+          Authorization: "Token 3379930827e3a20de523a86052f8e0d0a9d7146b",
+        },
+      };
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/movie/addAllGenres/",
+          data,
+          config
+        );
+        console.log(response.message);
+        alert("Фильм загружен");
+      } catch (error) {
+        alert(error.message);
       }
     },
   },

@@ -51,7 +51,7 @@ class Genre(models.Model):
 class Movie(models.Model):
     name = models.CharField(max_length=80)
     description = models.CharField(max_length=1000, default="")
-    tagline = models.CharField(max_length=255, default="-")
+    tagline = models.CharField(max_length=260, default="-", null=True, blank=True)
     year = models.SmallIntegerField()
     country = models.CharField(max_length=80)
     genres = models.ManyToManyField(Genre, related_name='film_genres')
