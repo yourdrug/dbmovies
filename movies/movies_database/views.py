@@ -12,7 +12,7 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from movies_database.models import Movie, UserMovieRelation, Genre, Actor, Director, Producer, Screenwriter
 from movies_database.permissions import IsOwnerOrStaffOrReadOnly
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer, ShortInfoMovieSerializer, \
-    ActorSerializer
+    ActorSerializer, DirectorSerializer, ProducerSerializer, ScreenwriterSerializer
 
 
 class MovieViewSet(ModelViewSet):
@@ -121,6 +121,33 @@ class ShortInfoMovieViewSet(ModelViewSet):
 class ActorInfoViewSet(ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['name']
+    permission_classes = [IsOwnerOrStaffOrReadOnly]
+    authentication_classes = (TokenAuthentication,)
+
+
+class DirectorInfoViewSet(ModelViewSet):
+    queryset = Director.objects.all()
+    serializer_class = DirectorSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['name']
+    permission_classes = [IsOwnerOrStaffOrReadOnly]
+    authentication_classes = (TokenAuthentication,)
+
+
+class ProducerInfoViewSet(ModelViewSet):
+    queryset = Producer.objects.all()
+    serializer_class = ProducerSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['name']
+    permission_classes = [IsOwnerOrStaffOrReadOnly]
+    authentication_classes = (TokenAuthentication,)
+
+
+class ScreenwriterInfoViewSet(ModelViewSet):
+    queryset = Screenwriter.objects.all()
+    serializer_class = ScreenwriterSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]

@@ -100,3 +100,30 @@ class ActorSerializer(ModelSerializer):
         model = Actor
         # fields = ('id', 'name', 'photo', 'birth_day', 'death_day', 'movies')
         fields = '__all__'
+
+
+class DirectorSerializer(ModelSerializer):
+    film_director = ShortInfoMovieSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Director
+        # fields = ('id', 'name', 'photo', 'birth_day', 'death_day', 'movies')
+        fields = '__all__'
+
+
+class ProducerSerializer(ModelSerializer):
+    film_producer = ShortInfoMovieSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Producer
+        # fields = ('id', 'name', 'photo', 'birth_day', 'death_day', 'movies')
+        fields = '__all__'
+
+
+class ScreenwriterSerializer(ModelSerializer):
+    film_screenwriter = ShortInfoMovieSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Screenwriter
+        # fields = ('id', 'name', 'photo', 'birth_day', 'death_day', 'movies')
+        fields = '__all__'
