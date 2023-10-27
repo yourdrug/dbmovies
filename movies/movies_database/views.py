@@ -11,14 +11,16 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from movies_database.models import Movie, UserMovieRelation, Genre, Actor, Director, Producer, Screenwriter
 from movies_database.permissions import IsOwnerOrStaffOrReadOnly
-from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer, ShortInfoMovieSerializer
+from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer, ShortInfoMovieSerializer, \
+    ActorSerializer
 
 
 class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all().annotate(
         annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
         annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
-    ).select_related('owner').prefetch_related('watchers', 'actors', 'director', 'producer', 'screenwriter', 'genres').order_by('id')
+    ).select_related('owner').prefetch_related('watchers', 'actors', 'director', 'producer', 'screenwriter',
+                                               'genres').order_by('id')
     serializer_class = MovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffOrReadOnly]
@@ -32,7 +34,7 @@ class MovieViewSet(ModelViewSet):
 
     @action(detail=False, methods=['POST'])
     def addAllGenres(self, request):
-        #for i in range(30):
+        # for i in range(30):
         movie_temp = Movie.objects.create(
             name=request.data.get("movies").get("name"),
             description=request.data.get("movies").get("description"),
@@ -111,6 +113,15 @@ class ShortInfoMovieViewSet(ModelViewSet):
     ).prefetch_related('actors', 'director', 'genres').order_by('-world_premier')
     serializer_class = ShortInfoMovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['year', 'name', 'genres__en_name']
+    filterset_fields = ['year', 'name', 'genres__en_name', 'actors__name']
+    permission_classes = [IsOwnerOrStaffOrReadOnly]
+    authentication_classes = (TokenAuthentication,)
+
+
+class ActorInfoViewSet(ModelViewSet):
+    queryset = Actor.objects.all()
+    serializer_class = ActorSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)

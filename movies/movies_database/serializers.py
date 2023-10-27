@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.renderers import JSONRenderer
 from rest_framework.serializers import ModelSerializer
 
 from movies_database.models import Movie, UserMovieRelation, Actor, Director, Producer, Screenwriter, Genre
@@ -14,7 +15,7 @@ class MovieWatcherSerializer(ModelSerializer):
 class MovieActorsSerializer(ModelSerializer):
     class Meta:
         model = Actor
-        fields = ('__all__')
+        fields = '__all__'
 
 
 class ShortMovieActorsSerializer(ModelSerializer):
@@ -26,7 +27,7 @@ class ShortMovieActorsSerializer(ModelSerializer):
 class MovieDirectorSerializer(ModelSerializer):
     class Meta:
         model = Director
-        fields = ('__all__')
+        fields = '__all__'
 
 
 class ShortMovieDirectorSerializer(ModelSerializer):
@@ -38,19 +39,19 @@ class ShortMovieDirectorSerializer(ModelSerializer):
 class MovieProducerSerializer(ModelSerializer):
     class Meta:
         model = Producer
-        fields = ('__all__')
+        fields = '__all__'
 
 
 class MovieScreenwriterSerializer(ModelSerializer):
     class Meta:
         model = Screenwriter
-        fields = ('__all__')
+        fields = '__all__'
 
 
 class MovieGenreSerializer(ModelSerializer):
     class Meta:
         model = Genre
-        fields = ('__all__')
+        fields = '__all__'
 
 
 class MovieSerializer(ModelSerializer):
@@ -90,3 +91,12 @@ class UserMovieRelationSerializer(ModelSerializer):
     class Meta:
         model = UserMovieRelation
         fields = ('movie', 'like', 'in_bookmarks', 'rate')
+
+
+class ActorSerializer(ModelSerializer):
+    film_actor = ShortInfoMovieSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Actor
+        # fields = ('id', 'name', 'photo', 'birth_day', 'death_day', 'movies')
+        fields = '__all__'
