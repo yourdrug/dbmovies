@@ -54,10 +54,71 @@
                 <div
                   v-if="director != movie.director[movie.director.length - 1]"
                 >
-                  <a href="#"> {{ director.name }},&nbsp;</a>
+                  <a @click="$router.push('/persons/director/' + director.id)">
+                    {{ director.name }},&nbsp;</a
+                  >
                 </div>
                 <div v-else>
-                  <a href="#"> {{ director.name }}</a>
+                  <a @click="$router.push('/persons/director/' + director.id)">
+                    {{ director.name }}</a
+                  >
+                </div>
+              </div>
+            </span>
+          </li>
+          <li>
+            <span class="text-muted">Продюссер</span>
+            <span>
+              <div
+                class="director"
+                v-for="producer in movie.producer"
+                :key="producer.id"
+              >
+                <div
+                  v-if="producer != movie.producer[movie.producer.length - 1]"
+                >
+                  <a @click="$router.push('/persons/producer/' + producer.id)">
+                    {{ producer.name }},&nbsp;</a
+                  >
+                </div>
+                <div v-else>
+                  <a @click="$router.push('/persons/producer/' + producer.id)">
+                    {{ producer.name }}</a
+                  >
+                </div>
+              </div>
+            </span>
+          </li>
+          <li>
+            <span class="text-muted">Сценарий</span>
+            <span>
+              <div
+                class="director"
+                v-for="screenwriter in movie.screenwriter"
+                :key="screenwriter.id"
+              >
+                <div
+                  v-if="
+                    screenwriter !=
+                    movie.screenwriter[movie.screenwriter.length - 1]
+                  "
+                >
+                  <a
+                    @click="
+                      $router.push('/persons/screenwriter/' + screenwriter.id)
+                    "
+                  >
+                    {{ screenwriter.name }},&nbsp;</a
+                  >
+                </div>
+                <div v-else>
+                  <a
+                    @click="
+                      $router.push('/persons/screenwriter/' + screenwriter.id)
+                    "
+                  >
+                    {{ screenwriter.name }}</a
+                  >
                 </div>
               </div>
             </span>
@@ -138,10 +199,12 @@ img {
 a {
   color: black;
   text-decoration: none;
+  cursor: pointer;
 }
 
 a:hover {
   color: #ff5c00;
+  cursor: pointer;
 }
 
 h2 {
