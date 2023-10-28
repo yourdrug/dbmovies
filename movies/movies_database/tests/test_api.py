@@ -8,17 +8,13 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.test.utils import CaptureQueriesContext
 
-from movies_database.models import Movie, UserMovieRelation, Actor, Director, Producer, Screenwriter, Genre
+from movies_database.models import Movie, UserMovieRelation, Genre
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer
 
 
 class MovieApiTestCase(APITestCase):
     def setUp(self):
         self.user = User.objects.create(username='test_username')
-        self.actor = Actor.objects.create(name='test_actor', photo='http://127.0.0.1:8000/')
-        self.director = Director.objects.create(name='test_actor', photo='http://127.0.0.1:8000/')
-        self.producer = Producer.objects.create(name='test_actor', photo='http://127.0.0.1:8000/')
-        self.screenwriter = Screenwriter.objects.create(name='test_actor', photo='http://127.0.0.1:8000/')
         self.genre = Genre.objects.create(name='test_genre')
 
         self.movie_1 = Movie.objects.create(name='Avengers2', year=2013, country='LOL',

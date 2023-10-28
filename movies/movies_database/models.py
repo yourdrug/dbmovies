@@ -6,50 +6,36 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 
 
+class Profession(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    en_name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Person(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
+    en_name = models.CharField(max_length=100, unique=True, null=True)
     photo = models.URLField()
     birth_day = models.DateField(default=date.today)
     death_day = models.DateField(default=None, null=True, blank=True)
-
-    class Meta:
-        abstract = True
-
-
-class Actor(Person):
-
-    def __str__(self):
-        return f'{self.name}'
-
-
-class Director(Person):
-
-    def __str__(self):
-        return f'{self.name}'
-
-
-class Producer(Person):
-
-    def __str__(self):
-        return f'{self.name}'
-
-
-class Screenwriter(Person):
+    profession = models.ManyToManyField(Profession)
 
     def __str__(self):
         return f'{self.name}'
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=50)
-    en_name = models.CharField(max_length=50, default=None, null=True)
+    name = models.CharField(max_length=50, unique=True)
+    en_name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return f'{self.name}'
 
 
 class Movie(models.Model):
-    name = models.CharField(max_length=80)
+    name = models.CharField(max_length=80, unique=True)
     description = models.CharField(max_length=1000, default="")
     tagline = models.CharField(max_length=200, default="-", null=True)
     year = models.SmallIntegerField()
@@ -59,10 +45,14 @@ class Movie(models.Model):
     poster = models.URLField(default="")
     world_premier = models.DateField(default=date.today)
 
-    actors = models.ManyToManyField(Actor, related_name='film_actor')
-    director = models.ManyToManyField(Director, related_name='film_director')
-    producer = models.ManyToManyField(Producer, related_name='film_producer')
-    screenwriter = models.ManyToManyField(Screenwriter, related_name='film_screenwriter')
+    actors = models.ManyToManyField(Person, related_name='film_actor')
+    directors = models.ManyToManyField(Person, related_name='film_director')
+    producers = models.ManyToManyField(Person, related_name='film_producer')
+    screenwriters = models.ManyToManyField(Person, related_name='film_screenwriter')
+    composers = models.ManyToManyField(Person, related_name='film_composer')
+    designers = models.ManyToManyField(Person, related_name='film_designer')
+    editors = models.ManyToManyField(Person, related_name='film_editor')
+    operators = models.ManyToManyField(Person, related_name='film_operator')
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='my_movies')
     watchers = models.ManyToManyField(User, through='UserMovieRelation', related_name='my_watched_movies')

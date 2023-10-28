@@ -1,26 +1,16 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from movies_database.models import Movie, UserMovieRelation, Actor, Director, Producer, Screenwriter, Genre
+from movies_database.models import Movie, UserMovieRelation, Person, Profession, Genre
 
 
-@admin.register(Actor)
-class ActorAdmin(ModelAdmin):
+@admin.register(Person)
+class PersonAdmin(ModelAdmin):
     pass
 
 
-@admin.register(Director)
-class DirectorAdmin(ModelAdmin):
-    pass
-
-
-@admin.register(Producer)
-class ProducerAdmin(ModelAdmin):
-    pass
-
-
-@admin.register(Screenwriter)
-class ScreenwriterAdmin(ModelAdmin):
+@admin.register(Profession)
+class ProfessionAdmin(ModelAdmin):
     pass
 
 

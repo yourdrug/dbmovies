@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count, Case, When, Avg
 from django.test import TestCase
 
-from movies_database.models import Movie, UserMovieRelation, Actor, Director, Producer, Screenwriter, Genre
+from movies_database.models import Movie, UserMovieRelation, Person, Genre
 from movies_database.serializers import MovieSerializer
 
 
@@ -14,10 +14,7 @@ class MovieSerializerTestCase(TestCase):
         user2 = User.objects.create(username='test_username2', first_name='Ivan', last_name='Sidorov')
         user3 = User.objects.create(username='test_username3', first_name='Ivan', last_name='Digorov')
 
-        self.actor = Actor.objects.create(name='test_actor', photo='http://127.0.0.1:8000/', birth_day=datetime.date(2020, 2, 2))
-        self.director = Director.objects.create(name='test_actor', photo='http://127.0.0.1:8000/', birth_day=datetime.date(2020, 2, 2))
-        self.producer = Producer.objects.create(name='test_actor', photo='http://127.0.0.1:8000/', birth_day=datetime.date(2020, 2, 2))
-        self.screenwriter = Screenwriter.objects.create(name='test_actor', photo='http://127.0.0.1:8000/', birth_day=datetime.date(2020, 2, 2))
+        self.actor = Person.objects.create(name='test_actor', photo='http://127.0.0.1:8000/', birth_day=datetime.date(2020, 2, 2))
         self.genre = Genre.objects.create(name='test_genre')
 
         movie_1 = Movie.objects.create(name='Avengers', year=2012, country='USA', description='asas',

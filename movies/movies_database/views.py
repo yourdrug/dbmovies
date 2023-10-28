@@ -9,10 +9,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
-from movies_database.models import Movie, UserMovieRelation, Genre, Actor, Director, Producer, Screenwriter
+from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
 from movies_database.permissions import IsOwnerOrStaffOrReadOnly
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer, ShortInfoMovieSerializer, \
-    ActorSerializer, DirectorSerializer, ProducerSerializer, ScreenwriterSerializer
+    PersonsMoviesSerializer
 
 
 class MovieViewSet(ModelViewSet):
@@ -46,50 +46,133 @@ class MovieViewSet(ModelViewSet):
             world_premier=request.data.get("movies").get("premiere").get("world").split("T")[0]
         )
         for genre in request.data.get("movies").get("genres"):
-            temp_genre = Genre.objects.filter(name=genre.get("name"))
-            movie_temp.genres.add(temp_genre[0])
+            if Genre.objects.get(name=genre.get("name")).exists():
+                movie_temp.genres.add(Genre.objects.get(name=genre.get("name")))
+            else:
+                temp_genre = Genre.objects.create(name=genre.get("name"), en_name=genre.get("name"))
+                movie_temp.genres.add(temp_genre)
 
         for person in request.data.get("movies").get("persons"):
             match person.get("enProfession"):
                 case "actor":
-                    if Actor.objects.filter(name=person.get("name")).exists():
-                        movie_temp.actors.add(Actor.objects.filter(name=person.get("name"))[0])
+                    if Person.objects.filter(name=person.get("name")).exists():
+                        some_person_professions = Person.objects.get(name=person.get("name")).profession.all()
+                        some_person = Person.objects.get(name=person.get("name"))
+                        if "actor" not in some_person_professions.en_name:
+                            some_person.profession.add(Profession.objects.get_or_create(name="актёр", en_name="actor"))
+                        movie_temp.actors.add(Person.objects.get(name=person.get("name")))
                     else:
-                        temp_actor = Actor.objects.create(
+                        temp_actor = Person.objects.create(
                             name=person.get("name"),
                             photo=person.get("photo")
                         )
+                        temp_actor.profession.add(Profession.objects.get_or_create(name="актёр", en_name="actor"))
                         movie_temp.actors.add(temp_actor)
 
                 case "director":
-                    if Director.objects.filter(name=person.get("name")).exists():
-                        movie_temp.director.add(Director.objects.filter(name=person.get("name"))[0])
+                    if Person.objects.filter(name=person.get("name")).exists():
+                        some_person_professions = Person.objects.get(name=person.get("name")).profession.all()
+                        some_person = Person.objects.get(name=person.get("name"))
+                        if "actor" not in some_person_professions.en_name:
+                            some_person.profession.add(Profession.objects.get_or_create(name="режиссёр", en_name="director"))
+                        movie_temp.directors.add(Person.objects.get(name=person.get("name")))
                     else:
-                        temp_actor = Director.objects.create(
+                        temp_actor = Person.objects.create(
                             name=person.get("name"),
                             photo=person.get("photo")
                         )
-                        movie_temp.director.add(temp_actor)
+                        temp_actor.profession.add(Profession.objects.get_or_create(name="режиссёр", en_name="director"))
+                        movie_temp.directors.add(temp_actor)
 
                 case "producer":
-                    if Producer.objects.filter(name=person.get("name")).exists():
-                        movie_temp.producer.add(Producer.objects.filter(name=person.get("name"))[0])
+                    if Person.objects.filter(name=person.get("name")).exists():
+                        some_person_professions = Person.objects.get(name=person.get("name")).profession.all()
+                        some_person = Person.objects.get(name=person.get("name"))
+                        if "actor" not in some_person_professions.en_name:
+                            some_person.profession.add(Profession.objects.get_or_create(name="продюссер", en_name="producer"))
+                        movie_temp.producers.add(Person.objects.get(name=person.get("name")))
                     else:
-                        temp_actor = Producer.objects.create(
+                        temp_actor = Person.objects.create(
                             name=person.get("name"),
                             photo=person.get("photo")
                         )
-                        movie_temp.producer.add(temp_actor)
+                        temp_actor.profession.add(Profession.objects.get_or_create(name="продюссер", en_name="producer"))
+                        movie_temp.producers.add(temp_actor)
 
                 case "writer":
-                    if Screenwriter.objects.filter(name=person.get("name")).exists():
-                        movie_temp.screenwriter.add(Screenwriter.objects.filter(name=person.get("name"))[0])
+                    if Person.objects.filter(name=person.get("name")).exists():
+                        some_person_professions = Person.objects.get(name=person.get("name")).profession.all()
+                        some_person = Person.objects.get(name=person.get("name"))
+                        if "actor" not in some_person_professions.en_name:
+                            some_person.profession.add(Profession.objects.get_or_create(name="сценарист", en_name="writer"))
+                        movie_temp.screenwriters.add(Person.objects.get(name=person.get("name")))
                     else:
-                        temp_actor = Screenwriter.objects.create(
+                        temp_actor = Person.objects.create(
                             name=person.get("name"),
                             photo=person.get("photo")
                         )
-                        movie_temp.screenwriter.add(temp_actor)
+                        temp_actor.profession.add(Profession.objects.get_or_create(name="сценарист", en_name="writer"))
+                        movie_temp.screenwriters.add(temp_actor)
+
+                case "composer":
+                    if Person.objects.filter(name=person.get("name")).exists():
+                        some_person_professions = Person.objects.get(name=person.get("name")).profession.all()
+                        some_person = Person.objects.get(name=person.get("name"))
+                        if "actor" not in some_person_professions.en_name:
+                            some_person.profession.add(Profession.objects.get_or_create(name="композитор", en_name="composer"))
+                        movie_temp.composers.add(Person.objects.get(name=person.get("name")))
+                    else:
+                        temp_actor = Person.objects.create(
+                            name=person.get("name"),
+                            photo=person.get("photo")
+                        )
+                        temp_actor.profession.add(Profession.objects.get_or_create(name="композитор", en_name="composer"))
+                        movie_temp.composers.add(temp_actor)
+
+                case "designer":
+                    if Person.objects.filter(name=person.get("name")).exists():
+                        some_person_professions = Person.objects.get(name=person.get("name")).profession.all()
+                        some_person = Person.objects.get(name=person.get("name"))
+                        if "actor" not in some_person_professions.en_name:
+                            some_person.profession.add(Profession.objects.get_or_create(name="художник", en_name="designer"))
+                        movie_temp.designers.add(Person.objects.get(name=person.get("name")))
+                    else:
+                        temp_actor = Person.objects.create(
+                            name=person.get("name"),
+                            photo=person.get("photo")
+                        )
+                        temp_actor.profession.add(Profession.objects.get_or_create(name="художник", en_name="designer"))
+                        movie_temp.designers.add(temp_actor)
+
+                case "editor":
+                    if Person.objects.filter(name=person.get("name")).exists():
+                        some_person_professions = Person.objects.get(name=person.get("name")).profession.all()
+                        some_person = Person.objects.get(name=person.get("name"))
+                        if "actor" not in some_person_professions.en_name:
+                            some_person.profession.add(Profession.objects.get_or_create(name="монтажёр", en_name="editor"))
+                        movie_temp.editors.add(Person.objects.get(name=person.get("name")))
+                    else:
+                        temp_actor = Person.objects.create(
+                            name=person.get("name"),
+                            photo=person.get("photo")
+                        )
+                        temp_actor.profession.add(Profession.objects.get_or_create(name="монтажёр", en_name="editor"))
+                        movie_temp.editors.add(temp_actor)
+
+                case "operator":
+                    if Person.objects.filter(name=person.get("name")).exists():
+                        some_person_professions = Person.objects.get(name=person.get("name")).profession.all()
+                        some_person = Person.objects.get(name=person.get("name"))
+                        if "actor" not in some_person_professions.en_name:
+                            some_person.profession.add(Profession.objects.get_or_create(name="оператор", en_name="operator"))
+                        movie_temp.operators.add(Person.objects.get(name=person.get("name")))
+                    else:
+                        temp_actor = Person.objects.create(
+                            name=person.get("name"),
+                            photo=person.get("photo")
+                        )
+                        temp_actor.profession.add(Profession.objects.get_or_create(name="оператор", en_name="operator"))
+                        movie_temp.operators.add(temp_actor)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -118,37 +201,11 @@ class ShortInfoMovieViewSet(ModelViewSet):
     authentication_classes = (TokenAuthentication,)
 
 
-class ActorInfoViewSet(ModelViewSet):
-    queryset = Actor.objects.all()
-    serializer_class = ActorSerializer
+class PersonInfoViewSet(ModelViewSet):
+    queryset = Person.objects.all()
+    serializer_class = PersonsMoviesSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
 
-
-class DirectorInfoViewSet(ModelViewSet):
-    queryset = Director.objects.all()
-    serializer_class = DirectorSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['name']
-    permission_classes = [IsOwnerOrStaffOrReadOnly]
-    authentication_classes = (TokenAuthentication,)
-
-
-class ProducerInfoViewSet(ModelViewSet):
-    queryset = Producer.objects.all()
-    serializer_class = ProducerSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['name']
-    permission_classes = [IsOwnerOrStaffOrReadOnly]
-    authentication_classes = (TokenAuthentication,)
-
-
-class ScreenwriterInfoViewSet(ModelViewSet):
-    queryset = Screenwriter.objects.all()
-    serializer_class = ScreenwriterSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['name']
-    permission_classes = [IsOwnerOrStaffOrReadOnly]
-    authentication_classes = (TokenAuthentication,)
