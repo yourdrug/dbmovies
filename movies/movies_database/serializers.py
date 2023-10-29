@@ -51,20 +51,21 @@ class MovieSerializer(ModelSerializer):
                   'year', 'country', 'poster', 'world_premier',
                   'annotated_likes', 'rating', 'owner_name',
                   'watchers', 'actors', 'directors', 'producers',
-                  'screenwriters', 'genres', 'annotated_count_rate')
+                  'screenwriters', 'composers', 'designers', 'editors',
+                  'operators', 'genres', 'annotated_count_rate')
 
 
 class ShortInfoMovieSerializer(ModelSerializer):
     annotated_count_rate = serializers.IntegerField(read_only=True)
     actors = ShortMoviePersonSerializer(many=True, read_only=True)
-    director = ShortMoviePersonSerializer(many=True, read_only=True)
+    directors = ShortMoviePersonSerializer(many=True, read_only=True)
     genres = MovieGenreSerializer(many=True, read_only=True)
 
     class Meta:
         model = Movie
         fields = ('id', 'name', 'watch_time', 'world_premier',
                   'year', 'country', 'poster', 'rating', 'actors',
-                  'director', 'genres', 'annotated_count_rate')
+                  'directors', 'genres', 'annotated_count_rate')
 
 
 class UserMovieRelationSerializer(ModelSerializer):
