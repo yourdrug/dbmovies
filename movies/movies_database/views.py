@@ -1,4 +1,4 @@
-from django.db.models import Count, Case, When, Avg
+from django.db.models import Count, Case, When
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
@@ -19,8 +19,9 @@ class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all().annotate(
         annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
         annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
-    ).select_related('owner').prefetch_related('watchers', 'actors', 'directors', 'producers', 'screenwriters',
-                                               'composers', 'designers', 'editors', 'operators', 'genres').order_by('id')
+    ).select_related('owner').prefetch_related('watchers', 'actors', 'directors', 'producers',
+                                               'screenwriters', 'composers', 'designers', 'editors',
+                                               'operators', 'genres').order_by('id')
     serializer_class = MovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffOrReadOnly]
@@ -56,7 +57,8 @@ class MovieViewSet(ModelViewSet):
             match person.get("enProfession"):
                 case "actor":
                     if Person.objects.filter(name=person.get("name")).exists():
-                        some_person_professions = Person.objects.get(name=person.get("name")).profession.values("en_name")
+                        some_person_professions = (
+                            Person.objects.get(name=person.get("name")).profession.values("en_name"))
                         some_person = Person.objects.get(name=person.get("name"))
                         if {"en_name": "actor"} not in some_person_professions:
                             if Profession.objects.filter(name="актёр").exists():
@@ -79,13 +81,15 @@ class MovieViewSet(ModelViewSet):
 
                 case "director":
                     if Person.objects.filter(name=person.get("name")).exists():
-                        some_person_professions = Person.objects.get(name=person.get("name")).profession.values("en_name")
+                        some_person_professions = (
+                            Person.objects.get(name=person.get("name")).profession.values("en_name"))
                         some_person = Person.objects.get(name=person.get("name"))
                         if {"en_name": "director"} not in some_person_professions:
                             if Profession.objects.filter(name="режиссёр").exists():
                                 some_person.profession.add(Profession.objects.filter(name="режиссёр")[0])
                             else:
-                                some_person.profession.add(Profession.objects.create(name="режиссёр", en_name="director"))
+                                some_person.profession.add(
+                                    Profession.objects.create(name="режиссёр", en_name="director"))
                         movie_temp.directors.add(Person.objects.get(name=person.get("name")))
                     else:
                         temp_director = Person.objects.create(
@@ -101,7 +105,8 @@ class MovieViewSet(ModelViewSet):
 
                 case "producer":
                     if Person.objects.filter(name=person.get("name")).exists():
-                        some_person_professions = Person.objects.get(name=person.get("name")).profession.values("en_name")
+                        some_person_professions = (
+                            Person.objects.get(name=person.get("name")).profession.values("en_name"))
                         some_person = Person.objects.get(name=person.get("name"))
                         if {"en_name": "producer"} not in some_person_professions:
                             if Profession.objects.filter(name="продюссер").exists():
@@ -119,12 +124,14 @@ class MovieViewSet(ModelViewSet):
                         if Profession.objects.filter(name="продюссер").exists():
                             temp_producer.profession.add(Profession.objects.filter(name="продюссер")[0])
                         else:
-                            temp_producer.profession.add(Profession.objects.create(name="продюссер", en_name="producer"))
+                            temp_producer.profession.add(
+                                Profession.objects.create(name="продюссер", en_name="producer"))
                         movie_temp.producers.add(temp_producer)
 
                 case "writer":
                     if Person.objects.filter(name=person.get("name")).exists():
-                        some_person_professions = Person.objects.get(name=person.get("name")).profession.values("en_name")
+                        some_person_professions = (
+                            Person.objects.get(name=person.get("name")).profession.values("en_name"))
                         some_person = Person.objects.get(name=person.get("name"))
                         if {"en_name": "writer"} not in some_person_professions:
                             if Profession.objects.filter(name="сценарист").exists():
@@ -147,7 +154,8 @@ class MovieViewSet(ModelViewSet):
 
                 case "composer":
                     if Person.objects.filter(name=person.get("name")).exists():
-                        some_person_professions = Person.objects.get(name=person.get("name")).profession.values("en_name")
+                        some_person_professions = (
+                            Person.objects.get(name=person.get("name")).profession.values("en_name"))
                         some_person = Person.objects.get(name=person.get("name"))
                         if {"en_name": "composer"} not in some_person_professions:
                             if Profession.objects.filter(name="композитор").exists():
@@ -165,12 +173,14 @@ class MovieViewSet(ModelViewSet):
                         if Profession.objects.filter(name="композитор").exists():
                             temp_composer.profession.add(Profession.objects.filter(name="композитор")[0])
                         else:
-                            temp_composer.profession.add(Profession.objects.create(name="композитор", en_name="composer"))
+                            temp_composer.profession.add(
+                                Profession.objects.create(name="композитор", en_name="composer"))
                         movie_temp.composers.add(temp_composer)
 
                 case "designer":
                     if Person.objects.filter(name=person.get("name")).exists():
-                        some_person_professions = Person.objects.get(name=person.get("name")).profession.values("en_name")
+                        some_person_professions = (
+                            Person.objects.get(name=person.get("name")).profession.values("en_name"))
                         some_person = Person.objects.get(name=person.get("name"))
                         if {"en_name": "designer"} not in some_person_professions:
                             if Profession.objects.filter(name="художник").exists():
@@ -193,7 +203,8 @@ class MovieViewSet(ModelViewSet):
 
                 case "editor":
                     if Person.objects.filter(name=person.get("name")).exists():
-                        some_person_professions = Person.objects.get(name=person.get("name")).profession.values("en_name")
+                        some_person_professions = (
+                            Person.objects.get(name=person.get("name")).profession.values("en_name"))
                         some_person = Person.objects.get(name=person.get("name"))
                         if {"en_name": "editor"} not in some_person_professions:
                             if Profession.objects.filter(name="монтажёр").exists():
@@ -216,7 +227,8 @@ class MovieViewSet(ModelViewSet):
 
                 case "operator":
                     if Person.objects.filter(name=person.get("name")).exists():
-                        some_person_professions = Person.objects.get(name=person.get("name")).profession.values("en_name")
+                        some_person_professions = (
+                            Person.objects.get(name=person.get("name")).profession.values("en_name"))
                         some_person = Person.objects.get(name=person.get("name"))
                         if {"en_name": "operator"} not in some_person_professions:
                             if Profession.objects.filter(name="оператор").exists():
@@ -271,4 +283,3 @@ class PersonInfoViewSet(ModelViewSet):
     filterset_fields = ['name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
-
