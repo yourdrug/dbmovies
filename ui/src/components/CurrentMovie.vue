@@ -48,18 +48,18 @@
             <span>
               <div
                 class="director"
-                v-for="director in movie.director"
+                v-for="director in movie.directors"
                 :key="director.id"
               >
                 <div
-                  v-if="director != movie.director[movie.director.length - 1]"
+                  v-if="director != movie.directors[movie.directors.length - 1]"
                 >
-                  <a @click="$router.push('/persons/director/' + director.id)">
+                  <a @click="$router.push('/persons/' + director.id)">
                     {{ director.name }},&nbsp;</a
                   >
                 </div>
                 <div v-else>
-                  <a @click="$router.push('/persons/director/' + director.id)">
+                  <a @click="$router.push('/persons/' + director.id)">
                     {{ director.name }}</a
                   >
                 </div>
@@ -71,18 +71,18 @@
             <span>
               <div
                 class="director"
-                v-for="producer in movie.producer"
+                v-for="producer in movie.producers"
                 :key="producer.id"
               >
                 <div
-                  v-if="producer != movie.producer[movie.producer.length - 1]"
+                  v-if="producer != movie.producers[movie.producers.length - 1]"
                 >
-                  <a @click="$router.push('/persons/producer/' + producer.id)">
+                  <a @click="$router.push('/persons/' + producer.id)">
                     {{ producer.name }},&nbsp;</a
                   >
                 </div>
                 <div v-else>
-                  <a @click="$router.push('/persons/producer/' + producer.id)">
+                  <a @click="$router.push('/persons/' + producer.id)">
                     {{ producer.name }}</a
                   >
                 </div>
@@ -94,30 +94,112 @@
             <span>
               <div
                 class="director"
-                v-for="screenwriter in movie.screenwriter"
+                v-for="screenwriter in movie.screenwriters"
                 :key="screenwriter.id"
               >
                 <div
                   v-if="
                     screenwriter !=
-                    movie.screenwriter[movie.screenwriter.length - 1]
+                    movie.screenwriters[movie.screenwriters.length - 1]
                   "
                 >
-                  <a
-                    @click="
-                      $router.push('/persons/screenwriter/' + screenwriter.id)
-                    "
-                  >
+                  <a @click="$router.push('/persons/' + screenwriter.id)">
                     {{ screenwriter.name }},&nbsp;</a
                   >
                 </div>
                 <div v-else>
-                  <a
-                    @click="
-                      $router.push('/persons/screenwriter/' + screenwriter.id)
-                    "
-                  >
+                  <a @click="$router.push('/persons/' + screenwriter.id)">
                     {{ screenwriter.name }}</a
+                  >
+                </div>
+              </div>
+            </span>
+          </li>
+          <li>
+            <span class="text-muted">Композитор</span>
+            <span>
+              <div
+                class="director"
+                v-for="composer in movie.composers"
+                :key="composer.id"
+              >
+                <div
+                  v-if="composer != movie.composers[movie.composers.length - 1]"
+                >
+                  <a @click="$router.push('/persons/' + composer.id)">
+                    {{ composer.name }},&nbsp;</a
+                  >
+                </div>
+                <div v-else>
+                  <a @click="$router.push('/persons/' + composer.id)">
+                    {{ composer.name }}</a
+                  >
+                </div>
+              </div>
+            </span>
+          </li>
+          <li>
+            <span class="text-muted">Оператор</span>
+            <span>
+              <div
+                class="director"
+                v-for="operator in movie.operators"
+                :key="operator.id"
+              >
+                <div
+                  v-if="operator != movie.operators[movie.operators.length - 1]"
+                >
+                  <a @click="$router.push('/persons/' + operator.id)">
+                    {{ operator.name }},&nbsp;</a
+                  >
+                </div>
+                <div v-else>
+                  <a @click="$router.push('/persons/' + operator.id)">
+                    {{ operator.name }}</a
+                  >
+                </div>
+              </div>
+            </span>
+          </li>
+          <li>
+            <span class="text-muted">Художник</span>
+            <span>
+              <div
+                class="director"
+                v-for="designer in movie.designers"
+                :key="designer.id"
+              >
+                <div
+                  v-if="designer != movie.designers[movie.designers.length - 1]"
+                >
+                  <a @click="$router.push('/persons/' + designer.id)">
+                    {{ designer.name }},&nbsp;</a
+                  >
+                </div>
+                <div v-else>
+                  <a @click="$router.push('/persons/' + designer.id)">
+                    {{ designer.name }}</a
+                  >
+                </div>
+              </div>
+            </span>
+          </li>
+          <li>
+            <span class="text-muted">Монтажёр</span>
+            <span>
+              <div
+                class="director"
+                v-for="editor in movie.editors"
+                :key="editor.id"
+              >
+                <div v-if="editor != movie.editors[movie.editors.length - 1]">
+                  <a @click="$router.push('/persons/' + editor.id)">
+                    {{ editor.name }},&nbsp;</a
+                  >
+                </div>
+                <div v-else>
+                  <a @click="$router.push('/persons/' + editor.id)">
+                    {{ editor.name }}</a
                   >
                 </div>
               </div>
@@ -189,50 +271,78 @@ export default {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  background-color: lightgray;
+}
+
+.wrapper-col-1 {
+  background-color: white;
+}
+
+.wrapper-col-2 {
+  background-color: white;
+}
+
+.wrapper-col-3 {
+  background-color: white;
 }
 
 img {
   width: 100%;
   border-radius: 10px;
+  background-color: white;
+}
+
+span {
+  background-color: white;
 }
 
 a {
   color: black;
   text-decoration: none;
   cursor: pointer;
+  background-color: white;
 }
 
 a:hover {
   color: #ff5c00;
   cursor: pointer;
+  background-color: white;
 }
 
 h2 {
   margin-bottom: 20px;
   font-weight: 900;
   font-size: 22px;
+  background-color: white;
 }
 
 .container {
-  width: 1100px;
+  width: 1230px;
   max-width: 100%;
   margin: 0 auto;
+  background-color: white;
 }
 
 .genre {
   display: inline-block;
+  background-color: white;
 }
 
 .director {
   display: inline-block;
+  text-align: justify;
+  background-color: white;
 }
 
 .wrapper {
   display: grid;
-  grid-template-columns: 340px 530px 150px;
+  grid-template-columns: 350px 600px 160px;
   grid-gap: 40px;
   padding-top: 80px;
+  padding-left: 10px;
+  padding-right: 10px;
   padding-bottom: 80px;
+  background-color: white;
 }
 
 .title {
@@ -241,6 +351,7 @@ h2 {
   margin-bottom: 10px;
   padding-top: 20px;
   line-height: 42px;
+  background-color: white;
 }
 
 .subtitle {
@@ -249,15 +360,18 @@ h2 {
   line-height: 19px;
   font-size: 16px;
   font-weight: 400;
+  background-color: white;
 }
 
 .description {
   margin-bottom: 30px;
   text-align: justify;
+  background-color: white;
 }
 
 .mb-40 {
   margin-bottom: 40px;
+  background-color: white;
 }
 
 .btn {
@@ -274,6 +388,7 @@ h2 {
 
 .params {
   list-style-type: none;
+  background-color: white;
 }
 
 .params li {
@@ -283,6 +398,8 @@ h2 {
   grid-gap: 30px;
   width: 100%;
   font-size: 14px;
+  text-align: justify;
+  background-color: white;
 }
 
 .tag {
@@ -293,10 +410,12 @@ h2 {
   border: 1px solid #ffffff;
   display: inline-block;
   margin-top: -3px;
+  background-color: white;
 }
 
 .text-muted {
   opacity: 0.4;
+  background-color: white;
 }
 
 .rathing-main {
@@ -305,6 +424,7 @@ h2 {
   font-weight: 900;
   font-size: 36px;
   line-height: 42px;
+  background-color: white;
 }
 
 .rathing-counts {
@@ -312,10 +432,12 @@ h2 {
   margin-bottom: 10px;
   line-height: 19px;
   opacity: 0.4;
+  background-color: white;
 }
 
 .rathing-details {
   display: inline-block;
+  background-color: white;
 }
 
 @media (max-width: 1024px) {

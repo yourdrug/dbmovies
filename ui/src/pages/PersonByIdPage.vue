@@ -20,8 +20,7 @@ export default {
   },
   methods: {
     async fetchPerson() {
-      let url =
-        "http://127.0.0.1:8000/persons/director/" + this.$route.params.id;
+      let url = "http://127.0.0.1:8000/persons/" + this.$route.params.id;
       try {
         const response = await axios.get(url);
         this.person = response.data;

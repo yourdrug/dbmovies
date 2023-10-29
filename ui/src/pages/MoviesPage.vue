@@ -3,6 +3,7 @@
     <input v-model="idInput" placeholder="id фильма в кинопоиске" />
     <button @click="getMoviesFromKinopoisk">Получить фильм</button>
     <button @click="postMovies">Добавить Фильм в бд</button>
+    <button @click="login">ВОЙТИ</button>
     <list-movies v-bind:short_movies="filterMovie" />
     <div class="filters">
       <my-select v-model="selectedFilter" :options="genreOptions" />
@@ -121,7 +122,7 @@ export default {
       };
       let config = {
         headers: {
-          Authorization: "Token 3379930827e3a20de523a86052f8e0d0a9d7146b",
+          Authorization: "Token " + localStorage.getItem("token"),
         },
       };
       try {
@@ -164,8 +165,5 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-}
-
-.filters {
 }
 </style>

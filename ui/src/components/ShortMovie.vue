@@ -12,7 +12,7 @@
       <div class="movie-more-desc">
         {{ movie.country.split(",")[0] }} | {{ movie.genres[0].name }}
         &nbsp;Режиссёр:
-        {{ movie.director[0].name }} <br />
+        {{ movie.directors[0].name }} <br />
         <br />
         В ролях: {{ movie.actors[0].name }}, {{ movie.actors[1].name }}
       </div>
