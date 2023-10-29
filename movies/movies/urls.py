@@ -27,7 +27,7 @@ router = SimpleRouter()
 router.register(r'movie', MovieViewSet)
 router.register(r'movie_short', ShortInfoMovieViewSet)
 router.register(r'movie_relation', UserMovieRelationViews)
-router.register(r'persons/actor', PersonInfoViewSet)
+router.register(r'persons', PersonInfoViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
