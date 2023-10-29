@@ -15,10 +15,10 @@ class Profession(models.Model):
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, null=True)
     en_name = models.CharField(max_length=100, unique=True, null=True)
     photo = models.URLField()
-    birth_day = models.DateField(default=date.today)
+    birth_day = models.DateField(default=date.today, null=True)
     death_day = models.DateField(default=None, null=True, blank=True)
     profession = models.ManyToManyField(Profession)
 

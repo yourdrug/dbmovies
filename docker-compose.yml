@@ -18,7 +18,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DB_NAME=movies_db
+      - DB_NAME=movie_db
       - DB_USER=movie_user
       - DB_PASS=password
 
@@ -32,16 +32,16 @@ services:
   database:
     image: postgres:15.4-alpine
     environment:
-      - POSTGRES_DB=movies_db
+      - POSTGRES_DB=movie_db
       - POSTGRES_USER=movie_user
       - POSTGRES_PASSWORD=password
     ports:
       - "5432:5432"
     volumes:
-      - database_data:/var/lib/postgresql/data
-    container_name: pgdb
+      - movies_data:/var/lib/postgresql/data
+    container_name: postgres
 
 volumes:
-  database_data:
+  movies_data:
 
 
