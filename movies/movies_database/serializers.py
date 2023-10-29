@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer
 from rest_framework.serializers import ModelSerializer
 
-from movies_database.models import Movie, UserMovieRelation, Genre, Person
+from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
 
 
 class MovieWatcherSerializer(ModelSerializer):
@@ -16,6 +16,12 @@ class MoviePersonSerializer(ModelSerializer):
     class Meta:
         model = Person
         fields = '__all__'
+
+
+class PersonProfessionSerializer(ModelSerializer):
+    class Meta:
+        model = Profession
+        fields = ('name', 'en_name')
 
 
 class ShortMoviePersonSerializer(ModelSerializer):
@@ -68,6 +74,16 @@ class ShortInfoMovieSerializer(ModelSerializer):
                   'directors', 'genres', 'annotated_count_rate')
 
 
+class ShortMovieForPersonSerializer(ModelSerializer):
+    annotated_count_rate = serializers.IntegerField(read_only=True)
+    genres = MovieGenreSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Movie
+        fields = ('id', 'name', 'year', 'genres',
+                  'poster', 'rating', 'annotated_count_rate')
+
+
 class UserMovieRelationSerializer(ModelSerializer):
     class Meta:
         model = UserMovieRelation
@@ -75,14 +91,15 @@ class UserMovieRelationSerializer(ModelSerializer):
 
 
 class PersonsMoviesSerializer(ModelSerializer):
-    film_actor = ShortInfoMovieSerializer(many=True, read_only=True)
-    film_director = ShortInfoMovieSerializer(many=True, read_only=True)
-    film_producer = ShortInfoMovieSerializer(many=True, read_only=True)
-    film_screenwriter = ShortInfoMovieSerializer(many=True, read_only=True)
-    film_composer = ShortInfoMovieSerializer(many=True, read_only=True)
-    film_designer = ShortInfoMovieSerializer(many=True, read_only=True)
-    film_editor = ShortInfoMovieSerializer(many=True, read_only=True)
-    film_operator = ShortInfoMovieSerializer(many=True, read_only=True)
+    film_actor = ShortMovieForPersonSerializer(many=True, read_only=True)
+    film_director = ShortMovieForPersonSerializer(many=True, read_only=True)
+    film_producer = ShortMovieForPersonSerializer(many=True, read_only=True)
+    film_screenwriter = ShortMovieForPersonSerializer(many=True, read_only=True)
+    film_composer = ShortMovieForPersonSerializer(many=True, read_only=True)
+    film_designer = ShortMovieForPersonSerializer(many=True, read_only=True)
+    film_editor = ShortMovieForPersonSerializer(many=True, read_only=True)
+    film_operator = ShortMovieForPersonSerializer(many=True, read_only=True)
+    profession = PersonProfessionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Person
