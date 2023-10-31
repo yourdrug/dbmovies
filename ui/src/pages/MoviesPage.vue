@@ -1,13 +1,15 @@
 <template>
+  <input v-model="idInput" placeholder="id фильма в кинопоиске" />
+  <button @click="getMoviesFromKinopoisk">Получить фильм</button>
+  <button @click="postMovies">Добавить Фильм в бд</button>
+  <button @click="login">ВОЙТИ</button>
   <div class="movies">
-    <input v-model="idInput" placeholder="id фильма в кинопоиске" />
-    <button @click="getMoviesFromKinopoisk">Получить фильм</button>
-    <button @click="postMovies">Добавить Фильм в бд</button>
-    <button @click="login">ВОЙТИ</button>
-    <list-movies v-bind:short_movies="filterMovie" />
     <div class="filters">
       <my-select v-model="selectedFilter" :options="genreOptions" />
+      <my-select v-model="selectedFilter" :options="genreOptions" />
+      <my-select v-model="selectedFilter" :options="genreOptions" />
     </div>
+    <list-movies v-bind:short_movies="filterMovie" />
   </div>
 </template>
 
@@ -162,8 +164,16 @@ export default {
   font-family: "Gabarito", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+.movies {
+  width: 1300px;
+  margin: 0 auto;
+  background-color: #fff;
+  display: flex;
+}
+
+.filters {
+  background-color: white;
+  margin: 15px;
 }
 </style>

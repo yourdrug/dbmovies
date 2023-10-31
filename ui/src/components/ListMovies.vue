@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="movielist">
     <short-movie
       v-for="movie in short_movies"
       :key="movie.id"
@@ -25,4 +25,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.movielist {
+  background-color: white;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+</style>

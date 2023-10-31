@@ -1,20 +1,30 @@
 <template>
-  <div class="app">
+  <my-navbar />
+  <div class="myapp">
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-export default {};
+import MyNavbar from "@/components/MyNavbar.vue";
+export default {
+  components: {
+    MyNavbar,
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: "Gabarito", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.myapp {
+  width: 1300px;
+  height: 873px;
+  margin: 0 auto;
+  background-color: #fff;
 }
 </style>
