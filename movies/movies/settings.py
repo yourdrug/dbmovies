@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import movies
@@ -23,14 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+config = dotenv_values(".env")
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mun)*43dg(*c)q0sx%ra=)d4_)ryy3$b87(wk^*p_9zfq@sz6z'
+SECRET_KEY = config["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(config["DEBUG"])
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
-CORS_ALLOW_ALL_ORIGINS = True
+ALLOWED_HOSTS = config["ALLOWED_HOSTS"].split()
+CORS_ALLOW_ALL_ORIGINS = bool(config["CORS_ALLOW_ALL_ORIGINS"])
 
 # Application definition
 
@@ -96,11 +97,11 @@ WSGI_APPLICATION = 'movies.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'movie_db',
-        'USER': 'movie_user',
-        'PASSWORD': 'password',
-        'HOST': 'postgres',
-        'PORT': '5432',
+        'NAME': config["POSTGRES_DB"],
+        'USER': config["POSTGRES_USER"],
+        'PASSWORD': config["POSTGRES_PASSWORD"],
+        'HOST': config["HOST"],
+        'PORT': config["PORT"],
     }
 }
 
@@ -173,7 +174,5 @@ REST_FRAMEWORK = {
 
 SOCIAL_AUTH_POSTGRES_JSON_FIELD = True
 
-load_dotenv()
-
-SOCIAL_AUTH_GITHUB_KEY = os.getenv('SOCIAL_AUTH_GITHUB_KEY')
-SOCIAL_AUTH_GITHUB_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_SECRET')
+SOCIAL_AUTH_GITHUB_KEY = config['SOCIAL_AUTH_GITHUB_KEY']
+SOCIAL_AUTH_GITHUB_SECRET = config['SOCIAL_AUTH_GITHUB_SECRET']

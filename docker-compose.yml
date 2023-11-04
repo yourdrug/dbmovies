@@ -17,11 +17,8 @@ services:
       dockerfile: ./movies/Dockerfile
     ports:
       - "8000:8000"
-    environment:
-      - DB_NAME=movie_db
-      - DB_USER=movie_user
-      - DB_PASS=password
-
+    env_file:
+      - ./movies/.env
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
       
@@ -31,10 +28,8 @@ services:
 
   database:
     image: postgres:15.4-alpine
-    environment:
-      - POSTGRES_DB=movie_db
-      - POSTGRES_USER=movie_user
-      - POSTGRES_PASSWORD=password
+    env_file:
+      - ./movies/.env
     ports:
       - "5432:5432"
     volumes:
