@@ -21,12 +21,14 @@ from django.template.defaulttags import url
 from django.urls import path, include, re_path
 from rest_framework.routers import SimpleRouter
 
-from movies_database.views import MovieViewSet, UserMovieRelationViews, ShortInfoMovieViewSet, PersonInfoViewSet
+from movies_database.views import MovieViewSet, UserMovieRelationViews, ShortInfoMovieViewSet, PersonInfoViewSet, \
+    ProfessionViewSet
 
 router = SimpleRouter()
 router.register(r'movie', MovieViewSet)
 router.register(r'movie_short', ShortInfoMovieViewSet)
 router.register(r'movie_relation', UserMovieRelationViews)
+router.register(r'profs', ProfessionViewSet)
 router.register(r'persons', PersonInfoViewSet)
 
 urlpatterns = [

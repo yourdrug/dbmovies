@@ -6,21 +6,14 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 
 
-class Profession(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    en_name = models.CharField(max_length=50, unique=True)
-
-    def __str__(self):
-        return f'{self.name}'
-
-
 class Person(models.Model):
     name = models.CharField(max_length=100, unique=True, null=True)
     en_name = models.CharField(max_length=100, unique=True, null=True)
     photo = models.URLField()
     birth_day = models.DateField(default=date.today, null=True)
     death_day = models.DateField(default=None, null=True, blank=True)
-    profession = models.ManyToManyField(Profession)
+
+    # profession = models.ManyToManyField(Profession)
 
     def __str__(self):
         return f'{self.name}'
@@ -45,14 +38,7 @@ class Movie(models.Model):
     poster = models.URLField(default="")
     world_premier = models.DateField(default=date.today)
 
-    actors = models.ManyToManyField(Person, related_name='film_actor')
-    directors = models.ManyToManyField(Person, related_name='film_director')
-    producers = models.ManyToManyField(Person, related_name='film_producer')
-    screenwriters = models.ManyToManyField(Person, related_name='film_screenwriter')
-    composers = models.ManyToManyField(Person, related_name='film_composer')
-    designers = models.ManyToManyField(Person, related_name='film_designer')
-    editors = models.ManyToManyField(Person, related_name='film_editor')
-    operators = models.ManyToManyField(Person, related_name='film_operator')
+    crew = models.ManyToManyField(Person, through='Profession', related_name='person_movies')
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='my_movies')
     watchers = models.ManyToManyField(User, through='UserMovieRelation', related_name='my_watched_movies')
@@ -60,6 +46,16 @@ class Movie(models.Model):
 
     def __str__(self):
         return f'Id {self.id}: {self.name} {self.year}'
+
+
+class Profession(models.Model):
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, default=None, null=True)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, default=None, null=True)
+    name = models.CharField(max_length=50)
+    en_name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class UserMovieRelation(models.Model):
