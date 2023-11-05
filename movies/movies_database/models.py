@@ -21,7 +21,7 @@ class Person(models.Model):
 
 class Genre(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    en_name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=50, unique=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -52,7 +52,7 @@ class Profession(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE, default=None, null=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, default=None, null=True)
     name = models.CharField(max_length=50)
-    en_name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50)
 
     def __str__(self):
         return f'{self.name}'
