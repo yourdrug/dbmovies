@@ -1,4 +1,6 @@
 from django.db.models import Count, Case, When
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
@@ -26,6 +28,10 @@ class MovieViewSet(ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     filterset_fields = ['year', 'name', 'genres__name']
     search_fields = ['name', 'country', 'genres__name']
+
+    @method_decorator(cache_page(60 * 60))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.validated_data['owner'] = self.request.user
@@ -88,6 +94,10 @@ class ShortInfoMovieViewSet(ModelViewSet):
     filterset_fields = ['year', 'name', 'genres__en_name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
+
+    @method_decorator(cache_page(60 * 60))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 
 class PersonInfoViewSet(ModelViewSet):

@@ -171,6 +171,18 @@ REST_FRAMEWORK = {
     ),
 }
 
+REDIS_HOST = config['REDIS_HOST']
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://{}:6379/1".format(REDIS_HOST),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 
 SOCIAL_AUTH_POSTGRES_JSON_FIELD = True
 
