@@ -18,21 +18,18 @@ class MovieGenreSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class PersonsMoviesSerializer(ModelSerializer):
+    class Meta:
+        model = Person
+        fields = '__all__'
+
+
 class ProfessionSerializer(ModelSerializer):
-    # person = PersonsMoviesSerializer(read_only=True)
+    person = PersonsMoviesSerializer(read_only=True)
 
     class Meta:
         model = Profession
-        fields = ('name', 'slug')
-
-
-class PersonsMoviesSerializer(ModelSerializer):
-    # profession = serializers.CharField(read_only=True, source='profession_set.all')
-
-    class Meta:
-        model = Person
-        # fields = ('id', 'name', 'photo', 'birth_day', 'death_day', 'movies')
-        fields = '__all__'
+        fields = ('name', 'slug', 'person')
 
 
 class MovieSerializer(ModelSerializer):
@@ -41,7 +38,7 @@ class MovieSerializer(ModelSerializer):
     owner_name = serializers.CharField(read_only=True, source='owner.username', default="")
     watchers = MovieWatcherSerializer(many=True, read_only=True)
     genres = MovieGenreSerializer(many=True, read_only=True)
-    crew = serializers.SerializerMethodField(read_only=True, source='get_crew')
+    crew = ProfessionSerializer(many=True, read_only=True, source='profession_set')
 
     class Meta:
         model = Movie

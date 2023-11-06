@@ -1,4 +1,4 @@
-from django.db.models import Count, Case, When
+from django.db.models import Count, Case, When, Prefetch
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
@@ -21,7 +21,7 @@ class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all().annotate(
         annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
         annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
-    ).select_related('owner').prefetch_related('watchers', 'crew', 'genres').order_by('id')
+    ).select_related('owner').prefetch_related('watchers', 'profession_set__person', 'genres').order_by('id')
     serializer_class = MovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffOrReadOnly]
@@ -29,7 +29,7 @@ class MovieViewSet(ModelViewSet):
     filterset_fields = ['year', 'name', 'genres__name']
     search_fields = ['name', 'country', 'genres__name']
 
-    @method_decorator(cache_page(60 * 60))
+    @method_decorator(cache_page(60))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -39,6 +39,17 @@ class MovieViewSet(ModelViewSet):
 
     @action(detail=False, methods=['POST'])
     def addAllGenres(self, request):
+        for genre in request.data.get("movies"):
+            if Genre.objects.filter(name=genre.get("name")).exists():
+                temp_genre = Genre.objects.get(name=genre.get("name"))
+                temp_genre.slug = genre.get("slug")
+                temp_genre.save()
+            else:
+                Genre.objects.create(name=genre.get("name"), slug=genre.get("slug"))
+        return Response(status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['POST'])
+    def addMovies(self, request):
         # for i in range(30):
         movie_temp = Movie.objects.create(
             name=request.data.get("movies").get("name"),
@@ -54,7 +65,7 @@ class MovieViewSet(ModelViewSet):
             if Genre.objects.filter(name=genre.get("name")).exists():
                 movie_temp.genres.add(Genre.objects.get(name=genre.get("name")))
             else:
-                temp_genre = Genre.objects.create(name=genre.get("name"), en_name=genre.get("name"))
+                temp_genre = Genre.objects.create(name=genre.get("name"), slug=genre.get("name"))
                 movie_temp.genres.add(temp_genre)
 
         for person in request.data.get("movies").get("persons"):
@@ -67,7 +78,7 @@ class MovieViewSet(ModelViewSet):
                     en_name=person.get("enName"),
                 )
             Profession.objects.create(person=temp_person, movie=movie_temp,
-                                      name=person.get("profession"), en_name=person.get("enProfession"))
+                                      name=person.get("profession"), slug=person.get("enProfession"))
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -91,11 +102,11 @@ class ShortInfoMovieViewSet(ModelViewSet):
     ).prefetch_related('crew', 'genres').order_by('-world_premier')
     serializer_class = ShortInfoMovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['year', 'name', 'genres__en_name']
+    filterset_fields = ['year', 'name', 'genres__name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
 
-    @method_decorator(cache_page(60 * 60))
+    @method_decorator(cache_page(60))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
