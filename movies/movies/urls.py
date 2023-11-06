@@ -33,7 +33,6 @@ router.register(r'persons', PersonInfoViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', include('social_django.urls', namespace='social'), current_movie_info),
     path("__debug__/", include("debug_toolbar.urls")),
     path('auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
