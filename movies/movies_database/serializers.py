@@ -23,11 +23,11 @@ class ProfessionSerializer(ModelSerializer):
 
     class Meta:
         model = Profession
-        fields = ('name', 'en_name')
+        fields = ('name', 'slug')
 
 
 class PersonsMoviesSerializer(ModelSerializer):
-    professions = ProfessionSerializer(many=True, source='profession_set.all', read_only=True)
+    # profession = serializers.CharField(read_only=True, source='profession_set.all')
 
     class Meta:
         model = Person
@@ -41,65 +41,20 @@ class MovieSerializer(ModelSerializer):
     owner_name = serializers.CharField(read_only=True, source='owner.username', default="")
     watchers = MovieWatcherSerializer(many=True, read_only=True)
     genres = MovieGenreSerializer(many=True, read_only=True)
-    # crew = PersonsMoviesSerializer(many=True, read_only=True)
-    actors = serializers.SerializerMethodField('get_actors')
-    directors = serializers.SerializerMethodField('get_directors')
-    producers = serializers.SerializerMethodField('get_producers')
-    writers = serializers.SerializerMethodField('get_writers')
-    composers = serializers.SerializerMethodField('get_composers')
-    editors = serializers.SerializerMethodField('get_editors')
-    designers = serializers.SerializerMethodField('get_designers')
-    operators = serializers.SerializerMethodField('get_operators')
+    crew = serializers.SerializerMethodField(read_only=True, source='get_crew')
 
     class Meta:
         model = Movie
         fields = ('id', 'name', 'description', 'tagline', 'watch_time',
                   'year', 'country', 'poster', 'world_premier',
-                  'annotated_likes', 'rating', 'owner_name',
-                  'watchers', 'actors', 'directors', 'producers', 'writers', 'composers', 'editors',
-                  'designers', 'operators', 'genres', 'annotated_count_rate')
+                  'annotated_likes', 'rating', 'owner_name', 'crew',
+                  'watchers', 'genres', 'annotated_count_rate')
 
-    def get_actors(self, obj):
-        # Извлеките информацию об актерах в фильме и верните ее в виде списка объектов
-        actors = Profession.objects.filter(movie=obj, en_name='actor')
-        actor_data = [{'id': actor.person.id, 'name': actor.person.name} for actor in actors]
-        return actor_data
-
-    def get_directors(self, obj):
-        # Извлеките информацию о режиссерах в фильме и верните ее в виде списка объектов
-        directors = Profession.objects.filter(movie=obj, en_name='director')
-        director_data = [{'id': director.person.id, 'name': director.person.name} for director in directors]
-        return director_data
-
-    def get_producers(self, obj):
-        producers = Profession.objects.filter(movie=obj, en_name='producer')
-        producer_data = [{'id': producer.person.id, 'name': producer.person.name} for producer in producers]
-        return producer_data
-
-    def get_composers(self, obj):
-        composers = Profession.objects.filter(movie=obj, en_name='composer')
-        composer_data = [{'id': composer.person.id, 'name': composer.person.name} for composer in composers]
-        return composer_data
-
-    def get_writers(self, obj):
-        writers = Profession.objects.filter(movie=obj, en_name='writer')
-        writer_data = [{'id': writer.person.id, 'name': writer.person.name} for writer in writers]
-        return writer_data
-
-    def get_editors(self, obj):
-        editors = Profession.objects.filter(movie=obj, en_name='editor')
-        editor_data = [{'id': editor.person.id, 'name': editor.person.name} for editor in editors]
-        return editor_data
-
-    def get_designers(self, obj):
-        designers = Profession.objects.filter(movie=obj, en_name='designer')
-        designer_data = [{'id': designer.person.id, 'name': designer.person.name} for designer in designers]
-        return designer_data
-
-    def get_operators(self, obj):
-        operators = Profession.objects.filter(movie=obj, en_name='operator')
-        operator_data = [{'id': operator.person.id, 'name': operator.person.name} for operator in operators]
-        return operator_data
+    def get_crew(self, obj):
+        persons = Profession.objects.filter(movie=obj)
+        persons_data = [{'id': person.person.id, 'name': person.person.name, 'profession': person.slug} for person in
+                        persons]
+        return persons_data
 
 
 class ShortInfoMovieSerializer(ModelSerializer):
@@ -115,14 +70,12 @@ class ShortInfoMovieSerializer(ModelSerializer):
                   'genres', 'annotated_count_rate')
 
     def get_actors(self, obj):
-        # Извлеките информацию об актерах в фильме и верните ее в виде списка объектов
-        actors = Profession.objects.filter(movie=obj, en_name='actor')
+        actors = Profession.objects.filter(movie=obj, slug='actor')
         actor_data = [{'id': actor.person.id, 'name': actor.person.name} for actor in actors]
         return actor_data
 
     def get_directors(self, obj):
-        # Извлеките информацию о режиссерах в фильме и верните ее в виде списка объектов
-        directors = Profession.objects.filter(movie=obj, en_name='director')
+        directors = Profession.objects.filter(movie=obj, slug='director')
         director_data = [{'id': director.person.id, 'name': director.person.name} for director in directors]
         return director_data
 
