@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.renderers import JSONRenderer
 from rest_framework.serializers import ModelSerializer
 
 from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
@@ -29,7 +28,7 @@ class ProfessionSerializer(ModelSerializer):
 
     class Meta:
         model = Profession
-        fields = ('name', 'slug', 'person')
+        fields = ('slug', 'person')
 
 
 class MovieSerializer(ModelSerializer):
@@ -47,34 +46,17 @@ class MovieSerializer(ModelSerializer):
                   'annotated_likes', 'rating', 'owner_name', 'crew',
                   'watchers', 'genres', 'annotated_count_rate')
 
-    def get_crew(self, obj):
-        persons = Profession.objects.filter(movie=obj)
-        persons_data = [{'id': person.person.id, 'name': person.person.name, 'profession': person.slug} for person in
-                        persons]
-        return persons_data
-
 
 class ShortInfoMovieSerializer(ModelSerializer):
     annotated_count_rate = serializers.IntegerField(read_only=True)
     genres = MovieGenreSerializer(many=True, read_only=True)
-    actors = serializers.SerializerMethodField('get_actors')
-    directors = serializers.SerializerMethodField('get_directors')
+    crew = ProfessionSerializer(many=True, read_only=True, source='profession_set')
 
     class Meta:
         model = Movie
         fields = ('id', 'name', 'watch_time', 'world_premier',
-                  'year', 'country', 'poster', 'rating', 'actors', 'directors',
+                  'year', 'country', 'poster', 'rating', 'crew',
                   'genres', 'annotated_count_rate')
-
-    def get_actors(self, obj):
-        actors = Profession.objects.filter(movie=obj, slug='actor')
-        actor_data = [{'id': actor.person.id, 'name': actor.person.name} for actor in actors]
-        return actor_data
-
-    def get_directors(self, obj):
-        directors = Profession.objects.filter(movie=obj, slug='director')
-        director_data = [{'id': director.person.id, 'name': director.person.name} for director in directors]
-        return director_data
 
 
 class UserMovieRelationSerializer(ModelSerializer):

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework.authtoken',
     'djoser',
+    'cacheops',
 
     'movies_database',
 ]
@@ -173,16 +174,15 @@ REST_FRAMEWORK = {
 
 REDIS_HOST = config['REDIS_HOST']
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://{}:6379/1".format(REDIS_HOST),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
+CACHEOPS_REDIS = "redis://{}:6379/1".format(REDIS_HOST)
+
+CACHEOPS_DEFAULTS = {
+    'timeout': 60*15
 }
 
+CACHEOPS = {
+    'movies_database.movie': {'ops': 'all', 'timeout': 60*1},
+}
 
 SOCIAL_AUTH_POSTGRES_JSON_FIELD = True
 

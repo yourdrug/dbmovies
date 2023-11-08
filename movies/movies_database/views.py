@@ -1,8 +1,8 @@
-from django.db.models import Count, Case, When, Prefetch
+from django.db.models import Count, Case, When
 from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from cacheops import cached_view_as, cached_as
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -29,7 +29,7 @@ class MovieViewSet(ModelViewSet):
     filterset_fields = ['year', 'name', 'genres__name']
     search_fields = ['name', 'country', 'genres__name']
 
-    @method_decorator(cache_page(60))
+    @method_decorator(cached_view_as(Movie))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -99,14 +99,14 @@ class UserMovieRelationViews(UpdateModelMixin, GenericViewSet):
 class ShortInfoMovieViewSet(ModelViewSet):
     queryset = Movie.objects.all().annotate(
         annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
-    ).prefetch_related('crew', 'genres').order_by('-world_premier')
+    ).prefetch_related('profession_set__person', 'genres').order_by('-world_premier')
     serializer_class = ShortInfoMovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['year', 'name', 'genres__name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
 
-    @method_decorator(cache_page(60))
+    @method_decorator(cached_view_as(Movie))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
