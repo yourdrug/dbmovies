@@ -1,8 +1,8 @@
 from django.db.models import Count, Case, When
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status
-from cacheops import cached_view_as, cached_as
+from rest_framework import status, viewsets
+from cacheops import cached_view_as
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -10,6 +10,7 @@ from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from movies_database.movie_db import MovieDb
 
 from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
 from movies_database.permissions import IsOwnerOrStaffOrReadOnly
@@ -118,6 +119,15 @@ class PersonInfoViewSet(ModelViewSet):
     filterset_fields = ['name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
+
+
+class PersonViewSet(viewsets.ViewSet):
+    def list(self, request):
+        my_db = MovieDb()
+        cursor = my_db.get_cursor()
+        cursor.execute("select * from movies_database_person;")
+        queryset = cursor.fetchall()
+        return Response(queryset)
 
 
 class ProfessionViewSet(ModelViewSet):
