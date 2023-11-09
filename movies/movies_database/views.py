@@ -1,4 +1,5 @@
-from django.db.models import Count, Case, When
+from django.db.models import Count, Case, When, Sum
+from django.core.cache import cache
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
@@ -30,9 +31,30 @@ class MovieViewSet(ModelViewSet):
     filterset_fields = ['year', 'name', 'genres__name']
     search_fields = ['name', 'country', 'genres__name']
 
-    @method_decorator(cached_view_as(Movie))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    # @method_decorator(cached_view_as(Movie))
+    # def dispatch(self, request, *args, **kwargs):
+    #     return super().dispatch(request, *args, **kwargs)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        response = super().list(request, *args, **kwargs)
+
+        if not request.user.is_authenticated:
+            total_likes = None
+        else:
+            likes_cache_name = 'likes_cache'
+            likes_cache = cache.get(likes_cache_name)
+
+            if likes_cache:
+                total_likes = likes_cache
+            else:
+                total_likes = queryset.aggregate(total=Sum(Case(
+                    When(usermovierelation__like=True, usermovierelation__user=request.user, then=1)))).get('total')
+                cache.set(likes_cache_name, total_likes, 60)
+        response_data = {'total_likes': total_likes, 'result': response.data}
+        response.data = response_data
+
+        return response
 
     def perform_create(self, serializer):
         serializer.validated_data['owner'] = self.request.user
