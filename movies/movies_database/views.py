@@ -15,7 +15,7 @@ from movies_database.movie_db import MovieDb
 from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
 from movies_database.permissions import IsOwnerOrStaffOrReadOnly
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer, ShortInfoMovieSerializer, \
-    PersonsMoviesSerializer, ProfessionSerializer
+    PersonsMoviesSerializer, ProfessionSerializer, MovieGenreSerializer
 
 
 class MovieViewSet(ModelViewSet):
@@ -124,15 +124,32 @@ class PersonInfoViewSet(ModelViewSet):
 class PersonViewSet(viewsets.ViewSet):
     def list(self, request):
         my_db = MovieDb()
-        cursor = my_db.get_cursor()
-        cursor.execute("select * from movies_database_person;")
-        queryset = cursor.fetchall()
+        data = my_db.execute_query(
+            """SELECT "movies_database_movie"."id",
+            "movies_database_movie"."name",
+            "movies_database_movie"."description",
+            "movies_database_movie"."tagline",
+            "movies_database_movie"."year",
+            "movies_database_movie"."country",
+            "movies_database_movie"."watch_time",
+            "movies_database_movie"."poster",
+            "movies_database_movie"."world_premier",
+            "movies_database_movie"."rating",
+            "movies_database_usermovierelation"."like",
+            COUNT(CASE WHEN "movies_database_usermovierelation"."rate" IS NOT NULL THEN 1 ELSE NULL END)
+            FROM "movies_database_movie"
+            LEFT OUTER JOIN "movies_database_usermovierelation"
+            ON ("movies_database_movie"."id" = "movies_database_usermovierelation"."movie_id")
+            GROUP BY "movies_database_movie"."id", "movies_database_usermovierelation"."like"
+            ORDER BY "movies_database_movie"."id" """
+            )
+        queryset = data
         return Response(queryset)
 
 
 class ProfessionViewSet(ModelViewSet):
-    queryset = Profession.objects.all()
-    serializer_class = ProfessionSerializer
+    queryset = Genre.objects.all().prefetch_related('film_genres')
+    serializer_class = MovieGenreSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
