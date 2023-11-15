@@ -1,20 +1,26 @@
+import random
+
 from django.db.models import Count, Case, When
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status
-from cacheops import cached_view_as, cached_as
+from rest_framework import status, response
+from rest_framework.renderers import JSONRenderer
+from cacheops import cached_view_as, cached_as, cached_view, invalidate_obj, cache, cached, CacheMiss
+from django.views.decorators.cache import never_cache
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.http import HttpResponse
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
 from movies_database.permissions import IsOwnerOrStaffOrReadOnly
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer, ShortInfoMovieSerializer, \
-    PersonsMoviesSerializer, ProfessionSerializer
+    PersonsMoviesSerializer, ProfessionSerializer, PersonsSerializer, PersonProfessionSerializer
 
 
 class MovieViewSet(ModelViewSet):
@@ -50,7 +56,6 @@ class MovieViewSet(ModelViewSet):
 
     @action(detail=False, methods=['POST'])
     def addMovies(self, request):
-        # for i in range(30):
         movie_temp = Movie.objects.create(
             name=request.data.get("movies").get("name"),
             description=request.data.get("movies").get("description"),
@@ -82,6 +87,13 @@ class MovieViewSet(ModelViewSet):
 
         return Response(status=status.HTTP_201_CREATED)
 
+    @action(detail=False, methods=['GET'])
+    def randomMovie(self, request):
+        ids = Movie.objects.values('id')
+        random_id = random.choice(ids)
+        return redirect('http://127.0.0.1:8000/movie/' + str(random_id.get("id")))
+        # return redirect('https: // vk.com / feed')
+
 
 class UserMovieRelationViews(UpdateModelMixin, GenericViewSet):
     permission_classes = [IsAuthenticated]
@@ -112,8 +124,8 @@ class ShortInfoMovieViewSet(ModelViewSet):
 
 
 class PersonInfoViewSet(ModelViewSet):
-    queryset = Person.objects.all()
-    serializer_class = PersonsMoviesSerializer
+    queryset = Person.objects.all().prefetch_related('person_movies', 'person_movies__genres')
+    serializer_class = PersonsSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
@@ -122,7 +134,8 @@ class PersonInfoViewSet(ModelViewSet):
 
 class ProfessionViewSet(ModelViewSet):
     queryset = Profession.objects.all()
-    serializer_class = ProfessionSerializer
+    serializer_class = PersonProfessionSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['person_id']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
