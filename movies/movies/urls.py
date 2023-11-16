@@ -25,7 +25,7 @@ from movies_database.views import MovieViewSet, UserMovieRelationViews, ShortInf
     ProfessionViewSet
 
 router = SimpleRouter()
-router.register(r'movie', MovieViewSet)
+router.register(r'movie', MovieViewSet, basename='movie')
 router.register(r'movie_short', ShortInfoMovieViewSet)
 router.register(r'movie_relation', UserMovieRelationViews)
 router.register(r'profs', ProfessionViewSet)

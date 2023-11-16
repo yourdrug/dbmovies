@@ -1,26 +1,24 @@
 import random
 
+from django.core.cache import cache
 from django.db.models import Count, Case, When
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status, response
-from rest_framework.renderers import JSONRenderer
-from cacheops import cached_view_as, cached_as, cached_view, invalidate_obj, cache, cached, CacheMiss
-from django.views.decorators.cache import never_cache
+from rest_framework import status
+from django.views.decorators.cache import never_cache, cache_page
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.http import HttpResponse
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
 from movies_database.permissions import IsOwnerOrStaffOrReadOnly
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer, ShortInfoMovieSerializer, \
-    PersonsMoviesSerializer, ProfessionSerializer, PersonsSerializer, PersonProfessionSerializer
+    PersonsSerializer, PersonProfessionSerializer
 
 
 class MovieViewSet(ModelViewSet):
@@ -35,7 +33,7 @@ class MovieViewSet(ModelViewSet):
     filterset_fields = ['year', 'name', 'genres__name']
     search_fields = ['name', 'country', 'genres__name']
 
-    @method_decorator(cached_view_as(Movie))
+    @method_decorator(cache_page(60 * 2))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -88,11 +86,15 @@ class MovieViewSet(ModelViewSet):
         return Response(status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['GET'])
+    @method_decorator(never_cache)
     def randomMovie(self, request):
-        ids = Movie.objects.values('id')
+        data = self.get_queryset()
+        ids = data.values('id')
         random_id = random.choice(ids)
-        return redirect('http://127.0.0.1:8000/movie/' + str(random_id.get("id")))
-        # return redirect('https: // vk.com / feed')
+        random_movie = data.get(id=random_id.get("id"))
+        serializer = self.get_serializer(random_movie)
+        return Response(serializer.data)
+        # return redirect('http://127.0.0.1:8000/movie/' + str(random_id.get("id")))
 
 
 class UserMovieRelationViews(UpdateModelMixin, GenericViewSet):
@@ -117,10 +119,6 @@ class ShortInfoMovieViewSet(ModelViewSet):
     filterset_fields = ['year', 'name', 'genres__name']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
-
-    @method_decorator(cached_view_as(Movie))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
 
 
 class PersonInfoViewSet(ModelViewSet):
