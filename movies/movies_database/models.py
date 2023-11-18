@@ -28,7 +28,7 @@ class Genre(models.Model):
 
 class Movie(models.Model):
     name = models.CharField(max_length=80, unique=True)
-    description = models.CharField(max_length=1000, default="")
+    description = models.CharField(max_length=1500, default="")
     tagline = models.CharField(max_length=200, default="-", null=True)
     year = models.PositiveIntegerField()
     country = models.CharField(max_length=80)
@@ -66,7 +66,7 @@ class UserMovieRelation(models.Model):
     is_watched = models.BooleanField(default=False)
 
     rate = models.PositiveSmallIntegerField(blank=True, null=True, validators=[MaxValueValidator(10)])
-    review = models.TextField(blank=True)
+    review = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.user.username}: {self.movie.name}, Rating: {self.rate}'
