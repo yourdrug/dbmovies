@@ -6,12 +6,14 @@ from movies_database.models import Movie, UserMovieRelation, Person, Profession,
 
 @admin.register(Person)
 class PersonAdmin(ModelAdmin):
-    pass
+    list_display = ("name", "en_name")
+    search_fields = ("name__startswith", "en_name__startswith",)
 
 
 @admin.register(Profession)
 class ProfessionAdmin(ModelAdmin):
-    pass
+    list_display = ("name", "person", "movie")
+    search_fields = ("name__startswith", "movie__name__startswith",)
 
 
 @admin.register(Genre)
@@ -21,7 +23,8 @@ class GenreAdmin(ModelAdmin):
 
 @admin.register(Movie)
 class MovieAdmin(ModelAdmin):
-    pass
+    search_fields = ("name__startswith",)
+    list_filter = ("year",)
 
 
 @admin.register(UserMovieRelation)
