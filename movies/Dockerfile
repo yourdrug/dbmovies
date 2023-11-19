@@ -11,5 +11,3 @@ WORKDIR /movies
 EXPOSE 8000
 
 RUN adduser --disabled-password movie-user
-
-USER movie-user
