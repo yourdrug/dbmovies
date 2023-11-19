@@ -108,6 +108,33 @@ class MovieViewSet(ModelViewSet):
         serializer = self.get_serializer(random_movie)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['GET'])
+    @method_decorator(never_cache)
+    def getPred(self, request):
+        recommendations = 1
+        movie_id = 6
+        recommend_list = []
+        from movies_database.logic import prep_data, get_csr_data, train_model
+        user_item_matrix = prep_data()
+        csr_data = get_csr_data(user_item_matrix)
+        import pickle
+        try:
+            model = pickle.load(open("movie_ml_model.sav", "rb"))
+        except (OSError, IOError):
+            train_model(csr_data)
+            model = pickle.load(open("movie_ml_model.sav", "rb"))
+
+        my_movie_id = user_item_matrix[user_item_matrix['movie__id'] == movie_id].index[0]
+
+        distances, indices = model.kneighbors(csr_data[my_movie_id], n_neighbors=recommendations + 1)
+        indices_list = indices.squeeze().tolist()
+        data = self.get_queryset()
+        for index in indices_list:
+            matrix_movie_id = user_item_matrix.iloc[index]['movie__id']
+            recommend_list.append(data.get(id=matrix_movie_id))
+        serializer = self.get_serializer(recommend_list, many=True)
+        return Response(serializer.data)
+
 
 class UserMovieRelationViews(UpdateModelMixin, GenericViewSet):
     permission_classes = [IsAuthenticated]
