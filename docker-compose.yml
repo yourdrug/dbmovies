@@ -3,9 +3,9 @@ services:
     build:
       context: .
       dockerfile: ./ui/Dockerfile
-    container_name: vue_app_container
-    ports:
-      - '8080:8080'
+    container_name: ui
+    expose:
+      - 5137
     depends_on:
       - backend
 
