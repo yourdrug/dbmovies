@@ -1,32 +1,15 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import MovieList from './components/movie-list/movie-list.component'
+import Pagination from './components/pagination-page/pagination-page.component'
 import './App.css'
 
+const pageSize = 50;
 
 function App() {
   const [myMovies, setMyMovie] = useState([])
   const [page, setPage] = useState(1)
   const [numberOfPages, setNumberOfPages] = useState(1)
-  const pageSize = 50;
-
-  async function getMyMovies(){
-    let config = {
-      headers: {
-        Authorization: "Token 14f3d5f19622f3719a6bf5da579a94fb61b9f5e4",
-      },
-    };
-    try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/movie_short/?page=" + page,
-        config
-      );
-      let movies = await response.data.results;
-      setMyMovie(movies);
-    } catch (error) {
-      alert("ошибка в парсе кп");
-    }
-  }
 
   async function getMovies(){
     let config = {
@@ -75,35 +58,40 @@ function App() {
     }
   }
   
-  function show() {
-    console.log(myMovies);
-  }
-
-  function next() {
+  function next(){
     setPage(page + 1);
   }
 
-  function previos() {
-    if(page - 1 != 0){
-      setPage(page - 1);
-    } 
-  }
-  
   useEffect(()=>{
+    async function getMyMovies(){
+      let config = {
+        headers: {
+          Authorization: "Token 14f3d5f19622f3719a6bf5da579a94fb61b9f5e4",
+        },
+      };
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/movie_short/?page=" + page,
+          config
+        );
+        let movies = await response.data.results;
+        let count =  await response.data.count;
+        let res = Math.ceil(count / 50)
+        setNumberOfPages(res);
+        setMyMovie(movies);
+      } catch (error) {
+        alert("ошибка в парсе кп");
+      }
+    }
     getMyMovies();
-    console.log("вызвал юз эффект");
   }, [page]);
-  
 
   return (
     <div>
       <button onClick={getMovies}>Получить фильм</button>
       <button onClick={next}>Следующая страница</button>
-      <button onClick={previos}>Предыдущая страница</button>
-      <h1>My Appp ahah</h1>
-      <MovieList movies={myMovies} page={page} pageSize={pageSize}/>
-      
-      <button onClick={show}>Показать фильм</button>
+      <Pagination setPage={setPage} page={page} numberOfPages={numberOfPages}/>
+      <MovieList movies={myMovies} page={page} pageSize={pageSize}/>    
     </div>
   )
 }
