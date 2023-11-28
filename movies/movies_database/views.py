@@ -67,6 +67,10 @@ class MovieViewSet(ModelViewSet):
             if tagline is not None:
                 short_tag = tagline[:max_tagline] + (points if len(tagline) > max_tagline else "")
 
+            try:
+                world_premier = request.data.get("movies").get("premiere").get("world").split("T")[0]
+            except Exception:
+                world_premier = request.data.get("movies").get("premiere").get("world")
             movie_temp = Movie.objects.create(
                 name=request.data.get("movies").get("name"),
                 description=short_desc,
@@ -75,7 +79,7 @@ class MovieViewSet(ModelViewSet):
                 country=request.data.get("movies").get("countries")[0].get("name"),
                 tagline=short_tag,
                 poster=request.data.get("movies").get("poster").get("url"),
-                world_premier=request.data.get("movies").get("premiere").get("world").split("T")[0]
+                world_premier=world_premier
             )
             for genre in request.data.get("movies").get("genres"):
                 if Genre.objects.filter(name=genre.get("name")).exists():
@@ -86,7 +90,9 @@ class MovieViewSet(ModelViewSet):
 
             for person in request.data.get("movies").get("persons"):
                 if Person.objects.filter(name=person.get("name")).exists():
-                    temp_person = Person.objects.get(name=person.get("name"))
+                    temp_person = Person.objects.filter(name=person.get("name")).first()
+                elif Person.objects.filter(en_name=person.get("enName")).exists():
+                    temp_person = Person.objects.filter(en_name=person.get("enName")).first()
                 else:
                     temp_person = Person.objects.create(
                         name=person.get("name"),
@@ -150,7 +156,7 @@ class UserMovieRelationViews(UpdateModelMixin, GenericViewSet):
 
 
 class MoviesPagination(PageNumberPagination):
-    page_size = 100
+    page_size = 50
     page_size_query_param = 'page_size'
     max_page_size = 200
 
