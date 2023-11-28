@@ -1,0 +1,7 @@
+.movie-list {
+    background-color: white;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+  }

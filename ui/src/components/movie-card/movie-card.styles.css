@@ -1,0 +1,112 @@
+.number {
+    margin-top: 50px;
+    margin-left: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: inherit;
+  }
+  
+  .movie-card {
+    width: 820px;
+    height: 260px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: whitesmoke;
+    margin-top: 1px;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 55px 150px 350px 260px;
+    border-bottom: 1px solid lightgray;
+  }
+  
+  .poster {
+    width: 100%; 
+    background-color: inherit;
+  }
+  
+  .poster img {
+    object-fit: cover;
+    padding-top: 20px;
+    width: 150px;
+    /*height: inherit;*/
+    background-color: inherit;
+    
+  }
+  
+  .movie-info {
+    text-align: left;
+    padding-top: 20px;
+    padding-left: 15px;
+    background-color: inherit;
+  }
+  
+  .movie-rate-good {
+    /*padding-top: 20px;*/
+    font-size: 20px;
+    font-weight: bold;
+    width: 40px;
+    display: inline-block;
+    background-color: inherit;
+    color: green;
+  }
+
+  .movie-rate-average {
+    /*padding-top: 20px;*/
+    font-size: 20px;
+    font-weight: bold;
+    width: 40px;
+    display: inline-block;
+    background-color: inherit;
+    color: gray;
+  }
+
+  .movie-rate-bad {
+    /*padding-top: 20px;*/
+    font-size: 20px;
+    font-weight: bold;
+    width: 40px;
+    display: inline-block;
+    background-color: inherit;
+    color: red;
+  }
+  
+  .count-rates {
+    display: inline-block;
+    text-align: left;
+    padding-left: 10px;
+    /*padding-top: 17px;*/
+    width: 50px;
+    font-size: 12px;
+    font-weight: 100;
+    background-color: inherit;
+  }
+  
+  .additional-info {
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: inherit;
+    width: 255px;
+    text-align: left;
+    padding-top: 25px;
+  }
+  
+  .movie-name {
+    font-size: 24px;
+    color: black;
+    font-weight: bold;
+    background-color: inherit;
+  }
+  
+  .movie-desc {
+    font-size: 14px;
+    margin-top: 10px;
+    color: black;
+    background-color: inherit;
+  }
+  
+  .movie-more-desc {
+    font-size: 14px;
+    margin-top: 16px;
+    color: grey;
+    background-color: inherit;
+  }
