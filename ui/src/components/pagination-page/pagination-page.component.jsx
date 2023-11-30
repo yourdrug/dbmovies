@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 function Pagination ({setPage, page, numberOfPages}) {
     const [neighbours, setNeighbour] = useState([])
 
-
     function changeNeighbour(){
         if (page == 1){
             setNeighbour([1, 2, numberOfPages])
@@ -27,6 +26,7 @@ function Pagination ({setPage, page, numberOfPages}) {
     }
 
     function choosePage(wantedPage){
+        console.log(wantedPage);
         setPage(wantedPage);
     }
 
@@ -36,10 +36,11 @@ function Pagination ({setPage, page, numberOfPages}) {
 
     return(
         <div className='pagination'>
-        {neighbours.map((neighbour, index) => {
-            return <button key={index} onClick={()=> choosePage(neighbour)}> {neighbour} </button>;
+            {neighbours.map((neighbour, index) => {
+                return <button className={`pagination-btn ${page == neighbour ? "active" : ""}`} 
+                key={index} onClick={()=> choosePage(neighbour)}> {neighbour} </button>;
         })}
-    </div>
+        </div>
     )   
 }
 

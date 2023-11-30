@@ -1,0 +1,49 @@
+.navbar {
+    margin: 0;
+    padding: 0;
+    background-color: #3D3C3A;
+    height: 70px;
+    box-shadow: 2px 2px 4px gray;
+    display: flex;
+    gap: 40px;
+    position: fixed;
+    min-width: 100%;
+    align-items: center;
+}
+
+.navbar .search-box{
+    border: none;
+    height: 35px;
+    border-radius: 10px;
+    margin-left: auto;
+    float: left;
+    min-width: 300px;
+}
+
+input[type="searchbox"] {
+    outline:none;
+    padding-left: 10px;
+}
+
+.search-box:focus{
+    scale: 1.02;
+    transition: 0.5s;
+}
+
+.navbar .appName {
+    font-size: 35px;
+    background-color: inherit;
+    color: lightgrey;
+    display: flex;
+    font-weight: bold;
+    padding-left: 280px;
+}
+  
+.navbar .logbtn {
+    background-color: inherit;
+    color: lightgrey;
+    font-size: 16px;
+    font-weight: bold;
+    float: left;
+    padding-right: 280px;
+}
