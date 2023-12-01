@@ -1,6 +1,7 @@
 import './pagination-page.styles.css';
 import { useState, useEffect } from 'react'
 
+
 function Pagination ({setPage, page, numberOfPages}) {
     const [neighbours, setNeighbour] = useState([])
 
@@ -26,7 +27,6 @@ function Pagination ({setPage, page, numberOfPages}) {
     }
 
     function choosePage(wantedPage){
-        console.log(wantedPage);
         setPage(wantedPage);
     }
 

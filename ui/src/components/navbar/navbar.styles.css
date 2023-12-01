@@ -10,6 +10,7 @@
     min-width: 100%;
     align-items: center;
     z-index: 10;
+    flex-direction: row;
 }
 
 .navbar .search-box{
@@ -45,12 +46,45 @@ input[type="searchbox"] {
     color: lightgrey;
     font-size: 16px;
     font-weight: bold;
-    float: left;
-    padding-right: 280px;
 }
 
 .logbtn:hover{
     cursor: pointer;
     transform: scale(1.02);
     transition: 1s;
+}
+
+.auth-module{
+    display: flex;
+    flex-direction: row;
+    padding-right: 280px;
+    align-items: center;
+    vertical-align: middle;
+    gap: 15px;
+}
+
+.navbar-username{
+    color: white;
+    font-weight: bold;
+}
+
+.navbar-username:hover{
+    color: white;
+    transform: scale(1.03);
+    transition: 0.1s;
+}
+
+.user-avatar{
+    border-radius: 50%;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
+    border: 2px solid white;
+    background-color: white;
+}
+
+.user-avatar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
