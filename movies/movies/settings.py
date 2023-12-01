@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'django_pandas',
 
     'movies_database',
+    'chatting',
+    'account'
 ]
 
 MIDDLEWARE = [
@@ -108,10 +110,10 @@ DATABASES = {
     }
 }
 
-AUTHENTICATION_BACKENDS = (
-   'social_core.backends.github.GithubOAuth2',
-   'django.contrib.auth.backends.ModelBackend',
-)
+# AUTHENTICATION_BACKENDS = (
+#    'social_core.backends.github.GithubOAuth2',
+#    'django.contrib.auth.backends.ModelBackend',
+# )
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -147,8 +149,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-
+AUTH_USER_MODEL = 'account.Account'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -170,6 +174,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
+}
+
+DJOSER = {
+    'SERIALIZERS': {
+        'current_user': 'account.serializers.CurrentUserInfoSerializer',
+    },
 }
 
 REDIS_HOST = config['REDIS_HOST']
