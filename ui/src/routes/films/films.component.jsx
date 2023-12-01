@@ -64,15 +64,16 @@ function Films() {
 
   useEffect(()=>{
     async function getMyMovies(){
+      /*
       let config = {
         headers: {
           Authorization: "Token 14f3d5f19622f3719a6bf5da579a94fb61b9f5e4",
         },
       };
+      */
       try {
         const response = await axios.get(
-          "http://127.0.0.1:8000/movie_short/?page=" + page,
-          config
+          "http://127.0.0.1:8000/movie_short/?page=" + page
         );
         let movies = await response.data.results;
         let count =  await response.data.count;
@@ -80,7 +81,7 @@ function Films() {
         setNumberOfPages(res);
         setMyMovie(movies);
       } catch (error) {
-        alert("ошибка в парсе кп");
+        alert("ошибка в получении данных с сервера");
       }
     }
     getMyMovies();

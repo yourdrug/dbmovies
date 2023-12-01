@@ -1,0 +1,50 @@
+.login-from{
+    display: flex;
+    flex-direction: column;
+    column-gap: 10px;
+}
+
+.username {
+    width: 300px;
+    height: 45px;
+    border-radius: 12px;
+    margin: 7px;
+    padding-left: 10px;
+}
+
+.password{
+    width: 300px;
+    height: 45px;
+    border-radius: 12px;
+    margin: 7px;
+    padding-left: 10px;
+}
+
+.title{
+    font-size: medium;
+    text-align: center;
+    color: black;
+}
+
+.submit-btn{
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+    margin: 0 auto;
+    cursor: pointer;
+    color: white;
+    background-color: #3D3C3A;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.submit-btn:hover{
+    transition: 1s;
+    transform: scale(1.01);
+}
+
+.login-buttons{
+    display: flex;
+    justify-content: space-between;
+}

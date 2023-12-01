@@ -9,6 +9,7 @@
     position: fixed;
     min-width: 100%;
     align-items: center;
+    z-index: 10;
 }
 
 .navbar .search-box{
@@ -46,4 +47,10 @@ input[type="searchbox"] {
     font-weight: bold;
     float: left;
     padding-right: 280px;
+}
+
+.logbtn:hover{
+    cursor: pointer;
+    transform: scale(1.02);
+    transition: 1s;
 }
