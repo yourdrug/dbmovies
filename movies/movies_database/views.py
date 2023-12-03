@@ -172,7 +172,12 @@ class ShortInfoMovieViewSet(ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     pagination_class = MoviesPagination
 
-    @method_decorator(cache_page(60 * 2))
+    def get_serializer_context(self):
+        # Передаем контекст сериализатору, чтобы он мог использовать request.user
+        context = super().get_serializer_context()
+        return {'request': self.request, **context}
+
+    # @method_decorator(cache_page(60 * 2))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 

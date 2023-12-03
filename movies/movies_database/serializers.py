@@ -50,12 +50,23 @@ class ShortInfoMovieSerializer(ModelSerializer):
     annotated_count_rate = serializers.IntegerField(read_only=True)
     genres = MovieGenreSerializer(many=True, read_only=True)
     crew = ProfessionSerializer(many=True, read_only=True, source='profession_set')
+    user_rating = serializers.SerializerMethodField()
+
+    def get_user_rating(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            user_rating = obj.usermovierelation_set.filter(user=user).values('rate').first()
+
+            if user_rating:
+                return user_rating['rate']
+
+        return None
 
     class Meta:
         model = Movie
         fields = ('id', 'name', 'watch_time', 'world_premier',
                   'year', 'country', 'poster', 'rating', 'crew',
-                  'genres', 'annotated_count_rate')
+                  'genres', 'user_rating', 'annotated_count_rate')
 
 
 class UserMovieRelationSerializer(ModelSerializer):

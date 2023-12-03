@@ -71,6 +71,9 @@ class UserMovieRelation(models.Model):
     rate = models.PositiveSmallIntegerField(blank=True, null=True, validators=[MaxValueValidator(10)])
     review = models.TextField(blank=True, null=True)
 
+    class Meta:
+        unique_together = ('user', 'movie')
+
     def __str__(self):
         return f'{self.user.username}: {self.movie.name}, Rating: {self.rate}'
 
