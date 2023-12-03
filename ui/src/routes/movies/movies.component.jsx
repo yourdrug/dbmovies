@@ -1,15 +1,43 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import MovieList from '../../components/movie-list/movie-list.component';
 import Pagination from '../../components/pagination-page/pagination-page.component';
-import './films.styles.css'
+import { UserContext } from '../../context/user.context';
+import './movies.styles.css'
 
 const pageSize = 50;
 
-function Films() {
+function Movies() {
   const [myMovies, setMyMovie] = useState([])
   const [page, setPage] = useState(1)
   const [numberOfPages, setNumberOfPages] = useState(1)
+  
+  const { token } = useContext(UserContext) 
+  
+  async function getMyMovies(){
+    if (token != null){
+      var config = {
+        headers: {
+          Authorization: "Token " + token,
+        },
+      };
+    }
+    
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/movie_short/?page=" + page, config
+      );
+      let movies = await response.data.results;
+      let count =  await response.data.count;
+      let res = Math.ceil(count / pageSize)
+      setNumberOfPages(res);
+      setMyMovie(movies);
+      console.log(token);
+      console.log(myMovies);
+    } catch (error) {
+      alert("ошибка в получении данных с сервера");
+    }
+  }
 
   async function getMovies(){
     let config = {
@@ -18,7 +46,7 @@ function Films() {
       },
     };
     try {
-      for (var k = 50; k < 75; k++){
+      for (var k = 1; k < 6; k++){
         console.log("Начинаю получать фильмы с " + k + " страницы");
         const response = await axios.get(
           "https://api.kinopoisk.dev/v1.4/movie?page=" + k + "&limit=50&selectFields=id&selectFields=name&selectFields=names&selectFields=description&selectFields=slogan&selectFields=type&selectFields=year&selectFields=movieLength&selectFields=genres&selectFields=countries&selectFields=poster&selectFields=persons&selectFields=premiere&notNullFields=id&notNullFields=name&notNullFields=description&notNullFields=slogan&notNullFields=type&notNullFields=year&notNullFields=movieLength&notNullFields=genres.name&notNullFields=countries.name&notNullFields=poster.url&notNullFields=persons.id&notNullFields=persons.name&notNullFields=persons.enName&notNullFields=persons.photo&notNullFields=persons.profession&notNullFields=persons.enProfession&notNullFields=premiere.world&type=movie",
@@ -43,7 +71,7 @@ function Films() {
     };
     let config = {
       headers: {
-        Authorization: "Token 14f3d5f19622f3719a6bf5da579a94fb61b9f5e4",
+        Authorization: "Token 9adeceea3d89a408b5c8f3157076e756ef9b98ca",
       },
     };
     try {
@@ -63,29 +91,10 @@ function Films() {
   }
 
   useEffect(()=>{
-    async function getMyMovies(){
-      /*
-      let config = {
-        headers: {
-          Authorization: "Token 14f3d5f19622f3719a6bf5da579a94fb61b9f5e4",
-        },
-      };
-      */
-      try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/movie_short/?page=" + page
-        );
-        let movies = await response.data.results;
-        let count =  await response.data.count;
-        let res = Math.ceil(count / pageSize)
-        setNumberOfPages(res);
-        setMyMovie(movies);
-      } catch (error) {
-        alert("ошибка в получении данных с сервера");
-      }
-    }
+    console.log(myMovies);
     getMyMovies();
-  }, [page]);
+    console.log(myMovies);
+  }, [page, token]);
 
   return (
     <div className='main-wrapper'>
@@ -97,4 +106,4 @@ function Films() {
   )
 }
 
-export default Films;
+export default Movies;

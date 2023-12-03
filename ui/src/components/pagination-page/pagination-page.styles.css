@@ -12,7 +12,7 @@
     cursor: pointer;
 }
 
-.active{
+.page-btn-active{
     background-color: black;
     color: white;
 }

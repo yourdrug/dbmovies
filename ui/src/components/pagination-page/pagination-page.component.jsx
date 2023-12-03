@@ -37,7 +37,7 @@ function Pagination ({setPage, page, numberOfPages}) {
     return(
         <div className='pagination'>
             {neighbours.map((neighbour, index) => {
-                return <button className={`pagination-btn ${page == neighbour ? "active" : ""}`} 
+                return <button className={`pagination-btn ${page == neighbour ? "page-btn-active" : ""}`} 
                 key={index} onClick={()=> choosePage(neighbour)}> {neighbour} </button>;
         })}
         </div>

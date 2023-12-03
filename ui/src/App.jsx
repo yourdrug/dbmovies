@@ -1,10 +1,11 @@
-import Films from './routes/films/films.component'
+import Movies from './routes/movies/movies.component'
 import Navigation from './routes/navigation/navigation.component'
 import Profile from './routes/profile/profile.component'
 import Home from './routes/home/home.component'
 import {Routes, Route} from 'react-router-dom'
 
 import './App.css'
+import MovieById from './components/movie-by-id/movie-by-id.component'
 
 function App() {
 
@@ -12,7 +13,8 @@ function App() {
     <Routes>
       <Route path='/' element={<Navigation/>}>
         <Route index element={<Home/>}/>
-        <Route path='films' element={<Films/>}/>
+        <Route path='movies' element={<Movies/>}/>
+        <Route path='movies/:id' element={<MovieById/>}/>
         <Route path='profile' element={<Profile/>}/>
       </Route>
     </Routes>

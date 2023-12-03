@@ -7,7 +7,7 @@ const Home = () => {
           id: 1,
           title: 'Фильмы',
           imageUrl: 'https://www.megacritic.ru/images/luchshie-filmy-2021.jpg',
-          slug: 'films'
+          slug: 'movies'
         },
         {
           id: 2,

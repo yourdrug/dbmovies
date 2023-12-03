@@ -5,14 +5,10 @@ const CategoryItem = ({ category }) => {
   const { imageUrl, title, slug } = category;
   return (
     <div className='category-container'>
-      <div
-        className='background-image'
-        style={{
-          backgroundColor: '#3D3C3A',
-        }}
-      />
+      <Link to={slug} style={{ textDecoration: 'none', backgroundColor: '#3D3C3A'}}
+        className='background-image'/>
       <div className='category-body-container'>
-        <Link to={slug} style={{ textDecoration: 'none' }}><h2>{title}</h2></Link>
+        <h2>{title}</h2>
       </div>
     </div>
   );

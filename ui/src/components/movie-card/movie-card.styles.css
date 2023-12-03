@@ -25,12 +25,18 @@
   .poster {
     width: 100%; 
     background-color: inherit;
+    border-radius: 0;
+    margin-right: 20px;
+    margin-top: 20px;
+  }
+
+  .poster:hover{
+    background-color: inherit;
   }
   
   .poster img {
     object-fit: cover;
-    padding-top: 20px;
-    width: 140px;
+    width: 130px;
     /*height: inherit;*/
     background-color: inherit;
     cursor: pointer;
@@ -42,6 +48,11 @@
     padding-left: 15px;
     background-color: inherit;
     cursor: pointer;
+    text-decoration: none;
+  }
+
+  .movie-info:hover{
+    background-color: inherit;
   }
   
   .movie-rate-good {
@@ -62,6 +73,7 @@
     display: inline-block;
     background-color: inherit;
     color: gray;
+    height: fit-content;
   }
 
   .movie-rate-bad {
@@ -82,16 +94,20 @@
     font-size: 12px;
     font-weight: 100;
     background-color: inherit;
+    height: fit-content;
   }
   
   .additional-info {
     padding-left: 10px;
-    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    overflow: visible;
     white-space: nowrap;
     background-color: inherit;
     width: 255px;
     text-align: left;
     padding-top: 16px;
+    
   }
   
   .movie-name {
@@ -114,4 +130,86 @@
     margin-top: 16px;
     color: grey;
     background-color: inherit;
+  }
+
+  .movie-card-set-rate{
+    background-image: url('https://cdn-icons-png.flaticon.com/512/13/13595.png'); 
+    background-size: cover; 
+    background-position: center; 
+    width: 22px;
+    height: 22px;
+    padding-bottom: 2px;
+    margin-top: 7px;
+    border-radius: 20px;
+    border: none;
+    background-color:rgb(230, 230, 230);
+  }
+
+  .movie-card-set-rate:hover{
+    transform: scale(1.15);
+    transition: 0.7s;
+    cursor: pointer;
+    background-color: rgb(220, 220, 220);
+  }
+
+  .rating-digit {
+    margin: 2px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .red {
+    color: red;
+  }
+  
+  .grey {
+    color: grey;
+  }
+  
+  .green {
+    color: green;
+  }
+  
+  .selected {
+    font-weight: bold;
+  }
+
+  .my-own-rating{
+    width: 50px;
+  }
+
+  .selected-rating{
+    width: 25px;
+    height: 25px;
+    border-radius: 20px;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .selected-rating:hover{
+    background-image: url('https://ikonki.svgpng.ru/wp-content/uploads/2021/12/Krestiksvgpng.ru_.png');
+    cursor: pointer;
+  }
+
+  .choices-for-marks{
+    display: flex; /* Размещаем оценки в строку */
+  }
+
+  .red-set-rate{
+    background-color: red;
+    color: white;
+    font-weight: bold;
+  }
+
+  .green-set-rate{
+    background-color: green;
+    color: white;
+    font-weight: bold;
+  }
+
+  .gray-set-rate{
+    background-color: gray;
+    color: white;
+    font-weight: bold;
   }

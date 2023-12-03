@@ -64,6 +64,7 @@ input[type="searchbox"] {
 }
 
 .navbar-username{
+    background-color: #3D3C3A;
     color: white;
     font-weight: bold;
 }
