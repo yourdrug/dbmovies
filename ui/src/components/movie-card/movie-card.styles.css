@@ -188,8 +188,14 @@
   }
 
   .selected-rating:hover{
-    background-image: url('https://ikonki.svgpng.ru/wp-content/uploads/2021/12/Krestiksvgpng.ru_.png');
+    background-image: url('https://png.pngtree.com/png-vector/20190411/ourlarge/pngtree-vector-cross-icon-png-image_925896.jpg');
+    width: 25px;
+    height: 25px;
+    background-size: cover;
     cursor: pointer;
+    background-color: transparent;
+    border: none;
+    color: transparent;
   }
 
   .choices-for-marks{
