@@ -77,7 +77,7 @@ const MovieCard = ({ movie, index }) => {
     }
 
     return (
-        <div className="movie-card">
+        <div className={movie.user_is_watched ? 'movie-card watched' : 'movie-card'}>
             <div className="number"> {index} </div>
                 <Link className="poster" to={`/movies/${movie.id}`}>
                     <img src={movie.poster} />
@@ -124,6 +124,7 @@ const MovieCard = ({ movie, index }) => {
                     </div>
                 )}
                 </div>
+                <button className="movie-card-additional-options"/>
             </div>
             <Modal active={active} setActive={setActive}>
                 <LoginForm />

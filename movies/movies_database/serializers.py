@@ -51,6 +51,8 @@ class ShortInfoMovieSerializer(ModelSerializer):
     genres = MovieGenreSerializer(many=True, read_only=True)
     crew = ProfessionSerializer(many=True, read_only=True, source='profession_set')
     user_rating = serializers.SerializerMethodField()
+    user_like = serializers.SerializerMethodField()
+    user_is_watched = serializers.SerializerMethodField()
 
     def get_user_rating(self, obj):
         user = self.context['request'].user
@@ -62,11 +64,31 @@ class ShortInfoMovieSerializer(ModelSerializer):
 
         return None
 
+    def get_user_like(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            user_like = obj.usermovierelation_set.filter(user=user).values('like').first()
+
+            if user_like:
+                return user_like['like']
+
+        return None
+
+    def get_user_is_watched(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            user_is_watched = obj.usermovierelation_set.filter(user=user).values('is_watched').first()
+
+            if user_is_watched:
+                return user_is_watched['is_watched']
+
+        return None
+
     class Meta:
         model = Movie
         fields = ('id', 'name', 'watch_time', 'world_premier',
                   'year', 'country', 'poster', 'rating', 'crew',
-                  'genres', 'user_rating', 'annotated_count_rate')
+                  'genres', 'user_rating', 'user_is_watched', 'user_like', 'annotated_count_rate')
 
 
 class UserMovieRelationSerializer(ModelSerializer):
