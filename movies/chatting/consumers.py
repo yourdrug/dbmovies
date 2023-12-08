@@ -33,9 +33,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         return {
             'action': 'message',
-            'user': user_id,
+            'sender': user_id,
             'roomId': room_id,
-            'message': message,
+            'text': message,
             'userImage': userObj.image.url,
             'username': userObj.username,
             'created': str(chatMessageObj.created)
