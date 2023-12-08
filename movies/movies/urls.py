@@ -36,6 +36,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
     path('auth/', include('djoser.urls')),
+    path('social/', include('chatting.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
 ]
 
