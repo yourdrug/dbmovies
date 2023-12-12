@@ -1,8 +1,15 @@
 import json
 from channels.db import database_sync_to_async
+from enum import Enum
 from channels.generic.websocket import AsyncWebsocketConsumer
 from chatting.models import ChatRoom, Message
 from account.models import Account, OnlineAccount
+
+
+class SocketActions(Enum):
+    MESSAGE = 'message'
+    TYPING = 'typing'
+    ONLINE_USER = 'onlineUser'
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -10,8 +17,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return Account.objects.get(id=userId)
 
     def getOnlineUsers(self):
-        onlineUsers = OnlineAccount.objects.all()
-        return [onlineUser.account.id for onlineUser in onlineUsers]
+        onlineUsers = list(OnlineAccount.objects.values_list('account_id', flat=True))
+        return onlineUsers
 
     def addOnlineUser(self, account):
         try:
@@ -46,7 +53,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         chatMessage = {
             'type': 'chat_message',
             'message': {
-                'action': 'onlineUser',
+                'action': SocketActions.ONLINE_USER.value,
                 'userList': onlineUserList
             }
         }
@@ -80,13 +87,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         action = text_data_json['action']
         room_id = text_data_json['roomId']
         chatMessage = {}
-        if action == 'message':
+        if action == SocketActions.MESSAGE.value:
             message = text_data_json['message']
             user_id = text_data_json['user']
-            chatMessage = await database_sync_to_async(
-                self.saveMessage
-            )(message, user_id, room_id)
-        elif action == 'typing':
+            chatMessage = await database_sync_to_async(self.saveMessage)(message, user_id, room_id)
+        elif action == SocketActions.TYPING.value:
             chatMessage = text_data_json
         await self.channel_layer.group_send(
             str(room_id),
