@@ -2,9 +2,10 @@ FROM python:3.10.0-alpine
 
 COPY ../requirements.txt /temp/requirements.txt
 
-RUN apk add postgresql-client build-base postgresql-dev
+RUN apk update \
+    && apk add postgresql-client build-base postgresql-dev musl-dev gcc python3-dev linux-headers
 
-RUN pip install -r /temp/requirements.txt
+RUN pip install --no-cache-dir -r /temp/requirements.txt
 
 COPY ../../movies /movies
 WORKDIR /movies
