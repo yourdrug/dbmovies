@@ -21,7 +21,10 @@ const SignUpForm = () =>{
             "http://127.0.0.1:8000/auth/users/me/",
             config
           );
+          localStorage.setItem("currentUser", JSON.stringify(response.data));
+          localStorage.setItem("id", response.data.id)
           setCurrentUser(response.data);
+          console.log(response);
         } catch (error) {
           alert(error.message);
         }
@@ -35,6 +38,7 @@ const SignUpForm = () =>{
             data
           );
           setToken(response.data.auth_token);
+          localStorage.setItem("token", response.data.auth_token);
         } catch (error) {
           alert(error.message);
         }

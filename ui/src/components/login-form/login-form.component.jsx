@@ -21,6 +21,7 @@ const LoginForm = () =>{
             config
           );
           setCurrentUser(response.data);
+          localStorage.setItem("id", response.data.id);
         } catch (error) {
           alert(error.message);
         }
@@ -33,6 +34,8 @@ const LoginForm = () =>{
             "http://127.0.0.1:8000/auth/token/login/",
             data
           );
+          localStorage.setItem("token", response.data.auth_token);
+          console.log(localStorage.getItem("token"));
           setToken(response.data.auth_token);
         } catch (error) {
           alert(error.message);
@@ -57,9 +60,9 @@ const LoginForm = () =>{
     }
 
     useEffect(() => {
-        if (token !== null) {
-            getAccountInfo();
-        }
+      if (token !== null) {
+        getAccountInfo();
+      }
     }, [token]);
 
     return(

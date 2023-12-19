@@ -10,9 +10,7 @@ import { UserContext } from '../../context/user.context';
 const Navbar = () => {
     const [active, setActive] = useState(false);
     
-    const { currentUser } = useContext(UserContext);
-    console.log(currentUser);
-    
+    const { currentUser } = useContext(UserContext);    
 
     return(
         <div className="navbar">

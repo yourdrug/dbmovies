@@ -70,7 +70,7 @@ const MovieById = () => {
             <div className="main-wrapper">
                 <div className="wrapper">
                     <div className="wrapper-col-1">
-                        <img src={movie.poster} alt={movie.name} />
+                        <img className="poster-for-full-movie-info" src={movie.poster} alt={movie.name} />
                     </div>
     
                     <div className="wrapper-col-2">

@@ -91,9 +91,7 @@ function Movies() {
   }
 
   useEffect(()=>{
-    console.log(myMovies);
     getMyMovies();
-    console.log(myMovies);
   }, [page, token]);
 
   return (

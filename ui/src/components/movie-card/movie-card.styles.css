@@ -117,6 +117,7 @@
     width: 255px;
     text-align: left;
     padding-top: 16px;
+    position: relative;
   }
   
   .movie-name {
@@ -227,7 +228,9 @@
   }
 
   .choices-for-marks{
-    display: flex; /* Размещаем оценки в строку */
+    position: absolute;
+    right: 50px;
+    margin: 10px;
   }
 
   .red-set-rate{
@@ -246,4 +249,89 @@
     background-color: gray;
     color: white;
     font-weight: bold;
+  }
+
+  .like-pressed-at-movie{
+    width: 25px;
+    height: 25px;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/833/833472.png');
+    background-size: cover;
+  }
+
+  .like-pressed-at-movie:hover{
+    width: 25px;
+    height: 25px;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/158/158722.png');
+    background-size: cover;
+    transform: scale(1.1);
+    transition: 0.5s;
+    cursor: pointer;
+
+  }
+
+  .like-not-pressed-at-movie{
+    width: 25px;
+    height: 25px;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/158/158722.png');
+    background-size: cover;
+  }
+
+  .like-not-pressed-at-movie:hover{
+    width: 25px;
+    height: 25px;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/833/833472.png');
+    background-size: cover;
+    transform: scale(1.1);
+    transition: 0.5s;
+    cursor: pointer;
+  }
+
+  .like-option-at-movie{
+    margin-top: 5px;
+    width: 25px;
+    height: 25px;
+  }
+
+  .select-options-for-movies{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 110px;
+    top: 60px;
+    background-color: white;
+    border: 1px solid black;
+    width: 155px;
+    height: 180px;
+    border-radius: 10px;
+    pointer-events: all;
+  }
+
+  .choose-for-album-btn{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    width: inherit;
+    margin-top: 5px;
+    border: none;
+    height: 40px;
+    font-size: 16px;
+    background-color: white;
+    text-align: start;
+    padding-left: 10px;
+  }
+
+  .choose-for-album-btn:hover{
+    background-color: rgb(237, 237, 237);
+    cursor: pointer;
+  }
+
+  .is-movie-watched{
+    width: 30px;
+    height: 30px;
+  }
+
+  .is-in-bookmarks{
+    width: 30px;
+    height: 30px;
   }

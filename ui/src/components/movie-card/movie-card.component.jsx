@@ -9,9 +9,13 @@ import { UserContext } from '../../context/user.context';
 
 const MovieCard = ({ movie, index }) => {
     const [selectedRating, setSelectedRating] = useState(movie.user_rating);
+    const [like, setLike] = useState(movie.user_like);
+    const [isWatched, setIsWatched] = useState(movie.user_is_watched);
+    const [isInBookmarks, setIsInBookmarks] = useState(movie.user_is_in_bookmark);
     const [showRatingOptions, setShowRatingOptions] = useState(false);
     const { token } = useContext(UserContext)
     const [active, setActive] = useState(false);
+    const [showSelectForAlbums, setShowSelectForAlbums] = useState(false);
 
     async function testUpdateRate (id, rating) {
         let config = {
@@ -21,6 +25,63 @@ const MovieCard = ({ movie, index }) => {
         };
         let data = {
             'rate': rating,
+        };
+        try {
+            const response = await axios.patch(
+              `http://127.0.0.1:8000/movie_relation/${id}/`, data, config
+            );
+            console.log(response);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    async function updateLike (id, current_like) {
+        let config = {
+            headers: {
+              Authorization: "Token " + token,
+            },
+        };
+        let data = {
+            'like': !current_like,
+        };
+        try {
+            const response = await axios.patch(
+              `http://127.0.0.1:8000/movie_relation/${id}/`, data, config
+            );
+            console.log(response);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    async function updateIsWatched (id, current_state) {
+        let config = {
+            headers: {
+              Authorization: "Token " + token,
+            },
+        };
+        let data = {
+            'is_watched': !current_state,
+        };
+        try {
+            const response = await axios.patch(
+              `http://127.0.0.1:8000/movie_relation/${id}/`, data, config
+            );
+            console.log(response);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    async function updateBookmarks (id, current_state) {
+        let config = {
+            headers: {
+              Authorization: "Token " + token,
+            },
+        };
+        let data = {
+            'in_bookmarks': !current_state,
         };
         try {
             const response = await axios.patch(
@@ -42,6 +103,11 @@ const MovieCard = ({ movie, index }) => {
         console.log(rating);
         testUpdateRate(id, rating);
     };
+
+    const handleLikeClick = (id, current_like) => {
+        setLike(!like);
+        updateLike(id, current_like);
+    };
     
     const handleButtonClick = () => {
         if(token !== null){
@@ -51,6 +117,16 @@ const MovieCard = ({ movie, index }) => {
             setActive(true);
         }
         
+    };
+
+    const markAsWatchedButtonClick = (id, currentState) => {
+        setIsWatched(!isWatched);
+        updateIsWatched(id, currentState);
+    };
+
+    const markInBookmarksButtonClick = (id, currentState) => {
+        setIsInBookmarks(!isInBookmarks);
+        updateBookmarks(id, currentState);
     };
 
     const getRatingColor = (rating) => {
@@ -77,7 +153,7 @@ const MovieCard = ({ movie, index }) => {
     }
 
     return (
-        <div className={movie.user_is_watched ? 'movie-card watched' : 'movie-card'}>
+        <div className={isWatched ? 'movie-card watched' : 'movie-card'}>
             <div className="number"> {index} </div>
                 <Link className="poster" to={`/movies/${movie.id}`}>
                     <img src={movie.poster} />
@@ -124,7 +200,27 @@ const MovieCard = ({ movie, index }) => {
                     </div>
                 )}
                 </div>
-                <button className="movie-card-additional-options"/>
+                <div className='like-option-at-movie'>
+                    {like ? (
+                        <div className='like-pressed-at-movie' onClick={() => handleLikeClick(movie.id, like)}/>
+                    ) : (
+                        <div className="like-not-pressed-at-movie" onClick={() => handleLikeClick(movie.id, like)}/>
+                    )}
+                </div>
+                <button className="movie-card-additional-options" onClick={()=> setShowSelectForAlbums(!showSelectForAlbums)}/>
+                {showSelectForAlbums && 
+                    <div className='select-options-for-movies'>
+                        <button className='choose-for-album-btn' onClick={()=> markAsWatchedButtonClick(movie.id, isWatched)}> 
+                            Просмотрен 
+                            {isWatched ? <img className='is-movie-watched' src='https://cdn-icons-png.flaticon.com/512/5191/5191458.png'/> 
+                                        : <img className='is-movie-watched' src='https://cdn-icons-png.flaticon.com/256/876/876769.png'/>}
+                        </button>
+                        <button className='choose-for-album-btn' onClick={()=> markInBookmarksButtonClick(movie.id, isInBookmarks)}> 
+                        Избранное 
+                            {isInBookmarks && <img className='is-in-bookmarks' src='https://cdn-icons-png.flaticon.com/512/1828/1828710.png'/>}
+                        </button>
+                    </div>      
+                }
             </div>
             <Modal active={active} setActive={setActive}>
                 <LoginForm />
