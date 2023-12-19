@@ -1,0 +1,46 @@
+.short-movie-card{
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 5px;
+    width: 200px;
+    height: auto;
+}
+
+.short-movie-card:hover{
+    border: 2px solid black;
+    position: relative;
+}
+
+.short-movie-card:hover .additional-info-for-little-card{
+    display: flex;
+}
+
+.short-movie-card:hover .name-for-little-moviecard{
+    display: inline;
+}
+
+.additional-info-for-little-card{
+    display: none;
+    flex-direction: column;
+}
+
+.name-for-little-moviecard{
+    display: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.country-and-year{
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.count-rates-for-little-card{
+    font-size: 14px;
+    color: rgb(166, 166, 166);
+    padding-left: 10px;
+}
