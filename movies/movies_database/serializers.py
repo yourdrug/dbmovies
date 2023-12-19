@@ -31,6 +31,14 @@ class ProfessionSerializer(ModelSerializer):
         fields = ('slug', 'person')
 
 
+class LittleMovieCardSerializer(ModelSerializer):
+    annotated_count_rate = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Movie
+        fields = ('id', 'name', 'year', 'country', 'poster', 'rating', 'annotated_count_rate')
+
+
 class MovieSerializer(ModelSerializer):
     annotated_likes = serializers.IntegerField(read_only=True)
     annotated_count_rate = serializers.IntegerField(read_only=True)
@@ -53,6 +61,7 @@ class ShortInfoMovieSerializer(ModelSerializer):
     user_rating = serializers.SerializerMethodField()
     user_like = serializers.SerializerMethodField()
     user_is_watched = serializers.SerializerMethodField()
+    user_is_in_bookmark = serializers.SerializerMethodField()
 
     def get_user_rating(self, obj):
         user = self.context['request'].user
@@ -84,14 +93,33 @@ class ShortInfoMovieSerializer(ModelSerializer):
 
         return None
 
+    def get_user_is_in_bookmark(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            user_is_in_bookmark = obj.usermovierelation_set.filter(user=user).values('in_bookmarks').first()
+
+            if user_is_in_bookmark:
+                return user_is_in_bookmark['in_bookmarks']
+
+        return None
+
     class Meta:
         model = Movie
         fields = ('id', 'name', 'watch_time', 'world_premier',
                   'year', 'country', 'poster', 'rating', 'crew',
-                  'genres', 'user_rating', 'user_is_watched', 'user_like', 'annotated_count_rate')
+                  'genres', 'user_rating', 'user_is_watched', 'user_like',
+                  'user_is_in_bookmark', 'annotated_count_rate')
 
 
 class UserMovieRelationSerializer(ModelSerializer):
+    class Meta:
+        model = UserMovieRelation
+        fields = ('movie', 'like', 'in_bookmarks', 'rate', 'is_watched', 'review')
+
+
+class UserMovieRelationForUserSerializer(ModelSerializer):
+    movie = LittleMovieCardSerializer(read_only=True)
+
     class Meta:
         model = UserMovieRelation
         fields = ('movie', 'like', 'in_bookmarks', 'rate', 'is_watched', 'review')

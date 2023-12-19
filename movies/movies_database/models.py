@@ -69,7 +69,7 @@ class UserMovieRelation(models.Model):
     is_watched = models.BooleanField(default=False)
 
     rate = models.PositiveSmallIntegerField(blank=True, null=True, validators=[MaxValueValidator(10)])
-    review = models.TextField(blank=True, null=True)
+    review = models.TextField(blank=True, null=True, default=None)
 
     class Meta:
         unique_together = ('user', 'movie')

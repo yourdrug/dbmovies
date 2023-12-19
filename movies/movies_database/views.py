@@ -1,7 +1,7 @@
 import random
 
 from django.core.cache import cache
-from django.db.models import Count, Case, When
+from django.db.models import Count, Case, When, Sum
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -11,14 +11,14 @@ from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
 from movies_database.permissions import IsOwnerOrStaffOrReadOnly
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer, ShortInfoMovieSerializer, \
-    PersonsSerializer, PersonProfessionSerializer
+    PersonsSerializer, PersonProfessionSerializer, UserMovieRelationForUserSerializer, LittleMovieCardSerializer
 
 
 class MovieViewSet(ModelViewSet):
@@ -111,14 +111,14 @@ class MovieViewSet(ModelViewSet):
         ids = data.values('id')
         random_id = random.choice(ids)
         random_movie = data.get(id=random_id.get("id"))
-        serializer = self.get_serializer(random_movie)
+        serializer = LittleMovieCardSerializer(random_movie)
         return Response(serializer.data)
 
     @action(detail=False, methods=['GET'])
     @method_decorator(never_cache)
     def getPred(self, request):
         recommendations = 1
-        movie_id = 6
+        movie_id = 1
         recommend_list = []
         from movies_database.logic import prep_data, get_csr_data, train_model
         user_item_matrix = prep_data()
@@ -131,7 +131,6 @@ class MovieViewSet(ModelViewSet):
             model = pickle.load(open("movie_ml_model.sav", "rb"))
 
         my_movie_id = user_item_matrix[user_item_matrix['movie__id'] == movie_id].index[0]
-
         distances, indices = model.kneighbors(csr_data[my_movie_id], n_neighbors=recommendations + 1)
         indices_list = indices.squeeze().tolist()
         data = self.get_queryset()
@@ -153,6 +152,35 @@ class UserMovieRelationViews(UpdateModelMixin, GenericViewSet):
         obj, _ = UserMovieRelation.objects.get_or_create(user=self.request.user,
                                                          movie_id=self.kwargs['movie'])
         return obj
+
+
+class UserMovieRelationForPersonView(ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = UserMovieRelationForUserSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+
+    filterset_fields = ['like']
+    search_fields = ['movie__name']
+
+    # lookup_field = 'movie'
+
+    def get_queryset(self):
+        queryset = UserMovieRelation.objects.filter(user=self.request.user)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        response = super().list(request, *args, **kwargs)
+
+        total_parametrs = queryset.aggregate(total_likes=Sum(Case(When(like=True, then=1), default=0)),
+                                             total_reviews=Sum(Case(When(review__isnull=False, then=1), default=0)))
+
+        response_data = {'main': response.data,
+                         'total_likes': total_parametrs['total_likes'],
+                         'total_reviews': total_parametrs['total_reviews']}
+        response.data = response_data
+        return response
 
 
 class MoviesPagination(PageNumberPagination):

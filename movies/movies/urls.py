@@ -23,14 +23,16 @@ from django.urls import path, include, re_path
 from rest_framework.routers import SimpleRouter
 
 from movies_database.views import MovieViewSet, UserMovieRelationViews, ShortInfoMovieViewSet, PersonInfoViewSet, \
-    ProfessionViewSet
+    ProfessionViewSet, UserMovieRelationForPersonView
 
 router = SimpleRouter()
 router.register(r'movie', MovieViewSet, basename='movie')
 router.register(r'movie_short', ShortInfoMovieViewSet)
 router.register(r'movie_relation', UserMovieRelationViews)
+router.register(r'user_movie_relation', UserMovieRelationForPersonView, basename='user_info')
 router.register(r'profs', ProfessionViewSet)
 router.register(r'persons', PersonInfoViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
