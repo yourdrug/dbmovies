@@ -1,0 +1,82 @@
+.all-users-chats-container{
+  padding-right: 15px;
+  border-right: 2px solid black;
+}
+
+.additional-info-for-user-active-chat{
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  margin-left: 5px;
+  border-radius: 10px;
+  width: 275px;
+  box-shadow: 0 0 0 2px rgb(148, 139, 139);
+  background-color: #52514e;
+  color: white;
+  font-weight: 500;
+}
+
+.additional-info-for-user{
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  border: 2px solid black;
+  border-radius: 10px;
+  width: 280px;
+}
+
+.user-list-container {
+  overflow: auto;
+  overflow-x: hidden;
+  height: 80vh;
+  margin-left: 20px;
+}
+
+.current-user-item-link{
+  align-items: center;
+}
+
+.chat-user-avatar{
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
+.user-username-isonline{
+  display: flex;
+  flex-direction: column;
+}
+
+.circle-and-info-about-online{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.user-online-circle {
+  background-color: #34ce57;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+}
+.user-offline-circle {
+  background-color: #e4606d;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+}
+.list-group-item {
+  padding: 0.4rem 1.25rem;
+  font-size: 10pt;
+}
+.list-group-item-action:focus,
+.list-group-item-action:hover,
+.active-chat {
+  background-color: #fff3cd;
+}

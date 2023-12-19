@@ -1,0 +1,245 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  padding-top: 5px;
+  border-bottom: 2px solid black;
+  align-items: center;
+  padding-bottom: 5px;
+}
+
+.user-info {
+  display: flex; 
+  padding-left: 40px;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-image-container {
+  border-radius: 10px;
+}
+
+.chat-messages-container {
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  padding-left: 20px;
+  padding-right: 20px;
+  gap: 15px;
+  height: calc(100vh - 260px);
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  transition: all 0.5s;
+}
+
+.avatar-in-chat{
+  width: 40px;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.input-group{
+  display: flex;
+  gap: 10px;
+  padding-top: 50px;
+  align-items: flex-end;
+}
+
+.chatting-input-message{
+  display: flex;
+  align-items: flex-start;
+  margin-left: auto;
+  padding-right: 55px;
+  padding-bottom: 10px;
+}
+
+#chat-message-input {
+  margin-right: -5px;
+  font-size: 20px;
+  border: 2px solid black;
+  border-radius: 10px;
+  min-height: 70px;
+  overflow-y: hidden;
+  min-width: 705px;
+  padding-left: 10px;
+  resize: none;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.btn-for-sending-messages{
+  height: 45px;
+  width: 120px;
+  border-radius: 10px;
+  background-color: #3D3C3A;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+}
+
+.chat-messages {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 138px);
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  transition: all 0.5s;
+}
+
+.chat-message-left {
+  display: flex;
+  flex-direction: row;
+  margin-right: auto;
+  margin-top: 10px;
+  align-items: flex-start;
+}
+
+.chat-message-body{
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-message-right .chat-message-body .username-time-for-messages-in-chat{
+  display: flex;
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.chat-message-right {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-left: auto;
+  margin-top: 10px;
+}
+
+.avatar-for-chatting-in-chat{
+  border-radius: 10px;
+}
+
+.chat-message-right .text-in-chat-message{
+  display: flex;
+  align-items:self-start;
+  font-size: 18px;
+  max-width: 600px;
+  text-align: justify;
+  overflow-x: hidden;
+  border: 1px solid black;
+  border-radius: 20px;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #dac587;
+}
+
+.chat-message-left .text-in-chat-message{
+  display: flex;
+  align-items:self-start;
+  font-size: 18px;
+  max-width: 600px;
+  text-align: justify;
+  overflow-x: hidden;
+  border: 1px solid white;
+  border-radius: 20px;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #5f5d59;
+  color: white;
+  font-weight: 400;
+}
+
+.time-for-messages-in-chat{
+  color: gray;
+}
+
+.chat-message-right .avatar-and-time-in-chat{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 80px;
+  margin-left: 15px;
+}
+
+.username-time-for-messages-in-chat{
+  margin-left: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+
+
+
+
+/* typing bubble */
+.chat-bubble {
+  background-color: #fff3cd;
+  padding: 16px 28px;
+  -webkit-border-radius: 20px;
+  -webkit-border-bottom-left-radius: 2px;
+  -moz-border-radius: 20px;
+  -moz-border-radius-bottomleft: 2px;
+  border-radius: 20px;
+  border-bottom-left-radius: 2px;
+  display: inline-block;
+}
+.typing {
+  align-items: center;
+  display: flex;
+  height: 17px;
+}
+.typing .dot {
+  animation: mercuryTypingAnimation 1s infinite ease-in-out;
+  background-color: #fff0c0;
+  border-radius: 50%;
+  height: 7px;
+  margin-right: 4px;
+  vertical-align: middle;
+  width: 7px;
+  display: inline-block;
+}
+.typing .dot:nth-child(1) {
+  animation-delay: 200ms;
+}
+.typing .dot:nth-child(2) {
+  animation-delay: 300ms;
+}
+.typing .dot:nth-child(3) {
+  animation-delay: 400ms;
+}
+.typing .dot:last-child {
+  margin-right: 0;
+}
+
+@keyframes mercuryTypingAnimation {
+  0% {
+    transform: translateY(0px);
+    background-color: #ffc003;
+  }
+  28% {
+    transform: translateY(-7px);
+    background-color: #e4bf52;
+  }
+  44% {
+    transform: translateY(0px);
+    background-color: #dac587;
+  }
+}
+
+.no-chat-selected-div{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(236, 235, 235);
+}
+
+.message-for-choose-chat{
+  font-style: italic;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: white;
+}

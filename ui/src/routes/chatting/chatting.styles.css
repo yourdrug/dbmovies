@@ -1,0 +1,6 @@
+.chat-screen-container{
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    width: inherit;
+    min-height: calc(100vh - 70px);
+}
