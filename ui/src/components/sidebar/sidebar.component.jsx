@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import ApiUtils from "../../api/apiUtils";
 import ApiEndpoints from "../../api/apiEndpoints";
 import CommonUtil from "../../util/commonUtil";
+import Modal from "../modal/modal.component";
 
 import axios from "axios";
 
@@ -30,24 +31,46 @@ const Sidebar = (props) => {
     fetchChatUser();
   }, []);
 
-  const getConnectedUserIds = () => {
-    let connectedUsers = "";
-    for (let chatUser of chatUsers) {
-      connectedUsers += chatUser.id + ",";
-    }
-    return connectedUsers.slice(0, -1);
-  };
-
   const fetchUsers = async () => {
-    const url = ApiEndpoints.USER_URL + "?exclude=" + getConnectedUserIds();
-    const users = await ApiConnector.sendGetRequest(url);
-    setUsers(users);
-    console.log("фетч юзерс " + users)
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/users');
+      let info = await response.data;
+      setUsers(info);
+    } catch (error) {
+      alert("ошибка в получении данных с сервера");
+    }
   };
 
   const addPeopleClickHandler = async () => {
     await fetchUsers();
     setIsShowAddPeopleModal(true);
+  };
+
+  const handleUserNewChatClick = async (user) => {
+    try {
+      let data = {}
+      if(props.currentUser.id == user.id){
+        data = {
+          'members': [props.currentUser.id, user.id],
+          'type': "SELF",
+          'name': user.username
+        };
+      }
+
+      else{
+        data = {
+          'members': [props.currentUser.id, user.id],
+          'type': "DM",
+          'name': user.username
+        };
+      }
+      
+      const response = await axios.post('http://127.0.0.1:8000/social/chats', data);
+      let info = await response.data;
+      console.log(info)
+    } catch (error) {
+      alert("ошибка в получении данных с сервера");
+    }
   };
 
   const getActiveChatClass = (roomId) => {
@@ -76,10 +99,14 @@ const Sidebar = (props) => {
 
   return (
     <div className="all-users-chats-container">
-        <button onClick={addPeopleClickHandler}
-          className="btn btn-outline-warning btn-block my-1 mt-4">
-          Add People
+        <button className='add-chats-for-sidebar' onClick={addPeopleClickHandler}>
+          Добавить чат
         </button>
+        <Modal active={isShowAddPeopleModal} setActive={setIsShowAddPeopleModal}>
+          {users.map((user) => (
+            <h1 onClick={()=> handleUserNewChatClick(user)}>{user.username}</h1>
+          ))}
+        </Modal>
       
       <div className="user-list-container" >
         {getChatListWithOnlineUser()?.map((chatUser, index) => {
@@ -118,38 +145,6 @@ const Sidebar = (props) => {
           );
         })}
       </div>
-      <ModalWindow
-        modalCloseHandler={() => setIsShowAddPeopleModal(false)}
-        show={isShowAddPeopleModal}
-      >
-        {users.length > 0 ? (
-          users?.map((user) => (
-            <div
-              key={user.id}
-              className="d-flex align-items-start pt-1 pb-1 d-flex align-items-center"
-            >
-              <img
-                src={user.image}
-                className="rounded-circle mr-1"
-                alt={user.username}
-                width="40"
-                height="40"
-              />
-              <div className="flex-grow-1 ml-2 mr-5">
-                {user.username}
-              </div>
-              <button
-                onClick={() => addMemberClickHandler(user.id)}
-                className="btn btn-sm btn-success"
-              >
-                Add
-              </button>
-            </div>
-          ))
-        ) : (
-          <h3>No More User Found</h3>
-        )}
-      </ModalWindow>
     </div>
   );
 };

@@ -1,17 +1,7 @@
 import './movie-little-card.styles.css';
-import { useState } from 'react';
-import { debounce } from 'lodash';
+import { Link } from "react-router-dom";
 
 const LittleMovieCard = ({movie}) => {
-    const [isHovered, setIsHovered] = useState(false);
-
-    const handleMouseEnter = debounce(() => {
-        setIsHovered(true);
-      }, 100); // Установите интервал debounce по вашему усмотрению
-    
-      const handleMouseLeave = debounce(() => {
-        setIsHovered(false);
-      }, 100);
 
     let className="movie-rate"
     if (movie.rating >= 7.5){
@@ -28,9 +18,10 @@ const LittleMovieCard = ({movie}) => {
 
 
     return (
-        <div className='short-movie-card'>
-            <span className='name-for-little-moviecard'> {movie.name} </span>
-            <img src={movie.poster} width={200} height={300}></img>
+        <Link className='link-for-little-card' to={`/movies/${movie.id}`} style={{textDecoration: "none"}}>
+            <div className='short-movie-card'>
+                <span className='name-for-little-moviecard'> {movie.name} </span>
+                <img src={movie.poster} width={200} height={300}></img>
                 <div className='additional-info-for-little-card'>
                     <span className='country-and-year'>{movie.country}, {movie.year} </span> 
                     <div>
@@ -38,7 +29,8 @@ const LittleMovieCard = ({movie}) => {
                         <span className='count-rates-for-little-card'>  {movie.annotated_count_rate !=0 && movie.annotated_count_rate} </span>
                     </div>
                 </div>
-        </div>
+            </div>
+        </Link>
     );
 };
   

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Directory from '../../components/directory/directory.component';
 import './home.styles.css'
 
@@ -22,6 +23,14 @@ const Home = () => {
     return(
         <div className='main-wrapper'>
             <Directory categories={categories} />
+            <div className='album-choices'>
+              <Link style={{textDecoration: "none"}}><div className='album-current-choice'>
+                ТОП 250
+              </div></Link>
+              <div className='album-current-choice'>
+                ТОП 500
+              </div>
+            </div>
         </div>
     )
 }

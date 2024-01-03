@@ -50,6 +50,7 @@
 }
 
 .control-buttons {
+    display: flex;
     height: 45px;
     width: 240px;
     border-radius: 10px;
@@ -59,6 +60,8 @@
     font-size: 18px;
     border: none;
     cursor: pointer;
+    align-items: center;
+    justify-content: center;
 }
 
 .control-buttons:hover{

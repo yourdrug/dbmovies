@@ -1,18 +1,42 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { useParams, Link } from "react-router-dom";
 
 import axios from "axios";
 import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
+import { UserContext } from "../../context/user.context";
+
 import './movie-by-id.styles.css'
 
 const MovieById = () => {
-    const[movie, setMovie] = useState(null)
+    const [movie, setMovie] = useState(null)
+    const [inputMessage, setInputMessage] = useState("");
+    const { currentUser, token } = useContext(UserContext)
     //const[movieId, setMovieId] = useState(12)    
 
     const params = useParams();
     let movieId = params.id;
+
+    async function sendReview () {
+        let config = {
+            headers: {
+              Authorization: "Token " + token,
+            },
+        };
+        let data = {
+            'review': inputMessage,
+        };
+        try {
+            const response = await axios.patch(
+              `http://127.0.0.1:8000/movie_relation/${movieId}/`, data, config
+            );
+            console.log(response);
+            setInputMessage("");
+        } catch (error) {
+            alert(error.message);
+        }
+    }
     
     
     async function getMovieById(){
@@ -26,11 +50,17 @@ const MovieById = () => {
         } catch (error) {
           alert("ошибка в получении данных с сервера");
         }
-      }
+    }
+
+    function onTextareaChanged (event) {
+        const contentEditable = event.target;
+        
+        if(contentEditable.scrollTop > 0){
+            contentEditable.style.height = contentEditable.scrollHeight + "px";
+        }
+    }
 
     useEffect(() => {
-        console.log("юз эффект");
-        //setMovieId(params.id);
         getMovieById();
     }, [movieId]);
 
@@ -41,6 +71,7 @@ const MovieById = () => {
     }
 
     else{
+        const actors = movie.crew.filter((profession) => profession.slug == 'actor')
         const directors = movie.crew.filter((profession) => profession.slug == 'director')
         const producers = movie.crew.filter((profession) => profession.slug == 'producer')
         const screenwriters = movie.crew.filter((profession) => profession.slug == 'writer')
@@ -111,7 +142,9 @@ const MovieById = () => {
                                 <span> 
                                     <div className="persons">
                                         {directors.map((profession) => {
-                                            return <div key={profession.person.id}><a>{profession.person.name} &nbsp;</a></div>
+                                            return <div key={profession.person.id}>
+                                                <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>{profession.person.name ? profession.person.name : profession.person.en_name}</Link>
+                                            </div>
                                             })
                                         } {directors.length === 0 && <span>-</span>}
                                     </div> 
@@ -123,7 +156,9 @@ const MovieById = () => {
                                 <span> 
                                     <div className="persons">
                                         {producers.map((profession) => {
-                                            return <div key={profession.person.id}><a>{profession.person.name} &nbsp;</a></div>
+                                            return <div key={profession.person.id}>
+                                                <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>{profession.person.name ? profession.person.name : profession.person.en_name}</Link>
+                                            </div>
                                             })
                                         } {producers.length === 0 && <span>-</span>}
                                     </div> 
@@ -135,7 +170,9 @@ const MovieById = () => {
                                 <span> 
                                     <div className="persons">
                                         {screenwriters.map((profession) => {
-                                            return <div key={profession.person.id}><a>{profession.person.name} &nbsp;</a></div>
+                                            return <div key={profession.person.id}>
+                                                <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>{profession.person.name ? profession.person.name : profession.person.en_name}</Link>
+                                            </div>
                                             })
                                         } {screenwriters.length === 0 && <span>-</span>}
                                     </div> 
@@ -147,7 +184,9 @@ const MovieById = () => {
                                 <span> 
                                     <div className="persons">
                                         {designers.map((profession) => {
-                                            return <div key={profession.person.id}><a>{profession.person.name} &nbsp;</a></div>
+                                            return <div key={profession.person.id}>
+                                                <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>{profession.person.name ? profession.person.name : profession.person.en_name}</Link>
+                                            </div>
                                             })
                                         } {designers.length === 0 && <span>-</span>}
                                     </div> 
@@ -159,7 +198,9 @@ const MovieById = () => {
                                 <span> 
                                     <div className="persons">
                                         {composers.map((profession) => {
-                                            return <div key={profession.person.id}><a>{profession.person.name} &nbsp;</a></div>
+                                            return <div key={profession.person.id}>
+                                                <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>{profession.person.name ? profession.person.name : profession.person.en_name}</Link>
+                                            </div>
                                             })
                                         } {composers.length === 0 && <span>-</span>}
                                     </div> 
@@ -171,7 +212,9 @@ const MovieById = () => {
                                 <span> 
                                     <div className="persons">
                                         {editors.map((profession) => {
-                                            return <div key={profession.person.id}><a>{profession.person.name} &nbsp;</a></div>
+                                            return <div key={profession.person.id}>
+                                                <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>{profession.person.name ? profession.person.name : profession.person.en_name}</Link>
+                                            </div>
                                             })
                                         } {editors.length === 0 && <span>-</span>}
                                     </div> 
@@ -183,7 +226,9 @@ const MovieById = () => {
                                 <span> 
                                     <div className="persons">
                                         {operators.map((profession) => {
-                                            return <div key={profession.person.id}><a>{profession.person.name} &nbsp;</a></div>
+                                            return <div key={profession.person.id}>
+                                                <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>{profession.person.name ? profession.person.name : profession.person.en_name}</Link>
+                                            </div>
                                             })
                                         } {operators.length === 0 && <span></span>}
                                     </div> 
@@ -204,9 +249,51 @@ const MovieById = () => {
     
                     <div className="wrapper-col-3">
                         <div className={className}> {movie.rating} </div> 
-                        <span className="rathing-counts">{movie.annotated_count_rate}</span>
-                        <a href="#" className="rathing-details">459 рецензий</a>
+                        <span className="rathing-counts">{movie.annotated_count_rate!=0 && movie.annotated_count_rate}</span>
+                        <a href="#" className="rathing-details">{movie.annotated_count_review}&nbsp;Рецензий</a>
+                        <div style={{fontWeight: "bold", marginTop:"10px"}}>Актеры</div>
+                        <div className="persons-actors">
+                            {actors.map((profession) => (
+                                <div key={profession.person.id}>
+                                    <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>{profession.person.name ? profession.person.name : profession.person.en_name}</Link>
+                                </div>
+                            ))}
+                            {actors.length === 0 && <span>-</span>}
+                        </div>
                     </div>
+                </div>
+                <div className="movies-reviews-for-full-page">
+                    <div className="input-module-for-movie-review">
+                        <textarea  type="text" placeholder="Введите ваш комментарий" 
+                            autoComplete="off" className="movie-review-input"
+                            onChange={(event) => {setInputMessage(event.target.value); onTextareaChanged(event)}}
+                            value={inputMessage}
+                        />
+                        <button className="btn-send-movie-review" onClick={()=>sendReview()}>Опубликовать</button>
+                    </div>
+                    
+                    <div className="list-reviews">
+                        {movie.movies_reviews.map((review, index) => {
+                            return (
+                                review.review !== null && (
+                                    <div className="reviews-texts" key={index}>
+                                        <div className="movie-review-owner">
+                                            <img
+                                                src={review.user.image}
+                                                className="user-image-container"
+                                                alt="User"
+                                                width="40"
+                                                height="40"
+                                            />
+                                            {review.user.username}
+                                        </div>
+                                        {review.review}
+                                    </div>
+                                )
+                            );
+                        })}
+                    </div>
+
                 </div>
             </div> 
         )

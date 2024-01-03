@@ -59,11 +59,11 @@ const LoginForm = () =>{
             });
     }
 
-    useEffect(() => {
-      if (token !== null) {
-        getAccountInfo();
-      }
-    }, [token]);
+    // useEffect(() => {
+    //   if (token !== null) {
+    //     getAccountInfo();
+    //   }
+    // }, [token]);
 
     return(
         <div className='login-from'>

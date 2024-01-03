@@ -49,14 +49,11 @@ const Profile = () => {
             "http://127.0.0.1:8000/user_movie_relation", config
           );
           let info = await response.data;
-          console.log("полученная информация " + JSON.stringify(info))
           setUserInfo(info);
-          await getMovie();
           const { likedMovies, bookmarkedMovies, watchedMovies } = processMovies(info);
           setLikedMovies(likedMovies);
           setBookmarkedMovies(bookmarkedMovies);
           setWatchedMovies(watchedMovies);
-          console.log(likedMovies);
         } catch (error) {
           alert("ошибка в получении данных с сервера");
         }
@@ -114,7 +111,8 @@ const Profile = () => {
                   : likedMovies.map((movie) => (
                     <LittleMovieCard key={movie.id} movie={movie} />
                   ))}
-                    {likedMovies.length > 3 && (<button className='control-buttons'>Смотреть еще</button>)}
+                    {likedMovies.length > 3 && 
+                    (<Link to={`/profile/${currentUser.id}/liked`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
               </div>
               <h2> Избранное </h2>
               <div className='users-liked-movies'>
@@ -125,7 +123,8 @@ const Profile = () => {
                   : bookmarkedMovies.map((movie) => (
                     <LittleMovieCard key={movie.id} movie={movie} />
                   ))}
-                    {bookmarkedMovies.length > 3 && (<button className='control-buttons'>Смотреть еще</button>)}
+                    {bookmarkedMovies.length > 3 && 
+                    (<Link to={`/profile/${currentUser.id}/bookmarks`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
               </div>
               <h2>Просмотренные фильмы</h2>
               <div className='users-liked-movies'>
@@ -136,7 +135,8 @@ const Profile = () => {
                   : watchedMovies.map((movie) => (
                     <LittleMovieCard key={movie.id} movie={movie} />
                   ))}
-                    {watchedMovies.length > 3 && (<button className='control-buttons'>Смотреть еще</button>)}
+                    {watchedMovies.length > 3 && 
+                    (<Link to={`/profile/${currentUser.id}/watched`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
               </div>
             </div>
           </div>

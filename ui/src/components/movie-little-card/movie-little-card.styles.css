@@ -1,4 +1,10 @@
-.short-movie-card{
+.link-for-little-card:hover{
+    text-decoration: none;
+    color: black;
+}
+
+.short-movie-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     border-radius: 10px;
@@ -8,11 +14,11 @@
     padding-bottom: 5px;
     width: 200px;
     height: auto;
+    transition: box-shadow 0.3s ease-in-out;
 }
 
-.short-movie-card:hover{
-    border: 2px solid black;
-    position: relative;
+.short-movie-card:hover {
+    box-shadow: 0 0 10px 2px black;
 }
 
 .short-movie-card:hover .additional-info-for-little-card{

@@ -21,15 +21,6 @@
   .movie-card.watched{
     background-color: rgb(233, 225, 222);
   }
-  
-  .movie-card:hover{
-    background-color: rgb(234, 234, 234);
-    transition: 0.6s;
-  }  
-
-  .movie-card.watched:hover{
-    background-color: rgb(221, 220, 220);
-  }
 
   .poster {
     width: 100%; 
@@ -37,10 +28,6 @@
     border-radius: 0;
     margin-right: 20px;
     margin-top: 20px;
-  }
-
-  .poster:hover{
-    background-color: inherit;
   }
   
   .poster img {
@@ -58,10 +45,6 @@
     background-color: inherit;
     cursor: pointer;
     text-decoration: none;
-  }
-
-  .movie-info:hover{
-    background-color: inherit;
   }
   
   .movie-rate-good {

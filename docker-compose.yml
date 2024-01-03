@@ -23,9 +23,9 @@ services:
 
     depends_on:
       - database
-      - localstack
-    # volumes:
-    #  - /home/eugene/Projects/dbmovies/movies/media:/movies/media
+     # - localstack
+    volumes:
+      - /home/eugene/Projects/dbmovies/movies/media:/movies/media
 
   database:
     image: postgres:15.4-alpine
@@ -41,17 +41,17 @@ services:
     image: redis:7.2-alpine
     hostname: redis
 
-  localstack:
-    image: localstack/localstack
-    environment:
-      - SERVICES=s3
-      - DEBUG=1
-      - DATA_DIR=/tmp/localstack/data
-    ports:
-      - "4566:4566"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./localstack:/tmp/localstack
+#  localstack:
+#    image: localstack/localstack
+#    environment:
+#      - SERVICES=s3
+#      - DEBUG=1
+#      - DATA_DIR=/tmp/localstack/data
+#    ports:
+#      - "4566:4566"
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - ./localstack:/tmp/localstack
 
 
 volumes:

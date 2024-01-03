@@ -1,0 +1,64 @@
+.person-page {
+    display: grid;
+    grid-template-columns: 350px 500px 300px;
+    grid-gap: 40px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 40px;
+}
+
+.person-details {
+    text-align: center;    
+}
+
+.person-wrapper-col-1 img {
+    width: 100%;
+    border-radius: 10px;
+    background-color: white;
+    margin-left: 15px;
+}
+
+    .person-professions,
+    .person-movies {
+    flex-grow: 1;
+    padding: 0 20px;
+    }
+
+    .person-professions h2,
+    .person-movies h2 {
+    text-align: center;
+    }
+
+.person-professions ul,
+.person-movies ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.person-professions li,
+.person-movies li {
+    margin-bottom: 8px;
+}
+
+.title-for-person{
+    font-size: 45px;
+    font-weight: 900;
+    margin-bottom: 10px;
+    margin-top: 0;
+    line-height: 42px;
+}
+
+.subtitle-for-person{
+    margin: 0;
+    opacity: 0.4;
+    line-height: 19px;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.movies-by-profession-by-person{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Пять колонок с одинаковой шириной */
+    grid-gap: 10px; /* Отступ между карточками */
+}
