@@ -1,7 +1,7 @@
 import random
 
 from django.core.cache import cache
-from django.db.models import Count, Case, When, Sum
+from django.db.models import Count, Case, When, Sum, Q
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -9,10 +9,11 @@ from django.views.decorators.cache import never_cache, cache_page
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.mixins import UpdateModelMixin
+from rest_framework.mixins import UpdateModelMixin, ListModelMixin
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
@@ -24,7 +25,8 @@ from movies_database.serializers import MovieSerializer, UserMovieRelationSerial
 class MovieViewSet(ModelViewSet):
     queryset = Movie.objects.all().annotate(
         annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
-        annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
+        annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1))),
+        annotated_count_review=Count(Case(When(usermovierelation__review__isnull=False, then=1)))
     ).select_related('owner').prefetch_related('watchers', 'profession_set__person', 'genres').order_by('id')
     serializer_class = MovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
@@ -209,6 +211,42 @@ class ShortInfoMovieViewSet(ModelViewSet):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
+    @action(detail=False, methods=['GET'])
+    @method_decorator(never_cache)
+    def liked_movies(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({'detail': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+        queryset = self.get_queryset()
+        movies = queryset.filter(
+            Q(usermovierelation__user=user, usermovierelation__like=True))
+        serializer = self.get_serializer(movies, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['GET'])
+    @method_decorator(never_cache)
+    def watched_movies(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({'detail': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+        queryset = self.get_queryset()
+        movies = queryset.filter(
+            Q(usermovierelation__user=user, usermovierelation__is_watched=True))
+        serializer = self.get_serializer(movies, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['GET'])
+    @method_decorator(never_cache)
+    def bookmarked_movies(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({'detail': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+        queryset = self.get_queryset()
+        movies = queryset.filter(
+            Q(usermovierelation__user=user, usermovierelation__in_bookmarks=True))
+        serializer = self.get_serializer(movies, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
 
 class PersonInfoViewSet(ModelViewSet):
     queryset = Person.objects.all().prefetch_related('person_movies', 'person_movies__genres')
@@ -226,3 +264,21 @@ class ProfessionViewSet(ModelViewSet):
     filterset_fields = ['person_id']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
+
+
+class SearchAPIView(APIView):
+    @method_decorator(cache_page(60 * 2))
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('query', '')
+
+        results_movie = Movie.objects.filter(name__icontains=query)[:3]
+        results_person = Person.objects.filter(name__icontains=query)[:3]
+
+        serializer_movie = LittleMovieCardSerializer(results_movie, many=True)
+        serializer_person = PersonsSerializer(results_person, many=True)
+
+        return Response({
+            'query': query,
+            'results_movie': serializer_movie.data,
+            'results_person': serializer_person.data
+        }, status=status.HTTP_200_OK)

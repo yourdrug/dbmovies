@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
+from account.serializers import CurrentUserInfoSerializer
 from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
 
 
@@ -32,26 +33,61 @@ class ProfessionSerializer(ModelSerializer):
 
 
 class LittleMovieCardSerializer(ModelSerializer):
-    annotated_count_rate = serializers.IntegerField(read_only=True)
+    annotated_count_rate = serializers.SerializerMethodField()
 
     class Meta:
         model = Movie
         fields = ('id', 'name', 'year', 'country', 'poster', 'rating', 'annotated_count_rate')
 
+    def get_annotated_count_rate(self, obj):
+        # Получаем текущий queryset фильмов, чтобы убедиться, что аннотация происходит на том же уровне
+        queryset = Movie.objects.filter(id=obj.id)
+
+        # Аннотируем count_rate
+        from django.db.models import Count
+        from django.db.models import Case
+        from django.db.models import When
+
+        annotated_queryset = queryset.annotate(
+            annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
+        )
+
+        # Возвращаем значение для текущего объекта
+        return annotated_queryset.first().annotated_count_rate if annotated_queryset.exists() else 0
+
+
+class ReviewsSerializer(serializers.ModelSerializer):
+    user = CurrentUserInfoSerializer(read_only=True)
+
+    class Meta:
+        model = UserMovieRelation
+        fields = ('review', 'user')
+
 
 class MovieSerializer(ModelSerializer):
     annotated_likes = serializers.IntegerField(read_only=True)
     annotated_count_rate = serializers.IntegerField(read_only=True)
+    annotated_count_review = serializers.IntegerField(read_only=True)
     owner_name = serializers.CharField(read_only=True, source='owner.username', default="")
     genres = MovieGenreSerializer(many=True, read_only=True)
     crew = ProfessionSerializer(many=True, read_only=True, source='profession_set')
+
+    movies_reviews = ReviewsSerializer(many=True, read_only=True, source='usermovierelation_set')
+
+    # def get_movies_reviews(self, obj):
+    #     reviews = obj.usermovierelation_set.filter(movie=obj).values_list('review', flat=True).all()
+    #
+    #     if reviews:
+    #         return reviews
+    #
+    #     return None
 
     class Meta:
         model = Movie
         fields = ('id', 'name', 'description', 'tagline', 'watch_time',
                   'year', 'country', 'poster', 'world_premier',
                   'annotated_likes', 'rating', 'owner_name', 'crew',
-                  'genres', 'annotated_count_rate')
+                  'genres', 'annotated_count_rate', 'annotated_count_review', 'movies_reviews')
 
 
 class ShortInfoMovieSerializer(ModelSerializer):
@@ -131,29 +167,20 @@ class ProfessionPersonSerializer(ModelSerializer):
         fields = ('slug',)
 
 
-class MoviePersonsSerializer(ModelSerializer):
-    genres = MovieGenreSerializer(many=True, read_only=True)
+class PersonProfessionSerializer(ModelSerializer):
+    # person = PersonsMoviesSerializer(read_only=True)
+    movie = LittleMovieCardSerializer(read_only=True)
 
     class Meta:
-        model = Movie
-        fields = ('id', 'name', 'watch_time', 'year', 'poster',
-                  'rating', 'genres')
+        model = Profession
+        fields = ('slug', 'movie')
 
 
 class PersonsSerializer(ModelSerializer):
-    person_movies = MoviePersonsSerializer(many=True, read_only=True)
-    professions = ProfessionPersonSerializer(many=True, read_only=True, source='profession_set')
+    # person_movies = MoviePersonsSerializer(many=True, read_only=True)
+    professions = PersonProfessionSerializer(many=True, read_only=True, source='profession_set')
 
     class Meta:
         model = Person
         fields = ('id', 'name', 'en_name', 'photo', 'birth_day',
-                  'death_day', 'person_movies', 'professions')
-
-
-class PersonProfessionSerializer(ModelSerializer):
-    person = PersonsMoviesSerializer(read_only=True)
-    movie = MoviePersonsSerializer(read_only=True)
-
-    class Meta:
-        model = Profession
-        fields = ('slug', 'person', 'movie')
+                  'death_day', 'professions')

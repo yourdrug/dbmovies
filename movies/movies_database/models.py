@@ -82,6 +82,9 @@ class UserMovieRelation(models.Model):
         creating = not self.pk
         old_rating = self.rate
 
+        if self.review is None:
+            self.review = None
+
         super().save(*args, **kwargs)
 
         new_rating = self.rate
