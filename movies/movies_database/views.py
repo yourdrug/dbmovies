@@ -91,9 +91,9 @@ class MovieViewSet(ModelViewSet):
                     movie_temp.genres.add(temp_genre)
 
             for person in request.data.get("movies").get("persons"):
-                if Person.objects.filter(name=person.get("name")).exists():
+                if Person.objects.filter(name=person.get("name")).exists() and person.get("name") is not None:
                     temp_person = Person.objects.filter(name=person.get("name")).first()
-                elif Person.objects.filter(en_name=person.get("enName")).exists():
+                elif Person.objects.filter(en_name=person.get("enName")).exists() and person.get("enName") is not None:
                     temp_person = Person.objects.filter(en_name=person.get("enName")).first()
                 else:
                     temp_person = Person.objects.create(
@@ -113,7 +113,7 @@ class MovieViewSet(ModelViewSet):
         ids = data.values('id')
         random_id = random.choice(ids)
         random_movie = data.get(id=random_id.get("id"))
-        serializer = LittleMovieCardSerializer(random_movie)
+        serializer = MovieSerializer(random_movie)
         return Response(serializer.data)
 
     @action(detail=False, methods=['GET'])
@@ -197,7 +197,7 @@ class ShortInfoMovieViewSet(ModelViewSet):
     ).prefetch_related('profession_set__person', 'genres').order_by('id')
     serializer_class = ShortInfoMovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['year', 'name', 'genres__name']
+    filterset_fields = ['year', 'name', 'genres__name', 'country']
     permission_classes = [IsOwnerOrStaffOrReadOnly]
     authentication_classes = (TokenAuthentication,)
     pagination_class = MoviesPagination
@@ -244,6 +244,18 @@ class ShortInfoMovieViewSet(ModelViewSet):
         queryset = self.get_queryset()
         movies = queryset.filter(
             Q(usermovierelation__user=user, usermovierelation__in_bookmarks=True))
+        serializer = self.get_serializer(movies, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['GET'])
+    @method_decorator(never_cache)
+    def will_watch_movies(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return Response({'detail': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+        queryset = self.get_queryset()
+        movies = queryset.filter(
+            Q(usermovierelation__user=user, usermovierelation__will_watch=True))
         serializer = self.get_serializer(movies, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 

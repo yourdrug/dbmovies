@@ -67,6 +67,7 @@ class UserMovieRelation(models.Model):
     like = models.BooleanField(default=False)
     in_bookmarks = models.BooleanField(default=False)
     is_watched = models.BooleanField(default=False)
+    will_watch = models.BooleanField(default=False)
 
     rate = models.PositiveSmallIntegerField(blank=True, null=True, validators=[MaxValueValidator(10)])
     review = models.TextField(blank=True, null=True, default=None)

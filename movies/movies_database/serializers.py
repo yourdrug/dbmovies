@@ -98,6 +98,7 @@ class ShortInfoMovieSerializer(ModelSerializer):
     user_like = serializers.SerializerMethodField()
     user_is_watched = serializers.SerializerMethodField()
     user_is_in_bookmark = serializers.SerializerMethodField()
+    user_will_watch = serializers.SerializerMethodField()
 
     def get_user_rating(self, obj):
         user = self.context['request'].user
@@ -139,18 +140,28 @@ class ShortInfoMovieSerializer(ModelSerializer):
 
         return None
 
+    def get_user_will_watch(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            user_is_in_bookmark = obj.usermovierelation_set.filter(user=user).values('will_watch').first()
+
+            if user_is_in_bookmark:
+                return user_is_in_bookmark['will_watch']
+
+        return None
+
     class Meta:
         model = Movie
         fields = ('id', 'name', 'watch_time', 'world_premier',
                   'year', 'country', 'poster', 'rating', 'crew',
                   'genres', 'user_rating', 'user_is_watched', 'user_like',
-                  'user_is_in_bookmark', 'annotated_count_rate')
+                  'user_is_in_bookmark', 'user_will_watch', 'annotated_count_rate')
 
 
 class UserMovieRelationSerializer(ModelSerializer):
     class Meta:
         model = UserMovieRelation
-        fields = ('movie', 'like', 'in_bookmarks', 'rate', 'is_watched', 'review')
+        fields = ('movie', 'like', 'in_bookmarks', 'rate', 'is_watched', 'will_watch', 'review')
 
 
 class UserMovieRelationForUserSerializer(ModelSerializer):
@@ -158,7 +169,7 @@ class UserMovieRelationForUserSerializer(ModelSerializer):
 
     class Meta:
         model = UserMovieRelation
-        fields = ('movie', 'like', 'in_bookmarks', 'rate', 'is_watched', 'review')
+        fields = ('movie', 'like', 'in_bookmarks', 'rate', 'is_watched', 'will_watch', 'review')
 
 
 class ProfessionPersonSerializer(ModelSerializer):
