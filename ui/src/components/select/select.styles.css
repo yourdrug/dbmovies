@@ -1,0 +1,22 @@
+.react-select-container {
+    width: 400px;
+}
+  
+.react-select__control {
+    border-color: #007bff;
+    border-radius: 8px;
+}
+  
+.react-select__menu {
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+  
+.react-select__option {
+    padding: 8px;
+}
+  
+.react-select__option:hover {
+    background-color: black;
+    color: #fff;
+}
