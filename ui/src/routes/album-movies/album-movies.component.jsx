@@ -9,6 +9,7 @@ const AlbumMovies = () => {
   const [likedMovies, setLikedMovies] = useState([])
   const [bookmarkedMovies, setBookmarkedMovies] = useState([])
   const [watchedMovies, setWatchedMovies] = useState([])
+  const [willWatchMovies, setWillWatchedMovies] = useState([])
 
   const params = useParams();
   let albumName = params.albumName;
@@ -73,6 +74,26 @@ async function getBookmarksMoives(){
   }
 }
 
+async function getWillWatchMoives(){
+  if (token != null){
+    var config = {
+      headers: {
+        Authorization: "Token " + token,
+      },
+    };
+  }
+  
+  try {
+    const response = await axios.get(
+      "http://127.0.0.1:8000/movie_short/will_watch_movies", config
+    );
+    let info = await response.data;
+    setWillWatchedMovies(info);
+  } catch (error) {
+    alert("ошибка в получении данных с сервера");
+  }
+}
+
 useEffect(()=>{
   switch(albumName){
     case 'liked':
@@ -84,6 +105,9 @@ useEffect(()=>{
     case 'bookmarks':
       getBookmarksMoives();
       break;
+    case 'will-watch':
+      getWillWatchMoives();
+      break;
   }
 }, []);
 
@@ -92,6 +116,7 @@ useEffect(()=>{
       {albumName == 'liked' && <MovieList className='movies-list' movies={likedMovies} page={1} pageSize={50}/>}
       {albumName == 'watched' && <MovieList className='movies-list' movies={watchedMovies} page={1} pageSize={50}/>}
       {albumName == 'bookmarks' && <MovieList className='movies-list' movies={bookmarkedMovies} page={1} pageSize={50}/>}
+      {albumName == 'will-watch' && <MovieList className='movies-list' movies={willWatchMovies} page={1} pageSize={50}/>}
     </div>
   );
 };

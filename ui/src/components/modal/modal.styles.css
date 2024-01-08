@@ -24,7 +24,7 @@
     border-radius: 12px;
     background-color: white;
     width: 30vw;
-    height: 300px;
+    height: auto;
     transform: scale(0.5);
     transition: 0.4s all;
 }

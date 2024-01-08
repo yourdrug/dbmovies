@@ -6,21 +6,24 @@ function Pagination ({setPage, page, numberOfPages}) {
     const [neighbours, setNeighbour] = useState([])
 
     function changeNeighbour(){
-        if (page == 1){
+        if (page == 1 && numberOfPages == 1){
+            setNeighbour([1])
+        }
+        else if (page == 1 && numberOfPages == 2){
+            setNeighbour([1, 2])
+        }
+        else if (page == 1 && numberOfPages >=3){
             setNeighbour([1, 2, numberOfPages])
         }
         else if(page == 2){
             setNeighbour([1, 2, 3, numberOfPages])
         }
-
         else if(page == numberOfPages){
             setNeighbour([1, numberOfPages - 1, numberOfPages])
         }
-
         else if(page == numberOfPages - 1){
             setNeighbour([1, numberOfPages - 2, numberOfPages - 1, numberOfPages])
         }
-
         else{
             setNeighbour([1, page - 1, page, page + 1, numberOfPages])
         }

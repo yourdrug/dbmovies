@@ -24,15 +24,8 @@ const getTimeFromDate = (date) => {
   return hour + ":" + minute + " " + meridian;
 };
 
-// const getUserId = () => { 
-//   if (localStorage.getItem("token")) {
-//     return localStorage.getItem("id");
-//   }
-//   return "";
-// };
-
 const getFormatedChatUser = (chatUsers, onlineUserList) => {
-  const userId = localStorage.getItem("id")
+  const userId = JSON.parse(localStorage.getItem("currentUser")).id
   return chatUsers.reduce((acumulator, item) => {
     if (item.type === "DM" || item.type === "SELF") {
       let newResult = {};
@@ -58,7 +51,6 @@ const getFormatedChatUser = (chatUsers, onlineUserList) => {
 
 const CommonUtil = {
   getTimeFromDate: getTimeFromDate,
-  //getUserId: getUserId,
   getFormatedChatUser: getFormatedChatUser,
 };
 

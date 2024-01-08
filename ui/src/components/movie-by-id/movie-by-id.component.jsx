@@ -12,8 +12,7 @@ import './movie-by-id.styles.css'
 const MovieById = () => {
     const [movie, setMovie] = useState(null)
     const [inputMessage, setInputMessage] = useState("");
-    const { currentUser, token } = useContext(UserContext)
-    //const[movieId, setMovieId] = useState(12)    
+    const { currentUser, token } = useContext(UserContext) 
 
     const params = useParams();
     let movieId = params.id;
@@ -31,7 +30,6 @@ const MovieById = () => {
             const response = await axios.patch(
               `http://127.0.0.1:8000/movie_relation/${movieId}/`, data, config
             );
-            console.log(response);
             setInputMessage("");
         } catch (error) {
             alert(error.message);

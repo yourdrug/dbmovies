@@ -53,7 +53,7 @@ const Sidebar = (props) => {
         data = {
           'members': [props.currentUser.id, user.id],
           'type': "SELF",
-          'name': user.username
+          'name': 'Избранное'
         };
       }
 
@@ -67,7 +67,6 @@ const Sidebar = (props) => {
       
       const response = await axios.post('http://127.0.0.1:8000/social/chats', data);
       let info = await response.data;
-      console.log(info)
     } catch (error) {
       alert("ошибка в получении данных с сервера");
     }
@@ -75,18 +74,11 @@ const Sidebar = (props) => {
 
   const getActiveChatClass = (roomId) => {
     let activeChatId = props.currentRoomId;
-    console.log("айди чата " + activeChatId);
-    //console.log("айди чата аргумент" + roomId);
     return roomId == activeChatId ? "-active-chat" : "";
-  };
-
-  const logoutClickHandler = () => {
-    console.log("вышел")
   };
 
   const getChatListWithOnlineUser = () => {
     let updatedChatList = chatUsers.map((user) => {
-    console.log("онлайн пользователи " + props.onlineUserList);
       if (props.onlineUserList.includes(user.id)) {
         user.isOnline = true;
       } else {

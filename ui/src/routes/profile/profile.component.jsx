@@ -7,14 +7,14 @@ import axios from 'axios';
 import './profile.styles.css'
 
 const Profile = () => {
-    const { currentUser, token } = useContext(UserContext)
-    const [userInfo, setUserInfo] = useState([])
-    const [movie, setMovie] = useState([])
-    const [likedMovies, setLikedMovies] = useState([])
-    const [bookmarkedMovies, setBookmarkedMovies] = useState([])
-    const [watchedMovies, setWatchedMovies] = useState([])
+  const { currentUser, token, setCurrentUser, setToken } = useContext(UserContext)
+  const [userInfo, setUserInfo] = useState([])
+  const [likedMovies, setLikedMovies] = useState([])
+  const [bookmarkedMovies, setBookmarkedMovies] = useState([])
+  const [watchedMovies, setWatchedMovies] = useState([])
+  const [willWatchMovies, setWillWatchMovies] = useState([])
 
-    async function getMovie(){
+  async function getUserInfo(){
       if (token != null){
         var config = {
           headers: {
@@ -25,44 +25,25 @@ const Profile = () => {
       
       try {
         const response = await axios.get(
-          "http://127.0.0.1:8000/movie/randomMovie/", config
+          "http://127.0.0.1:8000/user_movie_relation", config
         );
         let info = await response.data;
-        console.log("полученная информация " + JSON.stringify(info))
-        setMovie(info);
+        setUserInfo(info);
+        const { likedMovies, bookmarkedMovies, watchedMovies, willWatchMovies } = processMovies(info);
+        setLikedMovies(likedMovies);
+        setBookmarkedMovies(bookmarkedMovies);
+        setWatchedMovies(watchedMovies);
+        setWillWatchMovies(willWatchMovies);
       } catch (error) {
         alert("ошибка в получении данных с сервера");
       }
-  }
-
-    async function getUserInfo(){
-        if (token != null){
-          var config = {
-            headers: {
-              Authorization: "Token " + token,
-            },
-          };
-        }
-        
-        try {
-          const response = await axios.get(
-            "http://127.0.0.1:8000/user_movie_relation", config
-          );
-          let info = await response.data;
-          setUserInfo(info);
-          const { likedMovies, bookmarkedMovies, watchedMovies } = processMovies(info);
-          setLikedMovies(likedMovies);
-          setBookmarkedMovies(bookmarkedMovies);
-          setWatchedMovies(watchedMovies);
-        } catch (error) {
-          alert("ошибка в получении данных с сервера");
-        }
     }
 
     function processMovies(jsonData) {
       const likedMovies = [];
       const bookmarkedMovies = [];
       const watchedMovies = [];
+      const willWatchMovies = [];
     
       jsonData.main.forEach(item => {
         const movieData = item.movie;
@@ -78,9 +59,39 @@ const Profile = () => {
         if (item.is_watched) {
           watchedMovies.push(movieData);
         }
+
+        if (item.will_watch) {
+          willWatchMovies.push(movieData);
+        }
       });
     
-      return { likedMovies, bookmarkedMovies, watchedMovies };
+      return { likedMovies, bookmarkedMovies, watchedMovies, willWatchMovies };
+    }
+
+    async function logout() {
+      let data = { username: currentUser.username, password: localStorage.getItem("password")};
+      let config = {
+          headers: {
+            Authorization: "Token " + token,
+          },
+        };
+      axios.post("http://127.0.0.1:8000/auth/token/logout/", data, config)
+          .then(() => {
+              setCurrentUser(null);
+              setToken(null);
+          })
+          .catch(error => {
+              alert(error.message);
+          });
+  }
+
+    function handleLogoutClick(){
+      logout();
+      setCurrentUser(null);
+      setToken(null);
+      localStorage.setItem("token", null);
+      localStorage.setItem("currentUser", null);
+      localStorage.setItem("password", null);     
     }
     
     useEffect(()=>{
@@ -138,12 +149,25 @@ const Profile = () => {
                     {watchedMovies.length > 3 && 
                     (<Link to={`/profile/${currentUser.id}/watched`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
               </div>
+              <h2>Буду смотреть</h2>
+              <div className='users-liked-movies'>
+                {willWatchMovies.length > 3
+                  ? willWatchMovies.slice(0, 3).map((movie) => (
+                    <LittleMovieCard key={movie.id} movie={movie} />
+                  ))
+                  : willWatchMovies.map((movie) => (
+                    <LittleMovieCard key={movie.id} movie={movie} />
+                  ))}
+                    {willWatchMovies.length > 3 && 
+                    (<Link to={`/profile/${currentUser.id}/will-watch`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
+              </div>
             </div>
           </div>
           <div className='buttons-for-control-page'>
+            <Link to='/'><button className='control-buttons' onClick={()=>handleLogoutClick()}> Выйти </button></Link>
             <button className='control-buttons'> Редактировать </button>
             <Link to='/chatting'><button className='control-buttons' >Cообщения </button></Link>
-            <button className='control-buttons' onClick={()=> getMovie()}> Фильм на вечер </button>
+            <Link to='/random-movie'><button className='control-buttons'> Фильм на вечер </button></Link>
             
 
           </div>

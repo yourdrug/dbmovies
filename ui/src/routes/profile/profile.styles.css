@@ -1,6 +1,7 @@
 .wrapper-for-profile{
     display: flex;
     flex-direction: row;
+    padding-bottom: 120px;
 }
 
 .profile-info-at-page{
@@ -47,6 +48,7 @@
     margin-left: auto;
     gap: 20px;
     padding-top: 20px;
+    padding-right: 20px;
 }
 
 .control-buttons {
@@ -72,6 +74,7 @@
 .users-liked-movies{
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .username-and-total-info-for-user{

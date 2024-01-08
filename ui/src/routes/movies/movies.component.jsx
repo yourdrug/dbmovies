@@ -3,13 +3,12 @@ import axios from 'axios'
 import MovieList from '../../components/movie-list/movie-list.component';
 import Pagination from '../../components/pagination-page/pagination-page.component';
 import { UserContext } from '../../context/user.context';
-import Select from 'react-select';
+import FilterSelect from '../../components/select/select.component';
 import './movies.styles.css'
 
 const pageSize = 50;
 
 function Movies() {
-  const [myMovies, setMyMovie] = useState([])
   const [page, setPage] = useState(1)
   const [numberOfPages, setNumberOfPages] = useState(1)
   const [selectedGenre, setSelectedGenre] = useState("")
@@ -49,32 +48,6 @@ function Movies() {
     { value: "Великобритания", label: 'Великобритания' },
   ];
 
-  async function getMyMovies(){
-    if (token != null){
-      var config = {
-        headers: {
-          Authorization: "Token " + token,
-        },
-      };
-    }
-    
-    try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/movie_short/?page=" + page, config
-      );
-      let movies = await response.data.results;
-      let count =  await response.data.count;
-      let res = Math.ceil(count / pageSize)
-      setNumberOfPages(res);
-      setMyMovie(movies);
-      setFilteredMovies(movies)
-      console.log(token);
-      console.log(myMovies);
-    } catch (error) {
-      alert("ошибка в получении данных с сервера");
-    }
-  }
-
   async function getMovies(){
     let config = {
       headers: {
@@ -82,7 +55,7 @@ function Movies() {
       },
     };
     try {
-      for (var k = 1; k < 6; k++){
+      for (var k = 33; k < 51; k++){
         console.log("Начинаю получать фильмы с " + k + " страницы");
         const response = await axios.get(
           "https://api.kinopoisk.dev/v1.4/movie?page=" + k + "&limit=50&selectFields=id&selectFields=name&selectFields=names&selectFields=description&selectFields=slogan&selectFields=type&selectFields=year&selectFields=movieLength&selectFields=genres&selectFields=countries&selectFields=poster&selectFields=persons&selectFields=premiere&notNullFields=id&notNullFields=name&notNullFields=description&notNullFields=slogan&notNullFields=type&notNullFields=year&notNullFields=movieLength&notNullFields=genres.name&notNullFields=countries.name&notNullFields=poster.url&notNullFields=persons.id&notNullFields=persons.name&notNullFields=persons.enName&notNullFields=persons.photo&notNullFields=persons.profession&notNullFields=persons.enProfession&notNullFields=premiere.world&type=movie",
@@ -93,10 +66,19 @@ function Movies() {
           console.log("Отправляю " + i + "фильм")
           await postMovie(response.data.docs[i])
           console.log("Загрузил " + i + "фильм")
+        }
       }
-      }
-      
-    } catch (error) {
+
+      // const response = await axios.get(
+      //       "https://api.kinopoisk.dev/v1.4/movie?page=1&limit=20&selectFields=id&selectFields=name&selectFields=names&selectFields=description&selectFields=slogan&selectFields=type&selectFields=year&selectFields=movieLength&selectFields=genres&selectFields=countries&selectFields=poster&selectFields=persons&selectFields=premiere&notNullFields=id&notNullFields=name&notNullFields=description&notNullFields=slogan&notNullFields=type&notNullFields=year&notNullFields=movieLength&notNullFields=genres.name&notNullFields=countries.name&notNullFields=poster.url&notNullFields=persons.id&notNullFields=persons.name&notNullFields=persons.enName&notNullFields=persons.photo&notNullFields=persons.profession&notNullFields=persons.enProfession&notNullFields=premiere.world&type=movie",
+      //       config
+      //     );
+      //     for (var i = 0; i < 20; i++){
+      //         console.log("Отправляю " + i + "фильм")
+      //         await postMovie(response.data.docs[i])
+      //         console.log("Загрузил " + i + "фильм")
+      //     }
+      } catch (error) {
       alert(error.message);
     }
   }
@@ -126,22 +108,27 @@ function Movies() {
     setPage(page + 1);
   }
 
-  function filterMovie(){
-    let result = myMovies;
-
-    if (selectedGenre) {
-      result = result.filter((movie) => movie.genres.some((genre) => genre.name === selectedGenre));
+  async function filterMovie() {
+    if (token != null){
+      var config = {
+        headers: {
+          Authorization: "Token " + token,
+        },
+      };
     }
-
-    if (selectedYear) {
-      result = result.filter(item => item.year === selectedYear);
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/movie_short/?page=${page}&country=${selectedCountry}&year=${selectedYear}&genres__name=${selectedGenre}`,
+        config
+      );
+      let movies = await response.data.results;
+      let count =  await response.data.count;
+      let res = Math.ceil(count / pageSize)
+      setNumberOfPages(res);
+      setFilteredMovies(movies)
+    } catch (error) {
+      alert(error.message);
     }
-
-    if (selectedCountry) {
-      result = result.filter(item => item.country.includes(selectedCountry));
-    }
-
-    setFilteredMovies(result);
   }
 
   function sortMovie(){
@@ -164,20 +151,16 @@ function Movies() {
   }
 
   useEffect(()=>{
-    getMyMovies();
-  }, [page, token]);
-
-  useEffect(()=>{
     filterMovie();
-  }, [selectedGenre, selectedYear, selectedCountry, myMovies]);
+  }, [selectedGenre, selectedYear, selectedCountry, page, token]);
 
   useEffect(()=>{
-    console.log(orderingField);
     sortMovie();
-  }, [orderingField, myMovies]);
+  }, [orderingField, page]);
 
   const handleChangeYear = (selectedOption) => {
     setSelectedYear(selectedOption.value);
+    setPage(1);
   };
 
   const handleChangeSortField = (selectedOption) => {
@@ -186,10 +169,12 @@ function Movies() {
 
   const handleChangeGenreField = (selectedOption) => {
     setSelectedGenre(selectedOption.value);
+    setPage(1);
   };
 
   const handleChangeCountryField = (selectedOption) => {
     setSelectedCountry(selectedOption.value);
+    setPage(1);
   };
 
   return (
@@ -201,27 +186,27 @@ function Movies() {
           <Pagination setPage={setPage} page={page} numberOfPages={numberOfPages}/>
           <MovieList className='movies-list' movies={filteredMovies} page={page} pageSize={pageSize}/> 
         </div>
-        <div>
-        <Select className="react-select-container" 
-                classNamePrefix="react-select" 
-                options={sortFieldOption} 
-                defaultValue={sortFieldOption[0]}
-                onChange={handleChangeSortField}/>
-        <Select className="react-select-container" 
-                classNamePrefix="react-select" 
-                options={genreOption} 
-                defaultValue={genreOption[0]}
-                onChange={handleChangeGenreField}/>
-        <Select className="react-select-container" 
-                classNamePrefix="react-select" 
-                options={countryOption} 
-                defaultValue={countryOption[0]}
-                onChange={handleChangeCountryField}/>
-        <Select className="react-select-container" 
-                classNamePrefix="react-select" 
-                options={yearOption} 
-                defaultValue={yearOption[0]}
-                onChange={handleChangeYear}/>
+        <div className='selects-for-sorting-filtering'>
+          <FilterSelect
+              options={sortFieldOption}
+              defaultValue={sortFieldOption[0]}
+              onChange={handleChangeSortField}
+            />
+            <FilterSelect
+              options={genreOption}
+              defaultValue={genreOption[0]}
+              onChange={handleChangeGenreField}
+            />
+            <FilterSelect
+              options={countryOption}
+              defaultValue={countryOption[0]}
+              onChange={handleChangeCountryField}
+            />
+            <FilterSelect
+              options={yearOption}
+              defaultValue={yearOption[0]}
+              onChange={handleChangeYear}
+            />
         </div>
       </div>
     </div>

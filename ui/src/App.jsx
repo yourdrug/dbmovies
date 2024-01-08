@@ -4,6 +4,7 @@ import Profile from './routes/profile/profile.component'
 import Home from './routes/home/home.component'
 import HomeScreen from './routes/chatting/chatting.component'
 import AlbumMovies from './routes/album-movies/album-movies.component'
+import EveningMovie from './routes/evening-movie/evening-movie.component'
 import {Routes, Route} from 'react-router-dom'
 
 import './App.css'
@@ -23,6 +24,7 @@ function App() {
         <Route path='chatting/:chatId' element={<HomeScreen/>}/>
         <Route path='profile/:userId/:albumName' element={<AlbumMovies/>}/>
         <Route path='person/:id' element={<PersonPage/>}/>
+        <Route path='random-movie' element={<EveningMovie/>}/>
       </Route>
     </Routes>
   )

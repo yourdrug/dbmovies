@@ -10,12 +10,6 @@ import { Link } from "react-router-dom";
 
 let socket
 
-if (localStorage.getItem("token")){
-  socket = new WebSocket(
-    ServerUrl.WS_BASE_URL + `ws/users/${localStorage.getItem("id")}/chat/`
-  );
-}
-
 let typingTimer = 0;
 let isTypingSignalSent = false;
 
@@ -24,9 +18,14 @@ const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineU
   const [messages, setMessages] = useState({});
   const [typing, setTyping] = useState(false);
 
+  if (currentUser){
+    socket = new WebSocket(
+      ServerUrl.WS_BASE_URL + `ws/users/${JSON.parse(localStorage.getItem("currentUser")).id}/chat/`
+    );
+  }
+
   const fetchChatMessage = async () => {
     const currentChatId = currentRoomId;
-    console.log("выбран чат " + currentChatId)
     if (currentChatId) {
       const url = `http://127.0.0.1:8000/social/chats/${currentChatId}/messages?limit=12&offset=0`
       const config = { headers: ApiUtils.getAuthHeader() };
@@ -38,7 +37,6 @@ const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineU
 
   useEffect(() => {
     fetchChatMessage();
-    console.log("вызвал юз эффект");
   }, [currentRoomId]);
 
   const loggedInUserId = currentUser.id;

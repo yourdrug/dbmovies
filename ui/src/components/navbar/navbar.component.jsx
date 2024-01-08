@@ -98,7 +98,7 @@ const Navbar = () => {
             (<div className='auth-module'>
                 <a className="logbtn" onClick={() => setActive(true)}>Войти</a> 
                 <Modal active={active} setActive={setActive}>
-                    <SignUpForm/>
+                    <LoginForm setActive={setActive}/>
                 </Modal>
             </div> 
             ) : (

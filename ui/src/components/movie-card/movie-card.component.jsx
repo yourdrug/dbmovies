@@ -17,20 +17,17 @@ const MovieCard = ({ movie, index }) => {
     const [active, setActive] = useState(false);
     const [showSelectForAlbums, setShowSelectForAlbums] = useState(false);
 
-    async function testUpdateRate (id, rating) {
+    async function updateRate (id, rating) {
         let config = {
             headers: {
-              Authorization: "Token " + token,
+                Authorization: "Token " + token,
             },
         };
         let data = {
             'rate': rating,
         };
         try {
-            const response = await axios.patch(
-              `http://127.0.0.1:8000/movie_relation/${id}/`, data, config
-            );
-            console.log(response);
+            await axios.patch(`http://127.0.0.1:8000/movie_relation/${id}/`, data, config);
         } catch (error) {
             alert(error.message);
         }
@@ -100,13 +97,18 @@ const MovieCard = ({ movie, index }) => {
     const handleRatingClick = (id, rating) => {
         setSelectedRating(rating);
         setShowRatingOptions(false); // Закрываем варианты оценок после выбора
-        console.log(rating);
-        testUpdateRate(id, rating);
+        updateRate(id, rating);
     };
 
     const handleLikeClick = (id, current_like) => {
-        setLike(!like);
-        updateLike(id, current_like);
+        if(token){
+            setLike(!like);
+            updateLike(id, current_like);
+        }
+        else{
+            setActive(true);
+        }
+        
     };
     
     const handleButtonClick = () => {
@@ -120,13 +122,23 @@ const MovieCard = ({ movie, index }) => {
     };
 
     const markAsWatchedButtonClick = (id, currentState) => {
-        setIsWatched(!isWatched);
-        updateIsWatched(id, currentState);
+        if(token){
+            setIsWatched(!isWatched);
+            updateIsWatched(id, currentState);
+        }
+        else{
+            setActive(true);
+        }
     };
 
     const markInBookmarksButtonClick = (id, currentState) => {
-        setIsInBookmarks(!isInBookmarks);
-        updateBookmarks(id, currentState);
+        if(token){
+            setIsInBookmarks(!isInBookmarks);
+            updateBookmarks(id, currentState);
+        }
+        else{
+            setActive(true);
+        }
     };
 
     const getRatingColor = (rating) => {
