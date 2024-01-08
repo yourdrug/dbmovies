@@ -1,0 +1,16 @@
+.btn-for-next-random-movie{
+    display: flex;
+    height: 45px;
+    width: 240px;
+    border-radius: 10px;
+    background-color: #3D3C3A;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 15px;
+}
