@@ -4,7 +4,6 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 
-
 User = settings.AUTH_USER_MODEL
 
 
@@ -50,11 +49,18 @@ class Movie(models.Model):
         return f'Id {self.id}: {self.name} {self.year}'
 
 
+def get_upload_path(instance, filename):
+    movie_name = instance.movie.name.replace(" ", "_")
+    person_name = instance.person.name.replace(" ", "_")
+    return f'actors/{movie_name}/{person_name}/{filename}'
+
+
 class Profession(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE, default=None, null=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, default=None, null=True)
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50)
+    image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
 
     def __str__(self):
         return f'{self.name}'
