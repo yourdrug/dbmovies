@@ -7,7 +7,7 @@ import { ru } from 'date-fns/locale';
 
 import { UserContext } from "../../context/user.context";
 
-import './movie-by-id.styles.css'
+import './movie-by-id.css'
 
 const MovieById = () => {
     const [movie, setMovie] = useState(null)

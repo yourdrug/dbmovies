@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import Directory from '../../components/directory/directory.component';
-import './home.styles.css'
+import Directory from '../../components/directory/directory';
+import './home.css'
 
 const Home = () => {
     const categories = [

@@ -3,7 +3,7 @@ import ApiUtils from "../../api/apiUtils";
 import ServerUrl from "../../api/serverUrl";
 import SocketActions from "../../lib/socketActions";
 import CommonUtil from "../../util/commonUtil";
-import "./chat-body.styles.css";
+import "./chat-body.css";
 
 import axios from "axios";
 import { Link } from "react-router-dom";

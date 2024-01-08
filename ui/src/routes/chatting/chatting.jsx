@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
-import ChatBody from "../../components/chat-body/chat-body.component";
-import Sidebar from "../../components/sidebar/sidebar.component";
+import ChatBody from "../../components/chat-body/chat-body";
+import Sidebar from "../../components/sidebar/sidebar";
 
-import './chatting.styles.css'
+import './chatting.css'
 import { UserContext } from "../../context/user.context";
 
 const HomeScreen = () => {

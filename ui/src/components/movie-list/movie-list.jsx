@@ -1,5 +1,5 @@
-import MovieCard from '../movie-card/movie-card.component';
-import './movie-list.styles.css';
+import MovieCard from '../movie-card/movie-card';
+import './movie-list.css';
 
 
 

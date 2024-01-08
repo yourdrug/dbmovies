@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../context/user.context';
-import LittleMovieCard from '../../components/movie-little-card/movie-little-card.component';
+import LittleMovieCard from '../../components/movie-little-card/movie-little-card';
 
 import axios from 'axios';
-import './profile.styles.css'
+import './profile.css'
 
 const Profile = () => {
   const { currentUser, token, setCurrentUser, setToken } = useContext(UserContext)

@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
-import './login-form.styles.css'
+import './login-form.css'
 import { UserContext } from '../../context/user.context'
 
 const LoginForm = ({setActive}) =>{

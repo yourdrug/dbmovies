@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
-import MovieList from '../../components/movie-list/movie-list.component';
-import Pagination from '../../components/pagination-page/pagination-page.component';
+import MovieList from '../../components/movie-list/movie-list';
+import Pagination from '../../components/pagination-page/pagination-page';
 import { UserContext } from '../../context/user.context';
-import FilterSelect from '../../components/select/select.component';
-import './movies.styles.css'
+import FilterSelect from '../../components/select/select';
+import './movies.css'
 
 const pageSize = 50;
 

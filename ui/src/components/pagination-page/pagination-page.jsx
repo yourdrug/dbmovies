@@ -1,4 +1,4 @@
-import './pagination-page.styles.css';
+import './pagination-page.css';
 import { useState, useEffect } from 'react'
 
 

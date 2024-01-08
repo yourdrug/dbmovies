@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
-import './random-movie.styles.css'
+import './random-movie.css'
 
 const RandomMovie = ({movie}) => {
     const actors = movie.crew.filter((profession) => profession.slug == 'actor')
