@@ -297,7 +297,12 @@ h2 {
   gap: 5px;
 }
 
-.actor-image-container {
+.actor-image-container{
+  display: none;
+}
+
+.actor-wrapper:hover .actor-image-container {
+  display: block;
   position: absolute;
   top: 25px;
   left: 0;

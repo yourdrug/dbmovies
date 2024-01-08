@@ -14,16 +14,6 @@ const MovieById = () => {
     const [inputMessage, setInputMessage] = useState("");
     const { currentUser, token } = useContext(UserContext) 
 
-    const [hoveredActor, setHoveredActor] = useState(null);
-
-    const handleMouseEnter = (actor) => {
-        setHoveredActor(actor);
-    };
-
-    const handleMouseLeave = () => {
-        setHoveredActor(null);
-    };
-
     const params = useParams();
     let movieId = params.id;
 
@@ -264,13 +254,11 @@ const MovieById = () => {
                             {actors.map((profession) => (
                                 <div key={profession.person.id}
                                     className="actor-wrapper"
-                                    onMouseEnter={() => handleMouseEnter(profession)}
-                                    onMouseLeave={handleMouseLeave}
                                 >
                                     <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>
                                         {profession.person.name ? profession.person.name : profession.person.en_name}
                                     </Link>
-                                    {hoveredActor === profession && profession.image && (
+                                    {profession.image && (
                                         <div className="actor-image-container">
                                             <img src={profession.image} alt={profession.person.name} />
                                         </div>
