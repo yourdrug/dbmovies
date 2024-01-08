@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.contrib.auth.models import User
@@ -8,25 +9,22 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.test.utils import CaptureQueriesContext
 
+from account.models import Account
 from movies_database.models import Movie, UserMovieRelation, Genre
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer
 
 
 class MovieApiTestCase(APITestCase):
     def setUp(self):
-        self.user = User.objects.create(username='test_username')
+        self.user = Account.objects.create(username='test_username')
         self.genre = Genre.objects.create(name='test_genre')
 
-        self.movie_1 = Movie.objects.create(name='Avengers2', year=2013, country='LOL',
-                                            description='asas', tagline='assa', watch_time='asdasd',
-                                            poster='http://127.0.0.1:8000/',
-                                            owner=self.user)
+        self.movie_1 = Movie.objects.create(
+            name='s', description='a', year=2012, watch_time='asdasd', country='USA',
+            tagline='a', poster='http://127.0.0.1:8000/',
+            world_premier=datetime.date(2020, 2, 2))
 
         self.movie_1.genres.add(self.genre)
-        self.movie_1.actors.add(self.actor)
-        self.movie_1.director.add(self.director)
-        self.movie_1.producer.add(self.producer)
-        self.movie_1.screenwriter.add(self.screenwriter)
 
         self.movie_2 = Movie.objects.create(name='LOL', year=2001, country='Russia')
 
