@@ -1,4 +1,4 @@
-import './movie-little-card.styles.css';
+import './movie-little-card.css';
 import { Link } from "react-router-dom";
 
 const LittleMovieCard = ({movie}) => {

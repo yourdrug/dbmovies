@@ -1,15 +1,15 @@
-import Movies from './routes/movies/movies.component'
-import Navigation from './routes/navigation/navigation.component'
-import Profile from './routes/profile/profile.component'
-import Home from './routes/home/home.component'
-import HomeScreen from './routes/chatting/chatting.component'
-import AlbumMovies from './routes/album-movies/album-movies.component'
-import EveningMovie from './routes/evening-movie/evening-movie.component'
+import Movies from './routes/movies/movies'
+import Navigation from './routes/navigation/navigation'
+import Profile from './routes/profile/profile'
+import Home from './routes/home/home'
+import HomeScreen from './routes/chatting/chatting'
+import AlbumMovies from './routes/album-movies/album-movies'
+import EveningMovie from './routes/evening-movie/evening-movie'
 import {Routes, Route} from 'react-router-dom'
 
 import './App.css'
-import MovieById from './components/movie-by-id/movie-by-id.component'
-import PersonPage from './routes/person/person-page.component'
+import MovieById from './components/movie-by-id/movie-by-id'
+import PersonPage from './routes/person/person-page'
 
 function App() {
 

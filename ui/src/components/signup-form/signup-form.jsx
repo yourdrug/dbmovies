@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
-import './signup-form.styles.css'
+import './signup-form.css'
 import { UserContext } from '../../context/user.context'
 
 const SignUpForm = () =>{

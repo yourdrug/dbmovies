@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import "./sidebar.styles.css";
+import "./sidebar.css";
 import { Link } from "react-router-dom";
 import ApiUtils from "../../api/apiUtils";
 import ApiEndpoints from "../../api/apiEndpoints";
 import CommonUtil from "../../util/commonUtil";
-import Modal from "../modal/modal.component";
+import Modal from "../modal/modal";
 
 import axios from "axios";
 

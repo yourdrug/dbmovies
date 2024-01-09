@@ -1,9 +1,9 @@
-import LittleMovieCard from '../movie-little-card/movie-little-card.component';
+import LittleMovieCard from '../movie-little-card/movie-little-card';
 
 import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
 
-import './person-by-id.styles.css';
+import './person-by-id.css';
 import { Link } from 'react-router-dom';
 
 const PersonById = ({ personData }) => {

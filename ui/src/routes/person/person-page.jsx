@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 
 import axios from 'axios';
 
-import PersonById from "../../components/person-by-id/person-by-id.component";
+import PersonById from "../../components/person-by-id/person-by-id";
 
 const PersonPage = () => {
     const [personData, setPersonData] = useState(null)

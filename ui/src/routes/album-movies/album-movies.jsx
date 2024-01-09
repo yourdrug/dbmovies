@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
-import MovieList from '../../components/movie-list/movie-list.component';
+import MovieList from '../../components/movie-list/movie-list';
 import axios from 'axios';
 import { UserContext } from '../../context/user.context';
 

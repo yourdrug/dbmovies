@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import Modal from '../modal/modal.component';
-import LoginForm from '../login-form/login-form.component';
-import SignUpForm from '../signup-form/signup-form.component';
-import './navbar.styles.css';
+import Modal from '../modal/modal';
+import LoginForm from '../login-form/login-form';
+import SignUpForm from '../signup-form/signup-form';
+import './navbar.css';
 import { useState, useContext } from 'react';
 
 import axios from 'axios';

@@ -29,7 +29,7 @@ class ProfessionSerializer(ModelSerializer):
 
     class Meta:
         model = Profession
-        fields = ('slug', 'person')
+        fields = ('slug', 'person', 'image')
 
 
 class LittleMovieCardSerializer(ModelSerializer):

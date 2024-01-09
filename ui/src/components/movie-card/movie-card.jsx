@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import './movie-card.styles.css'
-import Modal from '../modal/modal.component';
-import LoginForm from '../login-form/login-form.component';
+import './movie-card.css'
+import Modal from '../modal/modal';
+import LoginForm from '../login-form/login-form';
 
 import { UserContext } from '../../context/user.context';
 

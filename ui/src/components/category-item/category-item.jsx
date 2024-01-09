@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './category-item.styles.scss';
+import './category-item.scss';
 
 const CategoryItem = ({ category }) => {
   const { imageUrl, title, slug } = category;

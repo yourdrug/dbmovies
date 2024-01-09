@@ -1,4 +1,4 @@
-import './modal.styles.css'
+import './modal.css'
 
 const Modal = ({active, setActive, children}) =>{
     return(

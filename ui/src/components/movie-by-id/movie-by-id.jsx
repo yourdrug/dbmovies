@@ -7,7 +7,7 @@ import { ru } from 'date-fns/locale';
 
 import { UserContext } from "../../context/user.context";
 
-import './movie-by-id.styles.css'
+import './movie-by-id.css'
 
 const MovieById = () => {
     const [movie, setMovie] = useState(null)
@@ -252,8 +252,17 @@ const MovieById = () => {
                         <div style={{fontWeight: "bold", marginTop:"10px"}}>Актеры</div>
                         <div className="persons-actors">
                             {actors.map((profession) => (
-                                <div key={profession.person.id}>
-                                    <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>{profession.person.name ? profession.person.name : profession.person.en_name}</Link>
+                                <div key={profession.person.id}
+                                    className="actor-wrapper"
+                                >
+                                    <Link to={`/person/${profession.person.id}`} style={{textDecoration: "none", color:"black"}}>
+                                        {profession.person.name ? profession.person.name : profession.person.en_name}
+                                    </Link>
+                                    {profession.image && (
+                                        <div className="actor-image-container">
+                                            <img src={profession.image} alt={profession.person.name} />
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                             {actors.length === 0 && <span>-</span>}

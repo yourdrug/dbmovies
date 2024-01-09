@@ -1,5 +1,5 @@
 import Select from 'react-select';
-import './select.styles.css'
+import './select.css'
 
 function FilterSelect({ options, defaultValue, onChange }) {
   return (

@@ -1,10 +1,10 @@
 import { useEffect, useState, useContext } from "react";
-import RandomMovie from "../../components/random-movie/random-movie.component";
+import RandomMovie from "../../components/random-movie/random-movie";
 import { UserContext } from "../../context/user.context";
 
 import axios from "axios";
 
-import './evening-movie.styles.css'
+import './evening-movie.css'
 
 const EveningMovie = () => {
     const [movie, setMovie] = useState(null)
