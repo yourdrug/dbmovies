@@ -109,11 +109,10 @@ function Movies() {
   }
 
   async function filterMovie() {
-    if (token != null){
-      var config = {
-        headers: {
-          Authorization: "Token " + token,
-        },
+    let config = {}
+    if (!token){
+      config.headers = {
+        Authorization: "Token " + token,
       };
     }
     try {
