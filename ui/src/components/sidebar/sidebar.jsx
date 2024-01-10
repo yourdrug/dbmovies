@@ -25,6 +25,16 @@ const Sidebar = (props) => {
       props.onlineUserList
     );
     setChatUsers(formatedChatUser);
+    let currentChattingMember = formatedChatUser.find(room => room.roomId == props.currentRoomId) || null;
+    props.setCurrentChattingMember(currentChattingMember);
+  };
+
+  const getConnectedUserIds = () => {
+    let connectedUsers = "";
+    for (let chatUser of chatUsers) {
+      connectedUsers += chatUser.id + ",";
+    }
+    return connectedUsers.slice(0, -1);
   };
 
   useEffect(() => {
@@ -33,8 +43,8 @@ const Sidebar = (props) => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/users');
-      let info = await response.data;
+      const response = await axios.get('http://127.0.0.1:8000/users/?exclude=' + getConnectedUserIds());
+      let info = await response.data.results;
       setUsers(info);
     } catch (error) {
       alert("ошибка в получении данных с сервера");
@@ -51,9 +61,9 @@ const Sidebar = (props) => {
       let data = {}
       if(props.currentUser.id == user.id){
         data = {
-          'members': [props.currentUser.id, user.id],
+          'members': [user.id],
           'type': "SELF",
-          'name': 'Избранное'
+          'name': user.username
         };
       }
 
@@ -66,9 +76,10 @@ const Sidebar = (props) => {
       }
       
       const response = await axios.post('http://127.0.0.1:8000/social/chats', data);
-      let info = await response.data;
+      console.log(response.data);
     } catch (error) {
-      alert("ошибка в получении данных с сервера");
+      console.log(error);
+      alert(error.message);
     }
   };
 
@@ -96,7 +107,29 @@ const Sidebar = (props) => {
         </button>
         <Modal active={isShowAddPeopleModal} setActive={setIsShowAddPeopleModal}>
           {users.map((user) => (
-            <h1 onClick={()=> handleUserNewChatClick(user)}>{user.username}</h1>
+            <div className="additional-info-for-user" key={user.id} onClick={()=> handleUserNewChatClick(user)}>
+              <img
+                  src={user.image}
+                  className="chat-user-avatar"
+                  alt={user.name}
+                  width="50"
+                  height="50"
+                />
+              <div className="user-username-isonline">
+                  {user.username}
+                  {props.onlineUserList.includes(user.id) ? (
+                    <div className="circle-and-info-about-online">
+                      <div className="user-online-circle">&nbsp;</div>
+                      &nbsp;  Online
+                    </div> 
+                    ) : (
+                      <div className="circle-and-info-about-online"> 
+                        <div className="user-offline-circle"></div>
+                        &nbsp;  Offline
+                      </div>
+                    )}
+                </div>
+            </div>
           ))}
         </Modal>
       

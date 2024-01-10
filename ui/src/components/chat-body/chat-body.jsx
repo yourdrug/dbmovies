@@ -6,23 +6,24 @@ import CommonUtil from "../../util/commonUtil";
 import "./chat-body.css";
 
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-let socket
+let socket = {}
+if (JSON.parse(localStorage.getItem("currentUser"))){
+  socket = new WebSocket(
+    `ws://127.0.0.1:8000/ws/users/${JSON.parse(localStorage.getItem("currentUser")).id}/chat/`
+  );
+}
 
 let typingTimer = 0;
 let isTypingSignalSent = false;
 
-const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineUserList }) => {
+const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineUserList, setCurrentRoomId }) => {
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState({});
   const [typing, setTyping] = useState(false);
 
-  if (currentUser){
-    socket = new WebSocket(
-      ServerUrl.WS_BASE_URL + `ws/users/${JSON.parse(localStorage.getItem("currentUser")).id}/chat/`
-    );
-  }
+  const navigate = useNavigate();
 
   const fetchChatMessage = async () => {
     const currentChatId = currentRoomId;
@@ -95,7 +96,7 @@ const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineU
   };
 
   const chatMessageTypingHandler = (event) => {
-    if (event.keyCode !== Constants.ENTER_KEY_CODE) {
+    if (event.keyCode !== 13) {
       if (!isTypingSignalSent) {
         sendTypingSignal(true);
         isTypingSignalSent = true;
@@ -111,6 +112,20 @@ const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineU
       messageSubmitHandler(event);
     }
   };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Escape') {
+      setCurrentRoomId(null);
+      navigate('/chatting');
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
 
   return (
     <>

@@ -1,4 +1,6 @@
 import { useState, useContext } from "react";
+import { useParams } from "react-router-dom";
+
 import ChatBody from "../../components/chat-body/chat-body";
 import Sidebar from "../../components/sidebar/sidebar";
 
@@ -6,9 +8,12 @@ import './chatting.css'
 import { UserContext } from "../../context/user.context";
 
 const HomeScreen = () => {
+  const params = useParams();
+  let chatId = params.chatId;
+
   const [currentChattingMember, setCurrentChattingMember] = useState({});
   const [onlineUserList, setOnlineUserList] = useState([]);
-  const [currentRoomId, setCurrentRoomId] = useState();
+  const [currentRoomId, setCurrentRoomId] = useState(chatId);
 
   const { currentUser, token } = useContext(UserContext) 
 
