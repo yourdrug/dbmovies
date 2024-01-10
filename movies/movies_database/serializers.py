@@ -40,7 +40,6 @@ class LittleMovieCardSerializer(ModelSerializer):
         fields = ('id', 'name', 'year', 'country', 'poster', 'rating', 'annotated_count_rate')
 
     def get_annotated_count_rate(self, obj):
-        # Получаем текущий queryset фильмов, чтобы убедиться, что аннотация происходит на том же уровне
         queryset = Movie.objects.filter(id=obj.id)
 
         # Аннотируем count_rate
