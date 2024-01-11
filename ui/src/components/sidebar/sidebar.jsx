@@ -8,6 +8,7 @@ import CommonUtil from "../../util/commonUtil";
 import Modal from "../modal/modal";
 
 import axios from "axios";
+import { slugify } from 'transliteration';
 
 const Sidebar = (props) => {
   const [chatUsers, setChatUsers] = useState([]); //sidebar users
@@ -56,6 +57,11 @@ const Sidebar = (props) => {
     setIsShowAddPeopleModal(true);
   };
 
+  const transliterateIfRussian = (name) => {
+    const isRussian = /[а-яА-ЯЁё]/.test(name);  
+    return isRussian ? slugify(name) : name
+  };
+
   const handleUserNewChatClick = async (user) => {
     try {
       let data = {}
@@ -71,12 +77,13 @@ const Sidebar = (props) => {
         data = {
           'members': [props.currentUser.id, user.id],
           'type': "DM",
-          'name': user.username
+          'name': transliterateIfRussian(user.username)
         };
       }
       
-      const response = await axios.post('http://127.0.0.1:8000/social/chats', data);
-      console.log(response.data);
+      await axios.post('http://127.0.0.1:8000/social/chats', data);
+      await fetchChatUser();
+      setIsShowAddPeopleModal(false);
     } catch (error) {
       console.log(error);
       alert(error.message);

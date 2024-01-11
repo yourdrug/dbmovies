@@ -1,19 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ApiUtils from "../../api/apiUtils";
 import ServerUrl from "../../api/serverUrl";
 import SocketActions from "../../lib/socketActions";
 import CommonUtil from "../../util/commonUtil";
+import { UserContext } from "../../context/user.context";
 import "./chat-body.css";
 
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-
-let socket = {}
-if (JSON.parse(localStorage.getItem("currentUser"))){
-  socket = new WebSocket(
-    `ws://127.0.0.1:8000/ws/users/${JSON.parse(localStorage.getItem("currentUser")).id}/chat/`
-  );
-}
 
 let typingTimer = 0;
 let isTypingSignalSent = false;
@@ -22,6 +16,8 @@ const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineU
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState({});
   const [typing, setTyping] = useState(false);
+
+  const { socket } = useContext(UserContext); 
 
   const navigate = useNavigate();
 

@@ -3,7 +3,7 @@ import Modal from '../modal/modal';
 import LoginForm from '../login-form/login-form';
 import SignUpForm from '../signup-form/signup-form';
 import './navbar.css';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 
 import axios from 'axios';
 
@@ -13,6 +13,17 @@ const Navbar = () => {
     const [active, setActive] = useState(false);
     const [searchInfo, setSearchInfo] = useState(null);
     const [searchInfoClass, setSearchInfoClass] = useState('search-info');
+
+    const { currentUser, setSocket } = useContext(UserContext); 
+
+    useEffect(() => {
+        if (currentUser){
+            let socket = new WebSocket(`ws://127.0.0.1:8000/ws/users/${currentUser.id}/chat/`);
+            setSocket(socket);
+        }
+    }, [currentUser]);
+
+    
 
     const handleSearchFocus = () => {
         setSearchInfoClass('search-info-active');
@@ -25,9 +36,6 @@ const Navbar = () => {
             setSearchInfoClass('search-info');
         }, 200);
     }
-
-    
-    const { currentUser } = useContext(UserContext);  
     
     const handleDebouncedInputChange = async (value) => {
         try {
