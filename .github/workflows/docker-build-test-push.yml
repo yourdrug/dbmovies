@@ -1,0 +1,29 @@
+name: Build, Test, and Push Docker Image
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-test-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build the Docker image
+      run: docker-compose build
+
+    - name: Run unit tests
+      run: docker-compose run backend python manage.py test movies_database/tests
+
+    - name: Log in to GitHub Container Registry
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Tag and push Docker image to GitHub Container Registry
+      run: |
+        docker tag dbmovies ghcr.io/${{ github.repository_owner }}/dbmovies:latest
+        docker push ghcr.io/${{ github.repository_owner }}/dbmovies:latest
