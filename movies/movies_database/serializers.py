@@ -73,14 +73,6 @@ class MovieSerializer(ModelSerializer):
 
     movies_reviews = ReviewsSerializer(many=True, read_only=True, source='usermovierelation_set')
 
-    # def get_movies_reviews(self, obj):
-    #     reviews = obj.usermovierelation_set.filter(movie=obj).values_list('review', flat=True).all()
-    #
-    #     if reviews:
-    #         return reviews
-    #
-    #     return None
-
     class Meta:
         model = Movie
         fields = ('id', 'name', 'description', 'tagline', 'watch_time',
