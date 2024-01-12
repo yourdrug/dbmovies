@@ -17,6 +17,9 @@ jobs:
     - name: Create .env file
       run: echo "${{ secrets.DOCKER_ENV_FILE }}" > movies/.env
 
+    - name: Use existing Docker image
+      run: docker pull ghcr.io/${{ github.repository_owner }}/dbmovies_backend:${{ github.sha }}
+
     - name: Build the Docker image
       run: docker-compose build
 
