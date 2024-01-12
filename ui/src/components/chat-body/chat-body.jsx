@@ -45,10 +45,12 @@ const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineU
 
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
+    console.log(event.data + " какая-то дата")
     const chatId = currentRoomId;
+    console.log(currentRoomId + " текущий номер комнаты")
     const userId = currentUser.id;
-    if (chatId === data.roomId) {
-      if (data.action === SocketActions.MESSAGE) {
+    if (chatId == data.roomId) {
+      if (data.action == SocketActions.MESSAGE) {
         data["userImage"] = ServerUrl.BASE_URL.slice(0, -1) + data.userImage;
         setMessages((prevState) => {
           let messagesState = JSON.parse(JSON.stringify(prevState));
@@ -56,11 +58,11 @@ const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineU
           return messagesState;
         });
         setTyping(false);
-      } else if (data.action === SocketActions.TYPING && data.user !== userId) {
+      } else if (data.action == SocketActions.TYPING && data.user != userId) {
         setTyping(data.typing);
       }
     }
-    if (data.action === SocketActions.ONLINE_USER) {
+    if (data.action == SocketActions.ONLINE_USER) {
       setOnlineUserList(data.userList);
     }
   };

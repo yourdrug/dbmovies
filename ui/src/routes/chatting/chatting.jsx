@@ -13,7 +13,7 @@ const HomeScreen = () => {
 
   const [currentChattingMember, setCurrentChattingMember] = useState({});
   const [onlineUserList, setOnlineUserList] = useState([]);
-  const [currentRoomId, setCurrentRoomId] = useState(chatId);
+  const [currentRoomId, setCurrentRoomId] = useState(chatId || null);
 
   const { currentUser, token } = useContext(UserContext) 
 

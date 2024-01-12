@@ -15,7 +15,7 @@ const Sidebar = (props) => {
   const [users, setUsers] = useState([]); //popup users
   const [isShowAddPeopleModal, setIsShowAddPeopleModal] = useState(false);
 
-  const fetchChatUser = async () => {
+  const fetchChatUser = async (newRoomId) => {
     const userId = props.currentUser.id;   
     const url = `http://127.0.0.1:8000/social/users/${userId}/chats`;
     const config = { headers: ApiUtils.getAuthHeader() };
@@ -25,9 +25,10 @@ const Sidebar = (props) => {
       chatUsers,
       props.onlineUserList
     );
+    // props.setCurrentRoomId(newRoomId);
     setChatUsers(formatedChatUser);
-    let currentChattingMember = formatedChatUser.find(room => room.roomId == props.currentRoomId) || null;
-    props.setCurrentChattingMember(currentChattingMember);
+    // let currentChattingMember = formatedChatUser.find(room => room.roomId == newRoomId) || null;
+    // props.setCurrentChattingMember(currentChattingMember);
   };
 
   const getConnectedUserIds = () => {
@@ -39,12 +40,12 @@ const Sidebar = (props) => {
   };
 
   useEffect(() => {
-    fetchChatUser();
+    fetchChatUser(props.currentRoomId);
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (value) => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/users/?exclude=' + getConnectedUserIds());
+      const response = await axios.get(`http://127.0.0.1:8000/users/?search=${value}&exclude=` + getConnectedUserIds());
       let info = await response.data.results;
       setUsers(info);
     } catch (error) {
@@ -53,7 +54,7 @@ const Sidebar = (props) => {
   };
 
   const addPeopleClickHandler = async () => {
-    await fetchUsers();
+    await fetchUsers("");
     setIsShowAddPeopleModal(true);
   };
 
@@ -81,9 +82,10 @@ const Sidebar = (props) => {
         };
       }
       
-      await axios.post('http://127.0.0.1:8000/social/chats', data);
-      await fetchChatUser();
+      const response = await axios.post('http://127.0.0.1:8000/social/chats', data);
+      await fetchChatUser(response.data.id);
       setIsShowAddPeopleModal(false);
+
     } catch (error) {
       console.log(error);
       alert(error.message);
@@ -107,12 +109,25 @@ const Sidebar = (props) => {
     return updatedChatList;
   };
 
+  async function onChangeInputHandler(event){
+      const value = event.target.value;
+      setTimeout(async () => {
+          await fetchUsers(value);
+        }, 300);
+  }
+
   return (
     <div className="all-users-chats-container">
         <button className='add-chats-for-sidebar' onClick={addPeopleClickHandler}>
           Добавить чат
         </button>
         <Modal active={isShowAddPeopleModal} setActive={setIsShowAddPeopleModal}>
+          <div style={{display:"flex", flexDirection:"column"}}>
+            <input className='search-box-for-users' type='searchbox' placeholder='Поиск пользователей'
+                        onChange={(event) => onChangeInputHandler(event)} />
+            <span className="text-muted">Кликните на пользователя, с которым хотите общаться</span>
+          </div>
+          
           {users.map((user) => (
             <div className="additional-info-for-user" key={user.id} onClick={()=> handleUserNewChatClick(user)}>
               <img

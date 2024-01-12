@@ -9,13 +9,13 @@
   gap: 15px;
   margin-top: 10px;
   margin-bottom: 15px;
-  margin-left: 5px;
   border-radius: 10px;
-  width: 275px;
-  box-shadow: 0 0 0 2px rgb(148, 139, 139);
+  width: 286px;
   background-color: #52514e;
   color: white;
   font-weight: 500;
+  min-height: 58px;
+  align-items: center;
 }
 
 .additional-info-for-user{
@@ -27,6 +27,11 @@
   border: 2px solid black;
   border-radius: 10px;
   width: 280px;
+  align-items: center;
+}
+
+.additional-info-for-user:hover{
+  cursor: pointer;
 }
 
 .user-list-container {
@@ -44,7 +49,6 @@
   border-radius: 10px;
   width: 40px;
   height: 40px;
-  margin-top: 5px;
   margin-left: 10px;
 }
 
@@ -96,4 +100,22 @@
   justify-content: center;
   margin-left: 20px;
   margin-top: 10px;
+}
+
+.search-box-for-users{
+  height: 35px;
+  border-radius: 10px;
+  float: left;
+  min-width: 300px;
+  margin-bottom: 5px;
+}
+
+.search-box-for-users:focus{
+  scale: 1.02;
+  transition: 0.5s;
+}
+
+.text-muted {
+  opacity: 0.4;
+  background-color: white;
 }
