@@ -18,7 +18,7 @@ jobs:
       run: echo "${{ secrets.DOCKER_ENV_FILE }}" > movies/.env
 
     - name: Use existing Docker image
-      run: docker pull ghcr.io/${{ github.repository_owner }}/dbmovies_backend:${{ github.sha }}
+      run: docker pull ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
 
     - name: Build the Docker image
       run: docker-compose build
@@ -29,7 +29,11 @@ jobs:
     - name: Log in to GitHub Container Registry
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: Tag and push Docker image to GitHub Container Registry
+    - name: Tag and push Docker image for backend to GitHub Container Registry
       run: |
-        docker tag dbmovies_backend ghcr.io/${{ github.repository_owner }}/dbmovies_backend:${{ github.sha }}
-        docker push ghcr.io/${{ github.repository_owner }}/dbmovies_backend:${{ github.sha }}
+        docker tag dbmovies_backend ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
+        docker push ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
+    - name: Tag and push Docker image for frontend to GitHub Container Registry
+      run: |
+        docker tag dbmovies_frontend ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:latest
+        docker push ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:latest
