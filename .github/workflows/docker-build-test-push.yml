@@ -28,5 +28,5 @@ jobs:
 
     - name: Tag and push Docker image to GitHub Container Registry
       run: |
-        docker tag backend ghcr.io/${{ github.repository_owner }}/backend:latest
-        docker push ghcr.io/${{ github.repository_owner }}/backend:latest
+        docker tag backend ghcr.io/${{ github.repository_owner }}/backend:${{ github.sha }}
+        docker push ghcr.io/${{ github.repository_owner }}/backend:${{ github.sha }}
