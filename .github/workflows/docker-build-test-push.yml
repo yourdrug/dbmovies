@@ -23,8 +23,8 @@ jobs:
     - name: Build and export to Docker
       uses: docker/build-push-action@v5
       with:
-        context: ./movies
-        dockerfile: /Dockerfile
+        context: .
+        dockerfile: ./movies/Dockerfile
         load: true
         tags: ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
 
