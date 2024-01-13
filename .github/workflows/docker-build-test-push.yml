@@ -14,17 +14,21 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2.4.0
 
+    - name: Log in to GitHub Container Registry
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
     - name: Create .env file
       run: echo "${{ secrets.DOCKER_ENV_FILE }}" > movies/.env
 
-    - name: Use existing Docker image
-      run: docker pull ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
+    - name: Build and export to Docker
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        load: true
+        tags: ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
 
     - name: Run unit tests
       run: docker-compose run backend python manage.py test movies_database/tests
-
-    - name: Log in to GitHub Container Registry
-      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Tag and push Docker image for backend to GitHub Container Registry
       run: |
