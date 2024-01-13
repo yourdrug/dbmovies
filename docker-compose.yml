@@ -11,13 +11,13 @@ services:
 
   backend:
     build:
-      context: .
-      dockerfile: ./movies/Dockerfile
+      context: ./movies
+      dockerfile: /Dockerfile
     container_name: backend
     ports:
       - "8000:8000"
     env_file:
-      - ./movies/.env
+      - /.env
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
 
