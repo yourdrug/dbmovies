@@ -1,6 +1,6 @@
 FROM python:3.10.0-alpine
 
-COPY ./requirements.txt /temp/requirements.txt
+COPY requirements.txt /temp/requirements.txt
 
 RUN apk update \
     && apk add postgresql-client build-base postgresql-dev musl-dev gcc python3-dev linux-headers \
