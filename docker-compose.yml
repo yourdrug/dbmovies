@@ -1,9 +1,9 @@
 services:
   frontend:
     build:
-      context: .
-      dockerfile: ./ui/Dockerfile
-    container_name: ui
+      context: ./ui
+      dockerfile: Dockerfile
+    container_name: frontend
     expose:
       - 5137
     depends_on:
@@ -12,7 +12,7 @@ services:
   backend:
     build:
       context: ./movies
-      dockerfile: ./movies/Dockerfile
+      dockerfile: Dockerfile
     container_name: backend
     ports:
       - "8000:8000"
@@ -23,7 +23,6 @@ services:
 
     depends_on:
       - database
-     # - localstack
     volumes:
       - /home/eugene/Projects/dbmovies/movies/media:/movies/media
 
@@ -40,19 +39,6 @@ services:
   redis:
     image: redis:7.2-alpine
     hostname: redis
-
-#  localstack:
-#    image: localstack/localstack
-#    environment:
-#      - SERVICES=s3
-#      - DEBUG=1
-#      - DATA_DIR=/tmp/localstack/data
-#    ports:
-#      - "4566:4566"
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#      - ./localstack:/tmp/localstack
-
 
 volumes:
   movies_data:
