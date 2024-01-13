@@ -20,20 +20,20 @@ jobs:
     - name: Create .env file
       run: echo "${{ secrets.DOCKER_ENV_FILE }}" > movies/.env
 
-    - name: Set up BuildKit
-      run: docker buildx create --use
-
     - name: Build and push
-      uses: docker/build-push-action@v5
+      run: docker-compose build
+
+    - name: Cache Docker images
+      uses: actions/cache@v2
       with:
-        context: ./movies
-        push: true
-        tags: ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        path: |
+          ~/.docker
+        key: ${{ runner.os }}-docker-${{ hashFiles('**/movies/Dockerfile*', '**/ui/Dockerfile*', '**/docker-compose.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-docker-
 
     - name: Run unit tests
-      run: docker run dbmovies_backend python manage.py test movies_database/tests
+      run: docker-compose run backend python manage.py test movies_database/tests
 
     - name: Tag and push Docker image for backend to GitHub Container Registry
       run: |
