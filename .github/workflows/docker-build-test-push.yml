@@ -11,36 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2.4.0
-
-    - name: Log in to GitHub Container Registry
-      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-    - name: Create .env file
-      run: echo "${{ secrets.DOCKER_ENV_FILE }}" > movies/.env
-
-    - name: Cache Docker images
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.docker
-        key: ${{ runner.os }}-docker-${{ hashFiles('**/movies/Dockerfile*', '**/ui/Dockerfile*', '**/docker-compose.yml') }}
-        restore-keys: |
-          ${{ runner.os }}-docker-
-
-    - name: Build and push
-      run: docker-compose build
-
-    - name: Run unit tests
-      run: docker-compose run backend python manage.py test movies_database/tests
-
-    - name: Tag and push Docker image for backend to GitHub Container Registry
-      run: |
-        docker tag dbmovies_backend ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
-        docker push ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
-
-    - name: Tag and push Docker image for frontend to GitHub Container Registry
-      run: |
-        docker tag dbmovies_frontend ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:latest
-        docker push ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:latest
+      # need checkout before using docker-compose-action
+      - uses: actions/checkout@v3
+      - uses: adambirds/docker-compose-action@v1.3.0
+        with:
+          compose-file: "./docker-compose.yml"
+          down-flags: "--volumes"
+          services: |
+            backend
+          test-command: "docker-compose run backend python manage.py test movies_database/tests"
