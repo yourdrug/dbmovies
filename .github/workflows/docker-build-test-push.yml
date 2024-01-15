@@ -27,12 +27,19 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./movies
-        driver-opt: dbmovies_network
         load: true
         tags: ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
 
     - name: Run unit tests
       run: docker run ghcr.io/${{ github.repository_owner }}/dbmovies_backend python manage.py test movies_database/tests
+      env:
+        DB_HOST: postgres
+        DB_PORT: 5432
+        DB_NAME: movie_db
+        DB_USER: movie_user
+        DB_PASSWORD: password
+        network:
+          name: dbmovies_network
 
     - name: Push Docker image for backend
       run: docker push ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
