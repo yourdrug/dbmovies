@@ -31,14 +31,10 @@ jobs:
 
     - name: Tag and push Docker image for backend
       run: |
-        docker tag dbmovies_backend ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
-        docker tag dbmovies_backend ghcr.io/${{ github.repository_owner }}/dbmovies_backend:v.1.0.0
-        docker push ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
+        docker tag dbmovies_backend ghcr.io/${{ github.repository_owner }}/dbmovies_backend:v.1.0.1
         docker push ghcr.io/${{ github.repository_owner }}/dbmovies_backend:v.1.0.0
 
     - name: Tag and push Docker image for frontend
       run: |
-        docker tag dbmovies_frontend ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:latest
-        docker tag dbmovies_frontend ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:v.1.0.0
-        docker push ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:latest
+        docker tag dbmovies_frontend ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:v.1.0.1
         docker push ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:v.1.0.0
