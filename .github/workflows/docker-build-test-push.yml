@@ -23,9 +23,6 @@ jobs:
     - name: Create .env file
       run: echo "${{ secrets.DOCKER_ENV_FILE }}" > movies/.env
 
-    - name: Build Docker image for backend
-      run: docker build -t  -f movies/Dockerfile .
-
     - name: Build backend image
       uses: docker/build-push-action@v5
       with:
