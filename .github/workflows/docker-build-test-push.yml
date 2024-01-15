@@ -1,8 +1,6 @@
-name: Build, Test, and Push Docker Image
+name: ci
 
 on:
-  push:
-    branches: ["master"]
   pull_request:
     branches: ["master"]
 
@@ -23,7 +21,7 @@ jobs:
     - name: Create .env file
       run: echo "${{ secrets.DOCKER_ENV_FILE }}" > movies/.env
 
-    - name: Build and push
+    - name: Build docker-compose
       run: docker-compose build
 
     - name: Run unit tests
