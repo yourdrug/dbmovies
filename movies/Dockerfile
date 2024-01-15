@@ -1,11 +1,11 @@
-FROM python:3.10.0-alpine
+FROM python:3.10.0-slim-buster
 
 WORKDIR /dbmovies/movies
 
 COPY requirements.txt /dbmovies/movies/
 
 RUN apk update \
-    && apk add postgresql-client build-base postgresql-dev musl-dev gcc python3-dev linux-headers \
+    && apk add postgresql-client build-base postgresql-dev \
     && pip install --no-cache-dir -r requirements.txt
 
 COPY . /dbmovies/movies
