@@ -2,9 +2,9 @@ name: ci
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build-test-push:
@@ -23,29 +23,18 @@ jobs:
     - name: Create .env file
       run: echo "${{ secrets.DOCKER_ENV_FILE }}" > movies/.env
 
-    - name: Build backend image
-      uses: docker/build-push-action@v5
-      with:
-        context: ./movies
-        load: true
-        tags: ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
+    - name: Build docker-compose
+      run: docker-compose build
 
     - name: Run unit tests
-      run: docker run ghcr.io/${{ github.repository_owner }}/dbmovies_backend python manage.py test movies_database/tests
-      env:
-        DB_HOST: postgres
-        DB_PORT: 5432
-        DB_NAME: movie_db
-        DB_USER: movie_user
-        DB_PASSWORD: password
+      run: docker-compose run backend python manage.py test movies_database/tests
 
-    - name: Push Docker image for backend
-      run: docker push ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
+    - name: Tag and push Docker image for backend
+      run: |
+        docker tag dbmovies_backend ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
+        docker push ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
 
-    - name: Build and push
-      uses: docker/build-push-action@v5
-      with:
-        context: ./ui
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: ${{ github.repository_owner }}/dbmovies_frontend:latest
+    - name: Tag and push Docker image for frontend
+      run: |
+        docker tag dbmovies_frontend ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:latest
+        docker push ghcr.io/${{ github.repository_owner }}/dbmovies_frontend:latest
