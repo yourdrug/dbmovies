@@ -24,7 +24,14 @@ jobs:
       run: echo "${{ secrets.DOCKER_ENV_FILE }}" > movies/.env
 
     - name: Build Docker image for backend
-      run: docker build -t ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest -f movies/Dockerfile .
+      run: docker build -t  -f movies/Dockerfile .
+
+    - name: Build backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./movies
+        load: true
+        tags: ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
 
     - name: Run unit tests
       run: docker run ghcr.io/${{ github.repository_owner }}/dbmovies_backend python manage.py test movies_database/tests
