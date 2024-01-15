@@ -38,8 +38,6 @@ jobs:
         DB_NAME: movie_db
         DB_USER: movie_user
         DB_PASSWORD: password
-      network:
-        name: dbmovies_network
 
     - name: Push Docker image for backend
       run: docker push ghcr.io/${{ github.repository_owner }}/dbmovies_backend:latest
