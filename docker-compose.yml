@@ -8,6 +8,8 @@ services:
       - 5137
     depends_on:
       - backend
+    networks:
+      - dbmovies_network
 
   backend:
     build:
@@ -25,6 +27,8 @@ services:
       - database
     volumes:
       - /home/eugene/Projects/dbmovies/movies/media:/movies/media
+    networks:
+      - dbmovies_network
 
   database:
     image: postgres:15.4-alpine
@@ -35,10 +39,18 @@ services:
     volumes:
       - movies_data:/var/lib/postgresql/data
     container_name: postgres
+    networks:
+      - dbmovies_network
 
   redis:
     image: redis:7.2-alpine
     hostname: redis
+    networks:
+      - dbmovies_network
+
+networks:
+  dbmovies_network:
+    driver: bridge
 
 volumes:
   movies_data:
