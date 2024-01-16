@@ -11,7 +11,7 @@ const HomeScreen = () => {
   const params = useParams();
   let chatId = params.chatId;
 
-  const [currentChattingMember, setCurrentChattingMember] = useState({});
+  const [currentChattingMember, setCurrentChattingMember] = useState(null);
   const [onlineUserList, setOnlineUserList] = useState([]);
   const [currentRoomId, setCurrentRoomId] = useState(chatId || null);
 

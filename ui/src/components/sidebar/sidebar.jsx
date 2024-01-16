@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useEffect } from "react";
 import "./sidebar.css";
 import { Link } from "react-router-dom";
@@ -7,6 +7,8 @@ import ApiEndpoints from "../../api/apiEndpoints";
 import CommonUtil from "../../util/commonUtil";
 import Modal from "../modal/modal";
 
+import { UserContext } from "../../context/user.context";
+
 import axios from "axios";
 import { slugify } from 'transliteration';
 
@@ -14,6 +16,8 @@ const Sidebar = (props) => {
   const [chatUsers, setChatUsers] = useState([]); //sidebar users
   const [users, setUsers] = useState([]); //popup users
   const [isShowAddPeopleModal, setIsShowAddPeopleModal] = useState(false);
+
+  const { socket, setSocket } = useContext(UserContext); 
 
   const fetchChatUser = async (newRoomId) => {
     const userId = props.currentUser.id;   
@@ -25,10 +29,10 @@ const Sidebar = (props) => {
       chatUsers,
       props.onlineUserList
     );
-    // props.setCurrentRoomId(newRoomId);
+    props.setCurrentRoomId(newRoomId);
     setChatUsers(formatedChatUser);
-    // let currentChattingMember = formatedChatUser.find(room => room.roomId == newRoomId) || null;
-    // props.setCurrentChattingMember(currentChattingMember);
+    let currentChattingMember = formatedChatUser.find(room => room.roomId == newRoomId) || null;
+    props.setCurrentChattingMember(currentChattingMember);
   };
 
   const getConnectedUserIds = () => {
@@ -58,6 +62,12 @@ const Sidebar = (props) => {
     setIsShowAddPeopleModal(true);
   };
 
+  const reconnectWebSocket = () => {
+    socket.close();
+    const newWebSocket = new WebSocket(`ws://127.0.0.1:8000/ws/users/${props.currentUser.id}/chat/`);
+    setSocket(newWebSocket);
+  };
+
   const transliterateIfRussian = (name) => {
     const isRussian = /[а-яА-ЯЁё]/.test(name);  
     return isRussian ? slugify(name) : name
@@ -85,7 +95,7 @@ const Sidebar = (props) => {
       const response = await axios.post('http://127.0.0.1:8000/social/chats', data);
       await fetchChatUser(response.data.id);
       setIsShowAddPeopleModal(false);
-
+      reconnectWebSocket();
     } catch (error) {
       console.log(error);
       alert(error.message);

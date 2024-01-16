@@ -22,9 +22,8 @@ const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineU
   const navigate = useNavigate();
 
   const fetchChatMessage = async () => {
-    const currentChatId = currentRoomId;
-    if (currentChatId) {
-      const url = `http://127.0.0.1:8000/social/chats/${currentChatId}/messages?limit=12&offset=0`
+    if (currentRoomId) {
+      const url = `http://127.0.0.1:8000/social/chats/${currentRoomId}/messages?limit=12&offset=0`
       const config = { headers: ApiUtils.getAuthHeader() };
       const response =  await axios.get(url, config);
       const chatMessages = response.data;
