@@ -3,7 +3,7 @@ import random
 from django.core.cache import cache
 from django.db.models import Count, Case, When, Sum, Q
 from django.utils.decorators import method_decorator
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import status
 from django.views.decorators.cache import never_cache, cache_page
 from rest_framework.authentication import TokenAuthentication
@@ -220,8 +220,11 @@ class ShortInfoMovieViewSet(ModelViewSet):
         queryset = self.get_queryset()
         movies = queryset.filter(
             Q(usermovierelation__user=user, usermovierelation__like=True))
-        serializer = self.get_serializer(movies, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+        paginator = MoviesPagination()
+        paginated_movies = paginator.paginate_queryset(movies, request)
+        serializer = self.get_serializer(paginated_movies, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     @action(detail=False, methods=['GET'])
     @method_decorator(never_cache)
