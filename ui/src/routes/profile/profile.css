@@ -2,12 +2,12 @@
     display: flex;
     flex-direction: row;
     padding-bottom: 120px;
+    min-width: 100%;
 }
 
 .profile-info-at-page{
     display: flex;
     flex-direction: column;
-    max-width: 600px;
     align-items: flex-start;
 }
 
@@ -45,7 +45,8 @@
 .buttons-for-control-page{
     display: flex;
     flex-direction: column;
-    margin-left: auto;
+    justify-content: flex-start;
+    align-items: flex-start;
     gap: 20px;
     padding-top: 20px;
     padding-right: 20px;
@@ -81,4 +82,11 @@
     padding-left: 20px;
     font-size: 24px;
     font-weight: 700;
+}
+
+.user-info-total-parametrs{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
 }

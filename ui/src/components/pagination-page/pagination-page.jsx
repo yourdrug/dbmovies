@@ -15,8 +15,17 @@ function Pagination ({setPage, page, numberOfPages}) {
         else if (page == 1 && numberOfPages >=3){
             setNeighbour([1, 2, numberOfPages])
         }
-        else if(page == 2){
-            setNeighbour([1, 2, 3, numberOfPages])
+        else if(page == 2 && numberOfPages == 2){
+            setNeighbour([1, 2])
+        }
+        else if(page == 2 && numberOfPages == 3){
+            setNeighbour([1, 2, 3])
+        }
+        else if(page == 2 && numberOfPages == 4){
+            setNeighbour([1, 2, 3, 4])
+        }
+        else if(page == 2 && numberOfPages > 4){
+            setNeighbour([1, 2, 3, 4, numberOfPages])
         }
         else if(page == numberOfPages){
             setNeighbour([1, numberOfPages - 1, numberOfPages])
