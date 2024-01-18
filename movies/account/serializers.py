@@ -4,7 +4,6 @@ from account.models import Account
 
 
 class CurrentUserInfoSerializer(UserSerializer):
-
     class Meta(UserSerializer.Meta):
         model = Account
         fields = (
@@ -13,3 +12,10 @@ class CurrentUserInfoSerializer(UserSerializer):
             'image',
             'email'
         )
+
+    def update_image(self, instance, validated_data):
+        image = validated_data.get('image', None)
+        if image:
+            instance.image = image
+        instance.save()
+        return instance

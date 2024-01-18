@@ -1,0 +1,24 @@
+.wrapper-edit-profile{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.inputs-edit-profile{
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+}
+
+.inputs-edit-profile label{
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.inputs-edit-profile .current-input-edit-profile{
+    width: 300px;
+    border-radius: 10px;
+    height: 30px;
+    font-size: 18px;
+    padding-left: 5px;
+}

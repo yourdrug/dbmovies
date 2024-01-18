@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from movies_database.permissions import IsOwnerOrStaffOrReadOnly
 from .models import Account
@@ -38,3 +41,22 @@ class AccountListView(generics.ListAPIView):
             return []
         queryset = super().get_queryset().exclude(id__in=exclude_users_arr)
         return queryset
+
+
+class FileUploadAPIView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = CurrentUserInfoSerializer
+
+    def patch(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, instance=request.user, partial=True)
+        user_instance = request.user
+        if serializer.is_valid():
+            serializer.update_image(user_instance, serializer.validated_data)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST)

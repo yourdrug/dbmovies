@@ -178,10 +178,10 @@ const Profile = () => {
           </div>
         </div>
         <div className='buttons-for-control-page'>
-          <Link to='/'><button className='control-buttons' onClick={()=>handleLogoutClick()}> Выйти </button></Link>
-          <button className='control-buttons'> Редактировать </button>
-          <Link to='/chatting'><button className='control-buttons' >Cообщения </button></Link>
-          <Link to='/random-movie'><button className='control-buttons'> Фильм на вечер </button></Link>
+          <Link style={{textDecoration: "none"}} to='/'><button className='control-buttons' onClick={()=>handleLogoutClick()}> Выйти </button></Link>
+          <Link style={{textDecoration: "none"}} to='/profile/edit'><button className='control-buttons'> Редактировать </button></Link>
+          <Link style={{textDecoration: "none"}} to='/chatting'><button className='control-buttons' >Cообщения </button></Link>
+          <Link style={{textDecoration: "none"}} to='/random-movie'><button className='control-buttons'> Фильм на вечер </button></Link>
         </div>
       </div>       
     </div>

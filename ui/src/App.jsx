@@ -5,6 +5,7 @@ import Home from './routes/home/home'
 import HomeScreen from './routes/chatting/chatting'
 import AlbumMovies from './routes/album-movies/album-movies'
 import EveningMovie from './routes/evening-movie/evening-movie'
+import EditProfile from './routes/edit-profile/edit-profile'
 import {Routes, Route} from 'react-router-dom'
 
 import './App.css'
@@ -23,6 +24,7 @@ function App() {
         <Route path='chatting' element={<HomeScreen/>}/>
         <Route path='chatting/:chatId' element={<HomeScreen/>}/>
         <Route path='profile/:userId/:albumName' element={<AlbumMovies/>}/>
+        <Route path='profile/edit' element={<EditProfile/>}/>
         <Route path='person/:id' element={<PersonPage/>}/>
         <Route path='random-movie' element={<EveningMovie/>}/>
       </Route>

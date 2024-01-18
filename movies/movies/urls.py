@@ -22,7 +22,7 @@ from django.conf import settings
 from django.urls import path, include, re_path
 from rest_framework.routers import SimpleRouter
 
-from account.views import AccountListView
+from account.views import AccountListView, FileUploadAPIView
 from movies_database.views import MovieViewSet, UserMovieRelationViews, ShortInfoMovieViewSet, PersonInfoViewSet, \
     ProfessionViewSet, UserMovieRelationForPersonView, SearchAPIView
 
@@ -41,6 +41,7 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path('auth/', include('djoser.urls')),
     path('social/', include('chatting.urls')),
+    path('users_update/', FileUploadAPIView.as_view()),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
 ]
 
