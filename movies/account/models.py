@@ -3,7 +3,8 @@ from django.db import models
 
 
 class Account(AbstractUser):
-    image = models.ImageField(upload_to="user")
+    image = models.ImageField(upload_to="user/")
+    is_critic = models.BooleanField(default=False)
 
 
 class OnlineAccount(models.Model):
@@ -11,3 +12,10 @@ class OnlineAccount(models.Model):
 
     def __str__(self):
         return self.account.username
+
+
+class Guest(models.Model):
+    name = models.CharField(default="Guest")
+
+    def __str__(self):
+        return self.name
