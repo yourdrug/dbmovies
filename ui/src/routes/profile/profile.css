@@ -43,6 +43,7 @@
 }
 
 .buttons-for-control-page{
+    margin-left: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -56,6 +57,21 @@
     display: flex;
     height: 45px;
     width: 240px;
+    border-radius: 10px;
+    background-color: #3D3C3A;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+
+.more-buttons {
+    display: flex;
+    height: 45px;
+    width: 60px;
     border-radius: 10px;
     background-color: #3D3C3A;
     color: white;

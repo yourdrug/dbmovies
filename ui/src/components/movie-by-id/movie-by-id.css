@@ -255,8 +255,6 @@ h2 {
   min-height: 50px;
   max-height: 167px;
   text-align: justify;
-  height: auto;
-  overflow-y: hidden;
   min-width: 565px;
   padding-left: 10px;
   padding-right: 5px;

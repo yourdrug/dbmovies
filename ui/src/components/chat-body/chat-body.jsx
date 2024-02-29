@@ -44,9 +44,7 @@ const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineU
 
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    console.log(event.data + " какая-то дата")
     const chatId = currentRoomId;
-    console.log(currentRoomId + " текущий номер комнаты")
     const userId = currentUser.id;
     if (chatId == data.roomId) {
       if (data.action == SocketActions.MESSAGE) {

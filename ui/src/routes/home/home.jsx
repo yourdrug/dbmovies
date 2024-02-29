@@ -24,9 +24,11 @@ const Home = () => {
         <div className='main-wrapper'>
             <Directory categories={categories} />
             <div className='album-choices'>
-              <Link style={{textDecoration: "none"}}><div className='album-current-choice'>
-                ТОП 250
-              </div></Link>
+              <Link style={{textDecoration: "none"}}>
+                <div className='album-current-choice'>
+                  ТОП 250
+                </div>
+              </Link>
               <div className='album-current-choice'>
                 ТОП 500
               </div>

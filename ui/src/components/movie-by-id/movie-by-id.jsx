@@ -1,6 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 
+import CriticImage from '../../assets/critic.jpg'
+
 import axios from "axios";
 import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -52,10 +54,8 @@ const MovieById = () => {
 
     function onTextareaChanged (event) {
         const contentEditable = event.target;
-        
-        if(contentEditable.scrollTop > 0){
-            contentEditable.style.height = contentEditable.scrollHeight + "px";
-        }
+        contentEditable.style.height = 'auto';
+        contentEditable.style.height = Math.min(contentEditable.scrollHeight, 167) + 'px';
     }
 
     useEffect(() => {
@@ -293,6 +293,7 @@ const MovieById = () => {
                                                 height="40"
                                             />
                                             {review.user.username}
+                                            {review.user.is_critic && <img src={CriticImage} width="80" height="30"/>}
                                         </div>
                                         {review.review}
                                     </div>

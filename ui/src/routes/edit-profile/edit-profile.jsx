@@ -131,28 +131,42 @@ const EditProfile = () => {
     return (
         <div className="main-wrapper">
             <div className="wrapper-edit-profile">
-                <div>
-                    {selectedImage && <img src={selectedImage} alt="Selected" onClick={handleReset} width="200" height="200" />}            
-                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} />
+                <div className="wrapper-for-avatar">
+                    {selectedImage && <img src={selectedImage} alt="Selected" onClick={handleReset} width="200" height="200" />}  
+                    <div>
+                        <label className="input-file">
+                            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange}/>
+                            <span>Выберите файл</span>
+                        </label>    
+                    </div>  
                 </div>
                 <div className="inputs-edit-profile">
-                    <label>Введите новое имя пользователя</label>
-                    <input type="text" placeholder="Имя пользователя" className="current-input-edit-profile"
-                        value={username} onChange={(event) => setUsername(event.target.value)}/>
-                    <label>Введите новый адрес почты</label>
-                    <input type="text" placeholder="example@gmail.com" className="current-input-edit-profile"
-                        value={email} onChange={(event) => setEmail(event.target.value)}/>
-                    <label>Введите новый пароль</label>
-                    <input type="password" value={new_password} className="current-input-edit-profile"
-                        onChange={(event) => setNewPassword(event.target.value)}/>
-                    <label>Повторите новый пароль</label>
-                    <input type="password" value={re_new_password} className="current-input-edit-profile"
-                        onChange={(event) => setReNewPassword(event.target.value)}/>
-                    <label>Введите текущий пароль</label>
-                    <input type="password" value={current_password} className="current-input-edit-profile"
-                        onChange={(event) => setCurrentPassword(event.target.value)}/>
-                </div>
-    
+                    <div style={{width: "1000px"}}>
+                        <label> Имя пользователя </label>
+                        <input type="text" placeholder={currentUser.username} className="current-input-edit-profile"
+                            value={username} onChange={(event) => setUsername(event.target.value)}/>
+                    </div>
+                    <div style={{width: "1000px"}}>
+                        <label>Электронная почта </label>
+                        <input type="text" placeholder={currentUser.email} className="current-input-edit-profile"
+                            value={email} onChange={(event) => setEmail(event.target.value)}/>
+                    </div>
+                    <div style={{width: "1000px"}}>
+                        <label>Введите новый пароль</label>
+                        <input type="password" value={new_password} className="current-input-edit-profile"
+                            onChange={(event) => setNewPassword(event.target.value)}/>
+                    </div>
+                    <div style={{width: "1000px"}}>
+                        <label>Повторите новый пароль</label>
+                        <input type="password" value={re_new_password} className="current-input-edit-profile"
+                            onChange={(event) => setReNewPassword(event.target.value)}/>
+                    </div>
+                    <div style={{width: "1000px"}}>
+                        <label>Введите текущий пароль</label>
+                        <input type="password" value={current_password} className="current-input-edit-profile"
+                            onChange={(event) => setCurrentPassword(event.target.value)}/>
+                    </div>
+                </div>  
                 <button className='control-buttons' onClick={handleUploadData}>Сохранить</button>
             </div>
             

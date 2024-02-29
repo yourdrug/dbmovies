@@ -7,6 +7,10 @@
 .album-current-choice{
     background-color: gray;
     height: 100px;
+    width: 620px;
+    margin-left: 10px;
+    padding-left: 10px;
+    color: white;
     display: flex;
     align-items: center;
 }

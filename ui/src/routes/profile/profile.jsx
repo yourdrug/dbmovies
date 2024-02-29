@@ -127,7 +127,7 @@ const Profile = () => {
             </div>
           </div>
           <div className='navigation-profile-btns'>
-            <h2>Любимые фильмы</h2>
+            {likedMovies.length > 0 && <h2>Любимые фильмы</h2>}
             <div className='users-liked-movies'>
               {likedMovies.length > 3
                 ? likedMovies.slice(0, 3).map((movie) => (
@@ -137,9 +137,9 @@ const Profile = () => {
                   <LittleMovieCard key={movie.id} movie={movie} />
                 ))}
                   {likedMovies.length > 3 && 
-                  (<Link to={`/profile/${currentUser.id}/liked`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
+                  (<Link to={`/profile/${currentUser.id}/liked`} style={{textDecoration: "none"}} className='more-buttons'>. . .</Link>)}
             </div>
-            <h2> Избранное </h2>
+            {bookmarkedMovies.length > 0 && <h2> Избранное </h2>}
             <div className='users-liked-movies'>
               {bookmarkedMovies.length > 3
                 ? bookmarkedMovies.slice(0, 3).map((movie) => (
@@ -151,7 +151,7 @@ const Profile = () => {
                   {bookmarkedMovies.length > 3 && 
                   (<Link to={`/profile/${currentUser.id}/bookmarks`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
             </div>
-            <h2>Просмотренные фильмы</h2>
+            {watchedMovies.length > 0 && <h2>Просмотренные фильмы</h2>}
             <div className='users-liked-movies'>
               {watchedMovies.length > 3
                 ? watchedMovies.slice(0, 3).map((movie) => (
@@ -163,7 +163,7 @@ const Profile = () => {
                   {watchedMovies.length > 3 && 
                   (<Link to={`/profile/${currentUser.id}/watched`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
             </div>
-            <h2>Буду смотреть</h2>
+            {willWatchMovies.length > 0 && <h2>Буду смотреть</h2>}
             <div className='users-liked-movies'>
               {willWatchMovies.length > 3
                 ? willWatchMovies.slice(0, 3).map((movie) => (
