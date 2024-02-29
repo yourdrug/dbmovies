@@ -8,8 +8,6 @@ services:
       - 5137
     depends_on:
       - backend
-    networks:
-      - dbmovies_network
 
   backend:
     build:
@@ -22,13 +20,10 @@ services:
       - ./movies/.env
     command: >
       sh -c "python manage.py runserver 0.0.0.0:8000"
-
     depends_on:
       - database
     volumes:
-      - /home/eugene/Projects/dbmovies/movies/media:/movies/media
-    networks:
-      - dbmovies_network
+      - /home/eugene/PycharmProjects/dbmovies/movies/media:/movies/media
 
   database:
     image: postgres:15.4-alpine
@@ -39,18 +34,10 @@ services:
     volumes:
       - movies_data:/var/lib/postgresql/data
     container_name: postgres
-    networks:
-      - dbmovies_network
 
   redis:
     image: redis:7.2-alpine
     hostname: redis
-    networks:
-      - dbmovies_network
-
-networks:
-  dbmovies_network:
-    driver: bridge
 
 volumes:
   movies_data:

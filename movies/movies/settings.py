@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'daphne',
-    'storages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
 
@@ -149,20 +148,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-# AWS_ACCESS_KEY_ID = config["AWS_ACCESS_KEY_ID"]
-# AWS_SECRET_ACCESS_KEY = config["AWS_SECRET_ACCESS_KEY"]
-# AWS_STORAGE_BUCKET_NAME = config["AWS_STORAGE_BUCKET_NAME"]
-# AWS_S3_REGION_NAME = config["AWS_S3_REGION_NAME"]
-#
-# AWS_S3_ENDPOINT_URL = config["AWS_S3_ENDPOINT_URL"]
+STATIC_URL = '/static/'
+STATIC_DIRS = os.path.join(BASE_DIR, 'static')
 
-# MEDIA_URL = config["MEDIA_URL"]
-
-STATIC_URL = 'static/'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+MEDIA_URL = 'media/'
+MEDIA_ROOT = f'{BASE_DIR}/media'
 
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
