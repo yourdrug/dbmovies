@@ -1,0 +1,127 @@
+.modal-for-global-chat{ 
+    display: flex;
+    z-index: 9999;
+    background-color: red;
+}
+
+.modal-global-chat-content-active{
+    height: 400px;
+    width: 500px;
+    background-color: white;
+    position: fixed;
+    top: calc(100% - 410px);
+    left: calc(100% - 510px);
+    border-radius: 12px;
+    transition: 0.4s all;
+    border: 1px black solid;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.modal-global-chat-content{
+    height: 40px;
+    width: 150px;
+    position: fixed;
+    top: calc(100% - 50px);
+    left: calc(100% - 160px);
+    border-radius: 12px;
+    transition: 0.4s all;
+    border: 1px black solid;
+}
+
+.modal-global-chat-content.active{
+    transform: scale(1);
+}
+
+.global-chat-user-counts{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px;
+}
+
+.user-online-circle {
+    background-color: #34ce57;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+}
+
+.button-for-collapse{
+    margin-left: auto;
+}
+
+.submit-btn-in-global-chat{
+    width: 30px;
+    height: 30px;
+    padding-bottom: 6px;
+}
+
+.global-chat-messages-container {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 15px;
+    gap: 15px;
+    height: 300px;
+    max-width: 450px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    transition: all 0.5s;
+}
+
+.global-chat-input-message-container{
+    display: flex;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+#global-chat-message-input{
+    min-width: 375px;
+    font-size: 18px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    height: 40px;
+    overflow-y: hidden;
+    resize: none;
+    padding-left: 5px;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.global-chat-message-left{
+    display: flex;
+    flex-direction: row;
+    margin-right: auto;
+    align-items: flex-start;
+    max-width: 450px;
+}
+
+.global-chat-message-body{
+    flex: 1;
+    margin-left: 5px;
+}
+
+.text-in-global-chat-message{
+    font-size: 18px;
+    color: black;
+    font-weight: 400;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.username-in-global-chat-message{
+    font-weight: bold;
+    margin-right: 5px;
+    color: gray;
+    font-size: 18px;
+}
+
+.avatar-in-global-chat{
+    border-radius: 10px;
+    margin-top: 8px;
+}

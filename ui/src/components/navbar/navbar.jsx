@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom';
 import Modal from '../modal/modal';
 import LoginForm from '../login-form/login-form';
 import SignUpForm from '../signup-form/signup-form';
+
+import GlobalChat from '../global-chat/global-chat';
+
 import './navbar.css';
 import { useState, useContext, useEffect } from 'react';
 
@@ -11,6 +14,7 @@ import { UserContext } from '../../context/user.context';
 
 const Navbar = () => {
     const [active, setActive] = useState(false);
+    const [globalChatActive, setGlobalChatActive] = useState(true);
     const [searchInfo, setSearchInfo] = useState(null);
     const [searchInfoClass, setSearchInfoClass] = useState('search-info');
 
@@ -19,6 +23,11 @@ const Navbar = () => {
     useEffect(() => {
         if (currentUser){
             let socket = new WebSocket(`ws://127.0.0.1:8000/ws/users/${currentUser.id}/chat/`);
+            setSocket(socket);
+        }
+
+        else{
+            let socket = new WebSocket('ws://127.0.0.1:8000/ws/guest/');
             setSocket(socket);
         }
     }, [currentUser]);
@@ -111,11 +120,12 @@ const Navbar = () => {
             </div> 
             ) : (
             <div className='auth-module'>
-                <div className='user-avatar'>
-                    <img src={currentUser ? currentUser.image : ''} alt='NICHEGO NET'></img>
+                <div className='user-avatar-in-navbar'>
+                    <img src={currentUser ? currentUser.image : ''} alt={currentUser.username}></img>
                 </div>
                 <Link className="navbar-username" to='/profile' style={{ textDecoration: 'none' }}>{currentUser.username}</Link>
-            </div>) }    
+            </div>) } 
+            <GlobalChat active={globalChatActive} setActive={setGlobalChatActive}></GlobalChat>
         </div>
         
     )

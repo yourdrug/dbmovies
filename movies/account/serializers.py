@@ -10,7 +10,8 @@ class CurrentUserInfoSerializer(UserSerializer):
             'id',
             'username',
             'image',
-            'email'
+            'email',
+            'is_critic'
         )
 
     def update_image(self, instance, validated_data):
