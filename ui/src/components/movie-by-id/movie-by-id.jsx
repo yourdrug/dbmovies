@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 
 import CriticImage from '../../assets/critic.jpg'
@@ -15,6 +15,8 @@ const MovieById = () => {
     const [movie, setMovie] = useState(null)
     const [inputMessage, setInputMessage] = useState("");
     const { currentUser, token } = useContext(UserContext) 
+    const [selectedRating, setSelectedRating] = useState(null);
+    const [showRatingOptions, setShowRatingOptions] = useState(false);
 
     const params = useParams();
     let movieId = params.id;
@@ -37,16 +39,78 @@ const MovieById = () => {
             alert(error.message);
         }
     }
-    
+
+    async function updateRate (id, rating) {
+        let config = {
+            headers: {
+                Authorization: "Token " + token,
+            },
+        };
+        let data = {
+            'rate': rating,
+        };
+        try {
+            await axios.patch(`http://127.0.0.1:8000/movie_relation/${id}/`, data, config);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    const choicesRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+        if (choicesRef.current && !choicesRef.current.contains(event.target)) {
+            setShowRatingOptions(false);
+        }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const handleRatingClick = (id, rating) => {
+        setSelectedRating(rating);
+        setShowRatingOptions(false); // Закрываем варианты оценок после выбора
+        updateRate(id, rating);
+    };
+
+    const handleButtonClick = () => {
+        if(token !== null){
+            setShowRatingOptions(!showRatingOptions); // Инвертируем видимость вариантов оценок
+        }
+        else{
+            setActive(true);
+        }
+        
+    };
+
+    const getRatingColor = (rating) => {
+        if (rating >= 1 && rating <= 5) {
+          return 'red-set-rate';
+        } else if (rating >= 6 && rating <= 7) {
+          return 'gray-set-rate';
+        } else {
+          return 'green-set-rate';
+        }
+    };
     
     async function getMovieById(){
+        let config = {
+            headers: {
+                Authorization: "Token " + token,
+            },
+        };
         try {
           const response = await axios.get(
-            `http://127.0.0.1:8000/movie/${movieId}`
+            `http://127.0.0.1:8000/movie/${movieId}`, config
           );
           let movie = await response.data;
           console.log(response.data)
           setMovie(movie);
+          setSelectedRating(movie.user_rating);
         } catch (error) {
           alert("ошибка в получении данных с сервера");
         }
@@ -249,8 +313,52 @@ const MovieById = () => {
                     </div>
     
                     <div className="wrapper-col-3">
-                        <div className={className}> {movie.rating} </div> 
-                        <span className="rathing-counts">{movie.annotated_count_rate!=0 && movie.annotated_count_rate}</span>
+                        <div style={{display:"flex", flexDirection:"row", minWidth:"180px"}}>
+                            <div className={className}> {movie.rating} </div> 
+                            <span className="full-movie-rating-counts">{movie.annotated_count_rate} оценок</span>
+                        </div>
+                        <div className='my-own-rating-full-movie'>
+                            {selectedRating && (
+                                <div className="rate-movie-block">
+                                    <button className="remove-movie-rate" 
+                                        onClick={() => handleRatingClick(movie.id, null)}>Удалить оценку</button>
+                                    <div className={`selected-user-rating ${getRatingColor(selectedRating)}`}> 
+                                        {selectedRating} 
+                                    </div>
+                                </div>
+                                
+                            )}
+                            {!selectedRating && !showRatingOptions && (
+                                <button className="movie-by-id-set-rate" onClick={handleButtonClick}>
+                                    Оценить фильм    
+                                </button>
+                            )}
+                                
+
+                            {showRatingOptions && !selectedRating &&(
+                            <div ref={choicesRef} className='choices-for-marks-full-movie'>
+                                {[...Array(10).keys()].map((index) => {
+                                const rating = index + 1;
+                                let colorClass;
+
+                                if (rating >= 1 && rating <= 5) {
+                                    colorClass = 'red';
+                                } else if (rating >= 6 && rating <= 7) {
+                                    colorClass = 'grey';
+                                } else {
+                                    colorClass = 'green';
+                                }
+
+                                return (
+                                    <span
+                                        key={rating}
+                                        className={`rating-digit-full-movie ${colorClass} ${selectedRating === rating ? 'selected' : ''}`}
+                                        onClick={() => handleRatingClick(movie.id ,rating)}> {rating} </span>
+                                );
+                                })}
+                            </div>
+                        )}
+                        </div>
                         <a href="#" className="rathing-details">{movie.annotated_count_review}&nbsp;Рецензий</a>
                         <div style={{fontWeight: "bold", marginTop:"10px"}}>Актеры</div>
                         <div className="persons-actors">
@@ -283,28 +391,33 @@ const MovieById = () => {
                     </div>
                     
                     <div className="list-reviews">
-                        {movie.movies_reviews.map((review, index) => {
-                            return (
-                                review.review !== null && (
-                                    <div className="reviews-texts" key={index}>
-                                        <div className="movie-review-owner">
-                                            <img
-                                                src={review.user.image}
-                                                className="user-image-container"
-                                                alt="User"
-                                                width="40"
-                                                height="40"
-                                            />
-                                            {review.user.username}
-                                            {review.user.is_critic && <img src={CriticImage} width="80" height="30"/>}
-                                        </div>
-                                        {review.review}
-                                    </div>
-                                )
-                            );
-                        })}
+                    {movie.movies_reviews.length > 0 ? (
+                        movie.movies_reviews.map((review, index) => {
+                        return (
+                            review.review !== null && (
+                            <div className="reviews-texts" key={index}>
+                                <div className="movie-review-owner">
+                                <img
+                                    src={review.user.image}
+                                    className="user-image-container"
+                                    alt="User"
+                                    width="40"
+                                    height="40"
+                                />
+                                {review.user.username}
+                                {review.user.is_critic && (
+                                    <img src={CriticImage} width="80" height="30" />
+                                )}
+                                </div>
+                                {review.review}
+                            </div>
+                            )
+                        );
+                        })
+                    ) : (
+                        <div className="no-reviews-text">Еще нет отзывов</div>
+                    )}
                     </div>
-
                 </div>
             </div> 
         )

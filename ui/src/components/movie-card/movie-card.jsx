@@ -149,7 +149,7 @@ const MovieCard = ({ movie, index }) => {
         } else {
           return 'green-set-rate';
         }
-      };
+    };
 
     let className="movie-rate"
     if (movie.rating >= 7.5){

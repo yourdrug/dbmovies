@@ -151,7 +151,7 @@ h2 {
   /*padding-top: 20px;*/
   font-size: 35px;
   font-weight: bold;
-  width: 40px;
+  width: 100px;
   display: inline-block;
   background-color: inherit;
   color: green;
@@ -161,7 +161,7 @@ h2 {
   /*padding-top: 20px;*/
   font-size: 35px;
   font-weight: bold;
-  width: 40px;
+  width: 100px;
   display: inline-block;
   background-color: inherit;
   color: gray;
@@ -171,21 +171,21 @@ h2 {
   /*padding-top: 20px;*/
   font-size: 35px;
   font-weight: bold;
-  width: 40px;
+  width: 100px;
   display: inline-block;
   background-color: inherit;
   color: red;
 }
 
-.rathing-counts {
-  display: block;
-  margin-bottom: 10px;
+.full-movie-rating-counts {
   line-height: 19px;
   opacity: 0.4;
   background-color: white;
+  padding-top: 24px;
 }
 
 .rathing-details {
+  margin-top: 10px;
   display: inline-block;
   background-color: white;
 }
@@ -323,4 +323,89 @@ h2 {
   position: relative;
   display: inline-block;
   margin-right: 10px;
+}
+
+.rate-movie-block{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 200px;
+}
+
+.remove-movie-rate:hover{
+  cursor: pointer;
+  scale: 1.05;
+  transition: 0.5s;
+}
+
+.selected-user-rating{
+  width: 25px;
+  height: 25px;
+  border-radius: 20px;
+  text-align: center;
+  margin-left: 5px;
+  margin-top: 6px;
+}
+
+.movie-by-id-set-rate{
+  margin-top: 6px;
+  background-color: whitesmoke;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  width: 180px;
+  height: 36px;
+  padding: 0;
+  position: relative;
+}
+
+.movie-by-id-set-rate:hover{
+  cursor: pointer;
+  scale: 1.05;
+  transition: 0.5s;
+}
+
+.choices-for-marks-full-movie{
+  margin-top: 6px;
+  background-color: whitesmoke;
+  border: none;
+  border-radius: 10px;
+  height: 36px;
+  position: absolute;
+  width: 220px;
+  display: flex;
+  flex-direction: row;
+  padding-left: 5px;
+  gap: 10px;
+  justify-content: center;
+}
+
+.my-own-rating-full-movie{
+  height: 50px;
+}
+
+.rating-digit-full-movie {
+  cursor: pointer;
+  padding-top: 5px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.rating-digit-full-movie:hover{
+  scale: 1.4;
+  transition: 0.5s;
+}
+
+.remove-movie-rate{
+  margin-top: 6px;
+  background-color: whitesmoke;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  width: 170px;
+  height: 36px;
+  padding: 0;
+  position: relative;
 }
