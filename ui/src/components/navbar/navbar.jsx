@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import Modal from '../modal/modal';
 import LoginForm from '../login-form/login-form';
-import SignUpForm from '../signup-form/signup-form';
 
 import GlobalChat from '../global-chat/global-chat';
 
@@ -12,13 +11,32 @@ import axios from 'axios';
 
 import { UserContext } from '../../context/user.context';
 
+function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+  
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+  
+      return () => {
+        clearTimeout(handler);
+      };
+    }, [value, delay]);
+  
+    return debouncedValue;
+  }
+
 const Navbar = () => {
     const [active, setActive] = useState(false);
     const [globalChatActive, setGlobalChatActive] = useState(true);
+    const [inputInfo, setInputInfo] = useState("")
     const [searchInfo, setSearchInfo] = useState(null);
     const [searchInfoClass, setSearchInfoClass] = useState('search-info');
 
     const { currentUser, setSocket } = useContext(UserContext); 
+
+    const debouncedSearchTerm = useDebounce(inputInfo, 500)
 
     useEffect(() => {
         if (currentUser){
@@ -32,7 +50,22 @@ const Navbar = () => {
         }
     }, [currentUser]);
 
-    
+
+    const handleDebouncedInputChange = async (value) => {
+        try {
+            const response = await axios.get(
+              `http://127.0.0.1:8000/search/?query=${value}`
+            );
+            setSearchInfo(response.data);
+            console.log(response.data)
+          } catch (error) {
+            alert("ошибка в получении данных с сервера");
+          }
+    };
+
+    useEffect(() => {
+        handleDebouncedInputChange(inputInfo);
+    }, [debouncedSearchTerm]);
 
     const handleSearchFocus = () => {
         setSearchInfoClass('search-info-active');
@@ -46,30 +79,13 @@ const Navbar = () => {
         }, 200);
     }
     
-    const handleDebouncedInputChange = async (value) => {
-        try {
-            const response = await axios.get(
-              `http://127.0.0.1:8000/search/?query=${value}`
-            );
-            setSearchInfo(response.data);
-            console.log(response.data)
-          } catch (error) {
-            alert("ошибка в получении данных с сервера");
-          }
-      };
     
-    async function onChangeInputHandler(event){
-        const value = event.target.value;
-        setTimeout(async () => {
-            await handleDebouncedInputChange(value);
-          }, 1000);
-    }
-
+    
     return(
         <div className="navbar">
             <Link className="appName" to='/' style={{ textDecoration: 'none' }}>Название</Link> 
-            <input className='search-box' type='searchbox' placeholder='Поиск по всему сайту'
-                    onChange={(event) => onChangeInputHandler(event)} onFocus={() => handleSearchFocus()}
+            <input className='search-box' type='searchbox' placeholder='Поиск по всему сайту' value={inputInfo}
+                    onChange={(event) => setInputInfo(event.target.value)} onFocus={() => handleSearchFocus()}
                     onBlur={() => handleSearchBlur()}/>
             {searchInfo && (
                 <div className={searchInfoClass}>
