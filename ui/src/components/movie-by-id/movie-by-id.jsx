@@ -111,11 +111,12 @@ const MovieById = () => {
                         <ul className="params">
                             <li>
                                 <span className="text-muted">Год производства</span>
-                                { movie.year }
+                                <Link style={{textDecoration: "none", color:"black"}} to={`/movies/year/${movie.year}`}>{ movie.year }</Link>
                             </li>
                             
                             <li>
-                                <span className="text-muted">Страна</span> { movie.country }
+                                <span className="text-muted">Страна</span> 
+                                <Link style={{textDecoration: "none", color:"black"}} to={`/movies/country/${movie.country}`}>{ movie.country }</Link>
                             </li>
                             
                             <li>
@@ -123,7 +124,9 @@ const MovieById = () => {
                                 <span>
                                     <div className="genre">
                                         {movie.genres.map((genre) => {
-                                            return <div className="genre" key={genre.name}><a>{genre.name}&nbsp;</a></div>
+                                            return <div className="genre" key={genre.name}>
+                                                        <Link style={{textDecoration: "none", color:"black"}} to={`/movies/genre/${genre.name}`}>{genre.name}&nbsp;</Link>
+                                                    </div>
                                             })
                                         }
                                     </div>

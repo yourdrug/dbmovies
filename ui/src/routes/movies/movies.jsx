@@ -4,16 +4,22 @@ import MovieList from '../../components/movie-list/movie-list';
 import Pagination from '../../components/pagination-page/pagination-page';
 import { UserContext } from '../../context/user.context';
 import FilterSelect from '../../components/select/select';
+import { useParams } from 'react-router-dom';
 import './movies.css'
 
 const pageSize = 50;
 
 function Movies() {
+  const params = useParams();
+  const genre = params.genre ? params.genre : "";
+  const country = params.country ? params.country : "";
+  const year = params.year ? params.year : "";
+
   const [page, setPage] = useState(1)
   const [numberOfPages, setNumberOfPages] = useState(1)
-  const [selectedGenre, setSelectedGenre] = useState("")
-  const [selectedYear, setSelectedYear] = useState("")
-  const [selectedCountry, setSelectedCountry] = useState("")
+  const [selectedGenre, setSelectedGenre] = useState(genre)
+  const [selectedYear, setSelectedYear] = useState(year)
+  const [selectedCountry, setSelectedCountry] = useState(country)
   const [orderingField, setOrderingField] = useState("")
   const [filteredMovies, setFilteredMovies] = useState([])
   
@@ -151,6 +157,15 @@ function Movies() {
   }
 
   useEffect(()=>{
+    if (genre){
+      setSelectedGenre(genre);
+    }
+    if (country){
+      setSelectedCountry(country);
+    }
+    if(year){
+      setSelectedYear(year);
+    }
     filterMovie();
   }, [selectedGenre, selectedYear, selectedCountry, page, token]);
 
@@ -194,17 +209,17 @@ function Movies() {
             />
             <FilterSelect
               options={genreOption}
-              defaultValue={genreOption[0]}
+              defaultValue={genre ? genreOption.find(option => option.value === genre) : genreOption[0]}
               onChange={handleChangeGenreField}
             />
             <FilterSelect
               options={countryOption}
-              defaultValue={countryOption[0]}
+              defaultValue={country ? countryOption.find(option => option.value === country) : countryOption[0]}
               onChange={handleChangeCountryField}
             />
             <FilterSelect
               options={yearOption}
-              defaultValue={yearOption[0]}
+              defaultValue={year ? yearOption.find(option => option.value === Number(year)) : yearOption[0]}
               onChange={handleChangeYear}
             />
         </div>
