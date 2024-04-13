@@ -8,6 +8,7 @@ import "./chat-body.css";
 
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 let typingTimer = 0;
 let isTypingSignalSent = false;
@@ -23,11 +24,16 @@ const ChatBody = ({currentUser, currentRoomId, currentChattingMember, setOnlineU
 
   const fetchChatMessage = async () => {
     if (currentRoomId) {
-      const url = `http://127.0.0.1:8000/social/chats/${currentRoomId}/messages?limit=12&offset=0`
-      const config = { headers: ApiUtils.getAuthHeader() };
-      const response =  await axios.get(url, config);
-      const chatMessages = response.data;
-      setMessages(chatMessages);
+      try{
+        const url = `http://127.0.0.1:8000/social/chats/${currentRoomId}/messages?limit=12&offset=0`
+        const config = { headers: ApiUtils.getAuthHeader() };
+        const response =  await axios.get(url, config);
+        const chatMessages = response.data;
+        setMessages(chatMessages);
+      }
+      catch(error){
+        toast.warn("Технические неполадки, попробуйте позже.")
+      }
     }
   };
 

@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 import './login-form.css'
 import { UserContext } from '../../context/user.context'
 
@@ -28,9 +29,26 @@ const LoginForm = ({setActive}) =>{
           setCurrentUser(response.data);
           localStorage.setItem("currentUser", JSON.stringify(response.data));
         } catch (error) {
-          alert(error.message);
+          toast.warn("Технические неполадки, попробуйте позже.")
         }
     }
+
+    async function autoLogin(temp_username, temp_password) {
+      let data = { username: temp_username, password: temp_password};
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:8000/auth/token/login/",
+          data
+        );
+        localStorage.setItem("token", response.data.auth_token);
+        localStorage.setItem("password", temp_password);
+        setToken(response.data.auth_token);
+        await getAccountInfo(response.data.auth_token);
+        setActive(false);
+      } catch (error) {
+        toast.warn("Технические неполадки, попробуйте позже.")
+      }
+  }
 
     async function login() {
         let data = { username: username, password: password};
@@ -45,18 +63,36 @@ const LoginForm = ({setActive}) =>{
           await getAccountInfo(response.data.auth_token);
           setActive(false);
         } catch (error) {
-          alert(error.message);
+          if(error.response.status == 400){
+            toast.error("Неверный логин или пароль.")
+            return
+          }
+          toast.warn("Технические неполадки, попробуйте позже.")
         }
     }
 
     async function signUp() {
-      let data = { username: reg_username, password: reg_password };
-      console.log(reg_password);
+      if (reg_password.length < 9){
+        toast.error("Пароль не должен быть меньше 8 символов.")
+        return
+      }
+      else if (reg_password != reg_re_password){
+        toast.error("Пароли должны совпадать.")
+        return
+      }
+
       try {
-        const response = await axios.post("http://127.0.0.1:8000/auth/users/", data);
-        console.log(response);
+        let data = { username: reg_username, password: reg_password };
+        await axios.post("http://127.0.0.1:8000/auth/users/", data);
+        toast.success("Аккаунт успешно создан!");
+        await autoLogin(reg_username, reg_password);
       } catch (error) {
-        alert(error.message);
+        if ("username" in error.response.data){
+          toast.error("Такое имя пользователя уже существует.")
+          return
+        }
+        
+        toast.warn("Технические неполадки, попробуйте позже.")
       }
   }
 

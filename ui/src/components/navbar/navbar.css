@@ -145,3 +145,14 @@ input[type="searchbox"] {
     background-color: white;
     font-style: italic;
 }
+
+.nothing-found{
+    align-items: center;
+    margin: auto;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.my-toast-container{
+    z-index: 10000;
+}

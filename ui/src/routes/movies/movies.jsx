@@ -117,7 +117,7 @@ function Movies() {
 
   async function filterMovie() {
     let config = {}
-    if (token){
+    if (token && token.length > 4){
       config.headers = {
         Authorization: "Token " + token,
       };
@@ -196,8 +196,6 @@ function Movies() {
     <div className='main-wrapper'>
       <div className='movies-columns'>
         <div>
-          <button onClick={getMovies}>Получить фильм</button>
-          <button onClick={next}>Следующая страница</button>
           <Pagination setPage={setPage} page={page} numberOfPages={numberOfPages}/>
           <MovieList className='movies-list' movies={filteredMovies} page={page} pageSize={pageSize}/> 
         </div>

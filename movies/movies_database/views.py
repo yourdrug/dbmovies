@@ -113,7 +113,7 @@ class MovieViewSet(ModelViewSet):
         ids = data.values('id')
         random_id = random.choice(ids)
         random_movie = data.get(id=random_id.get("id"))
-        serializer = MovieSerializer(random_movie)
+        serializer = MovieSerializer(random_movie, context={'request': request})
         return Response(serializer.data)
 
     @action(detail=False, methods=['GET'])

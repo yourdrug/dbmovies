@@ -6,6 +6,7 @@ import GlobalChat from '../global-chat/global-chat';
 
 import './navbar.css';
 import { useState, useContext, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 import axios from 'axios';
 
@@ -29,7 +30,7 @@ function useDebounce(value, delay) {
 
 const Navbar = () => {
     const [active, setActive] = useState(false);
-    const [globalChatActive, setGlobalChatActive] = useState(true);
+    const [globalChatActive, setGlobalChatActive] = useState(false);
     const [inputInfo, setInputInfo] = useState("")
     const [searchInfo, setSearchInfo] = useState(null);
     const [searchInfoClass, setSearchInfoClass] = useState('search-info');
@@ -57,9 +58,8 @@ const Navbar = () => {
               `http://127.0.0.1:8000/search/?query=${value}`
             );
             setSearchInfo(response.data);
-            console.log(response.data)
           } catch (error) {
-            alert("ошибка в получении данных с сервера");
+            toast.warn("Технические неполадки, попробуйте позже.")
           }
     };
 
@@ -69,7 +69,7 @@ const Navbar = () => {
 
     const handleSearchFocus = () => {
         setSearchInfoClass('search-info-active');
-        handleDebouncedInputChange("");
+        handleDebouncedInputChange(inputInfo);
     };
 
     const handleSearchBlur = () => {
@@ -83,6 +83,19 @@ const Navbar = () => {
     
     return(
         <div className="navbar">
+            <ToastContainer className="my-toast-container"
+                position="bottom-right"
+                autoClose={5000}
+                limit={10}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable={false}
+                pauseOnHover={false}
+                theme="light"
+            />
             <Link className="appName" to='/' style={{ textDecoration: 'none' }}>Название</Link> 
             <input className='search-box' type='searchbox' placeholder='Поиск по всему сайту' value={inputInfo}
                     onChange={(event) => setInputInfo(event.target.value)} onFocus={() => handleSearchFocus()}
@@ -125,8 +138,13 @@ const Navbar = () => {
                             ))}
                         </div>
                     )}
+                    {searchInfo.results_person.length == 0 && searchInfo.results_movie.length == 0 && (
+                        <div className='nothing-found'>
+                            Ничего не найдено 
+                        </div>
+                    )}
                 </div>
-            )}           
+            )}   
             { !currentUser ? 
             (<div className='auth-module'>
                 <a className="logbtn" onClick={() => setActive(true)}>Войти</a> 

@@ -48,18 +48,16 @@ const GlobalChat = ({active, setActive}) =>{
       setInputMessage("");
     };
     
-    socket.onmessage = (event) => {
+    if (socket){
+      socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log(data)
         if (data.action == SocketActions.MESSAGE) {
           data["userImage"] = ServerUrl.BASE_URL.slice(0, -1) + data.userImage;
           setMessages((prevState) => {
             let messagesState = JSON.parse(JSON.stringify(prevState));
-            console.log("messagesState " + messagesState);
             messagesState.results.unshift(data);
             return messagesState;
           });
-          console.log("coo,otybz " + messages);
         }
         if (data.action == SocketActions.ONLINE_USER) {
           setOnlineUserList(data.userList);
@@ -68,13 +66,15 @@ const GlobalChat = ({active, setActive}) =>{
           setOnlineUsersCount(data.count);
         }
       };
-
+    }
+    
     return(
       <div className='global-chat-container'>
         {active ? (
           <div className='modal-global-chat-content-active'>
             <div className='global-chat-user-counts'> 
-              <div className="user-online-circle"/> &nbsp; {onlineUsersCount} 
+              <div className="user-online-circle"/> &nbsp; {onlineUsersCount}
+              <span className='global-chat-title'>Глобальный чат</span> 
               <div className='button-for-collapse' onClick={() => setActive(false)}> 
                 <img 
                   src='https://cdn-icons-png.flaticon.com/512/54/54860.png'
@@ -130,7 +130,7 @@ const GlobalChat = ({active, setActive}) =>{
         ) : (
           <div className='modal-global-chat-content' onClick={() => setActive(true)}>
             <div className='global-chat-user-counts'> 
-              <div className="user-online-circle"/> &nbsp; {onlineUsersCount} 
+              <div className="user-online-circle"/> &nbsp; {onlineUsersCount}
             </div>
           </div>
         )}

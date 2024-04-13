@@ -10,6 +10,7 @@
 .movies-columns{
     display: flex;
     flex-direction: row;
+    margin-left: 15px;
 }
 
 .selects-for-sorting-filtering{

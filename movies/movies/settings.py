@@ -13,11 +13,8 @@ import os
 from pathlib import Path
 import socket
 from dotenv import dotenv_values
-from storages.backends.s3boto3 import S3Boto3Storage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-import movies
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -110,11 +107,6 @@ DATABASES = {
     }
 }
 
-# AUTHENTICATION_BACKENDS = (
-#    'social_core.backends.github.GithubOAuth2',
-#    'django.contrib.auth.backends.ModelBackend',
-# )
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -185,6 +177,7 @@ REST_FRAMEWORK = {
 DJOSER = {
     'SERIALIZERS': {
         'current_user': 'account.serializers.CurrentUserInfoSerializer',
+        'user_create': 'account.serializers.CustomUserCreateSerializer'
     },
 }
 

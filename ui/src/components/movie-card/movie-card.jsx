@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import axios from 'axios';
 import './movie-card.css'
 import Modal from '../modal/modal';
 import LoginForm from '../login-form/login-form';
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { UserContext } from '../../context/user.context';
 
@@ -28,8 +31,14 @@ const MovieCard = ({ movie, index }) => {
         };
         try {
             await axios.patch(`http://127.0.0.1:8000/movie_relation/${id}/`, data, config);
+            if (rating){
+                toast.success('Оценка успешно добавлена!');
+            }
+            else{
+                toast.info('Оценка успешно удалена.');
+            }
         } catch (error) {
-            alert(error.message);
+            toast.warn("Технические неполадки, попробуйте позже.")
         }
     }
 
@@ -43,12 +52,15 @@ const MovieCard = ({ movie, index }) => {
             'like': !current_like,
         };
         try {
-            const response = await axios.patch(
-              `http://127.0.0.1:8000/movie_relation/${id}/`, data, config
-            );
-            console.log(response);
+            await axios.patch(`http://127.0.0.1:8000/movie_relation/${id}/`, data, config);
+            if (current_like){
+                toast.info('Лайк убран.');
+            }
+            else{
+                toast.success('Лайк добавлен!')
+            }
         } catch (error) {
-            alert(error.message);
+            toast.warn("Технические неполадки, попробуйте позже.")
         }
     }
 
@@ -62,12 +74,15 @@ const MovieCard = ({ movie, index }) => {
             'is_watched': !current_state,
         };
         try {
-            const response = await axios.patch(
-              `http://127.0.0.1:8000/movie_relation/${id}/`, data, config
-            );
-            console.log(response);
+            await axios.patch(`http://127.0.0.1:8000/movie_relation/${id}/`, data, config);
+            if (current_state){
+                toast.info('Фильм убран из просмотренных.');
+            }
+            else{
+                toast.success('Фильм добавлен в просмотренные!')
+            }
         } catch (error) {
-            alert(error.message);
+            toast.warn("Технические неполадки, попробуйте позже.")
         }
     }
 
@@ -84,11 +99,31 @@ const MovieCard = ({ movie, index }) => {
             const response = await axios.patch(
               `http://127.0.0.1:8000/movie_relation/${id}/`, data, config
             );
-            console.log(response);
+            if (current_state){
+                toast.info('Фильм убран из «Избранного».');
+            }
+            else{
+                toast.success('Фильм добавлен в «Избранное»!')
+            }
         } catch (error) {
-            alert(error.message);
+            toast.warn("Технические неполадки, попробуйте позже.")
         }
     }
+
+    const choicesRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (choicesRef.current && !choicesRef.current.contains(event.target)) {
+                setShowSelectForAlbums(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(()=>{
         setSelectedRating(movie.user_rating);
@@ -221,7 +256,7 @@ const MovieCard = ({ movie, index }) => {
                 </div>
                 <button className="movie-card-additional-options" onClick={()=> setShowSelectForAlbums(!showSelectForAlbums)}/>
                 {showSelectForAlbums && 
-                    <div className='select-options-for-movies'>
+                    <div ref={choicesRef} className='select-options-for-movies'>
                         <button className='choose-for-album-btn' onClick={()=> markAsWatchedButtonClick(movie.id, isWatched)}> 
                             Просмотрен 
                             {isWatched ? <img className='is-movie-watched' src='https://cdn-icons-png.flaticon.com/512/5191/5191458.png'/> 

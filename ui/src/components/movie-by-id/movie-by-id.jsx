@@ -3,6 +3,9 @@ import { useParams, Link } from "react-router-dom";
 
 import CriticImage from '../../assets/critic.jpg'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import axios from "axios";
 import { format, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -35,8 +38,9 @@ const MovieById = () => {
               `http://127.0.0.1:8000/movie_relation/${movieId}/`, data, config
             );
             setInputMessage("");
+            toast.success('Отзыв успешно отправлен!');
         } catch (error) {
-            alert(error.message);
+            toast.warn("Технические неполадки, попробуйте позже.")
         }
     }
 
@@ -51,8 +55,15 @@ const MovieById = () => {
         };
         try {
             await axios.patch(`http://127.0.0.1:8000/movie_relation/${id}/`, data, config);
+            if (rating){
+                toast.success('Оценка успешно добавлена!');
+            }
+            else{
+                toast.info('Оценка успешно удалена.');
+            }
+                
         } catch (error) {
-            alert(error.message);
+            toast.warn("Технические неполадки, попробуйте позже.")
         }
     }
 
@@ -60,14 +71,14 @@ const MovieById = () => {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-        if (choicesRef.current && !choicesRef.current.contains(event.target)) {
-            setShowRatingOptions(false);
-        }
+            if (choicesRef.current && !choicesRef.current.contains(event.target)) {
+                setShowRatingOptions(false);
+            }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
 
@@ -108,11 +119,10 @@ const MovieById = () => {
             `http://127.0.0.1:8000/movie/${movieId}`, config
           );
           let movie = await response.data;
-          console.log(response.data)
           setMovie(movie);
           setSelectedRating(movie.user_rating);
         } catch (error) {
-          alert("ошибка в получении данных с сервера");
+            toast.warn('Технические неполадки. Попробуйте позже.');
         }
     }
 
@@ -161,6 +171,19 @@ const MovieById = () => {
 
         return(
             <div className="main-wrapper">
+                <ToastContainer
+                    position="bottom-right"
+                    autoClose={5000}
+                    limit={10}
+                    hideProgressBar={false}
+                    newestOnTop
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    draggable={false}
+                    pauseOnHover={false}
+                    theme="light"
+                />
                 <div className="wrapper">
                     <div className="wrapper-col-1">
                         <img className="poster-for-full-movie-info" src={movie.poster} alt={movie.name} />
