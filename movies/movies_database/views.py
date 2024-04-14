@@ -35,6 +35,11 @@ class MovieViewSet(ModelViewSet):
     filterset_fields = ['year', 'name', 'genres__name']
     search_fields = ['name', 'country', 'genres__name']
 
+    def get_serializer_context(self):
+        # Передаем контекст сериализатору, чтобы он мог использовать request.user
+        context = super().get_serializer_context()
+        return {'request': self.request, **context}
+
     # @method_decorator(cache_page(60 * 2))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)

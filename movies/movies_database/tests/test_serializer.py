@@ -8,6 +8,7 @@ from django.test import TestCase
 from account.models import Account
 from movies_database.models import Movie, UserMovieRelation, Person, Genre, Profession
 from movies_database.serializers import MovieSerializer
+from django.test.client import RequestFactory
 
 
 class MovieSerializerTestCase(TestCase):
@@ -35,6 +36,8 @@ class MovieSerializerTestCase(TestCase):
             rate=4,
             review='Great movie!',
         )
+        self.request = RequestFactory().get('/')
+        self.request.user = self.user
 
     def test_movie_model(self):
         # Проверяем, что модель Movie корректно создается
@@ -45,7 +48,7 @@ class MovieSerializerTestCase(TestCase):
 
     def test_movie_serializer(self):
         # Проверяем, что сериализатор MovieSerializer корректно представляет объект Movie
-        serializer = MovieSerializer(instance=self.movie)
+        serializer = MovieSerializer(instance=self.movie, context={"request": self.request})
         data = serializer.data
 
         self.assertEqual(data['id'], self.movie.id)

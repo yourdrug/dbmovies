@@ -13,6 +13,8 @@ from account.models import Account
 from movies_database.models import Movie, UserMovieRelation, Genre, Person, Profession
 from movies_database.serializers import MovieSerializer, UserMovieRelationSerializer
 
+from django.test.client import RequestFactory
+
 
 class MovieApiTestCase(APITestCase):
     def setUp(self):
@@ -75,6 +77,8 @@ class MovieApiTestCase(APITestCase):
             rate=4,
             review='Enjoyable movie with both action and drama.',
         )
+        self.request = RequestFactory().get('/')
+        self.request.user = self.user
 
     def test_get(self):
         url = reverse('movie-list')
@@ -84,7 +88,7 @@ class MovieApiTestCase(APITestCase):
                 annotated_likes=Count(Case(When(usermovierelation__like=True, then=1))),
                 annotated_count_rate=Count(Case(When(usermovierelation__rate__isnull=False, then=1)))
             ).order_by('id')
-            serializer_data = MovieSerializer(movies, many=True).data
+            serializer_data = MovieSerializer(movies, many=True, context={"request": self.request}).data
             self.assertEqual(status.HTTP_200_OK, response.status_code)
 
             for expected_movie, actual_movie in zip(serializer_data, response.data['results']):

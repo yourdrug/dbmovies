@@ -75,7 +75,7 @@ class MovieSerializer(ModelSerializer):
     user_rating = serializers.SerializerMethodField()
 
     def get_user_rating(self, obj):
-        user = self.context['request'].user
+        user = self.context['request'].user or None
         if user.is_authenticated:
             user_rating = obj.usermovierelation_set.filter(user=user).values('rate').first()
 
