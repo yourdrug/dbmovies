@@ -23,6 +23,7 @@ services:
     depends_on:
       - database
     volumes:
+      - ./movies:/movies
       - /home/eugene/PycharmProjects/dbmovies/movies/media:/movies/media
 
   database:
@@ -33,7 +34,7 @@ services:
       - "5433:5434"
     volumes:
       - movies_data:/var/lib/postgresql/data
-    container_name: postgres
+    container_name: dbmovies_db
 
   redis:
     image: redis:7.2-alpine
@@ -41,5 +42,3 @@ services:
 
 volumes:
   movies_data:
-
-

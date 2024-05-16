@@ -13,7 +13,34 @@ const LoginForm = ({setActive}) =>{
     const [reg_username, setRegUsername] = useState("")
     const [isLoginFormVisible, setLoginFormVisible] = useState(true);
 
+    const [isWrong, setIsWrong] = useState(false)
+    const [isWrongSignup, setIsWrongSignup] = useState(false)
+
     const { currentUser, setCurrentUser, setToken, token } = useContext(UserContext) 
+
+    async function handleKeyPress(event){
+      if (event.key === 'Enter' && isLoginFormVisible) {
+        await login();
+      }
+      else if (event.key === 'Enter' && !isLoginFormVisible) {
+        await signUp();
+      }
+    };
+  
+    useEffect(() => {
+      document.addEventListener('keydown', handleKeyPress);
+      return () => {
+        document.removeEventListener('keydown', handleKeyPress);
+      };
+    }, [username, password, reg_password, reg_re_password, reg_username, isLoginFormVisible]);
+
+    const elementStyleLogin = {
+      color: isWrong ? 'red' : 'black',
+    };
+
+    const elementStyleSignup = {
+      color: isWrongSignup ? 'red' : 'black',
+    };
 
     async function getAccountInfo(token) {
         let config = {
@@ -51,6 +78,12 @@ const LoginForm = ({setActive}) =>{
   }
 
     async function login() {
+      if(username == "" || password == ""){
+        toast.error("Заполните все обязательные поля.")
+        setIsWrong(true);
+        return
+      }
+        setIsWrong(false);
         let data = { username: username, password: password};
         try {
           const response = await axios.post(
@@ -72,7 +105,12 @@ const LoginForm = ({setActive}) =>{
     }
 
     async function signUp() {
-      if (reg_password.length < 9){
+      if(reg_username == "" || reg_password == "" || reg_re_password == ""){
+        toast.error("Заполните все обязательные поля.")
+        setIsWrongSignup(true);
+        return
+      }
+      else if (reg_password.length < 9){
         toast.error("Пароль не должен быть меньше 8 символов.")
         return
       }
@@ -80,7 +118,7 @@ const LoginForm = ({setActive}) =>{
         toast.error("Пароли должны совпадать.")
         return
       }
-
+      setIsWrongSignup(false);
       try {
         let data = { username: reg_username, password: reg_password };
         await axios.post("http://127.0.0.1:8000/auth/users/", data);
@@ -105,12 +143,12 @@ const LoginForm = ({setActive}) =>{
                   <div className="input-box">
                     <input type="text" required  value={username} 
                       onChange={(event) => setUsername(event.target.value)}/>
-                    <label>Имя пользователя</label>
+                    <label style = {elementStyleLogin}>Имя пользователя</label>
                   </div>
                   <div className="input-box">
                     <input type="password" required value={password} 
                       onChange={(event) => setPassword(event.target.value)}/>
-                    <label>Пароль</label>
+                    <label style = {elementStyleLogin}>Пароль</label>
                   </div>
                   <div className="remember-forgot">
                     <label><input type="checkbox" />Запомнить меня</label>
@@ -130,17 +168,17 @@ const LoginForm = ({setActive}) =>{
                   <div className="input-box">
                     <input className="username" type="text" required value={reg_username} 
                       onChange={(event) => setRegUsername(event.target.value)}/>
-                    <label>Имя пользователя</label>
+                    <label style = {elementStyleSignup}>Имя пользователя</label>
                   </div>
                   <div className="input-box">
                     <input className="password" type="password" required value={reg_password} 
                       onChange={(event) => setRegPassword(event.target.value)}/>
-                    <label>Пароль</label>
+                    <label style = {elementStyleSignup}>Пароль</label>
                   </div>
                   <div className="input-box">
                     <input className="password" type="password" required value={reg_re_password} 
                       onChange={(event) => setRegRePassword(event.target.value)}/>
-                    <label>Повторите пароль</label>
+                    <label style = {elementStyleSignup}>Повторите пароль</label>
                   </div>
                   <div className="remember-forgot">
                     <label><input type="checkbox" />Я согласен с условиями и правилами</label>

@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import RandomMovie from "../../components/random-movie/random-movie";
 import { UserContext } from "../../context/user.context";
+import { toast } from "react-toastify";
 
 import axios from "axios";
 
@@ -17,7 +18,7 @@ const EveningMovie = () => {
           let info = await response.data;
           setMovie(info);
         } catch (error) {
-          alert("ошибка в получении данных с сервера");
+            toast.warn("Технические неполадки. Попробуйте позже.");
         }
     }
 
@@ -32,9 +33,9 @@ const EveningMovie = () => {
         };
         try {
             await axios.patch(`http://127.0.0.1:8000/movie_relation/${movie.id}/`, data, config);
-            alert("Успешно добавлено!")
+            toast.success("Фильм добавлен в «Избранное»!") 
         } catch (error) {
-            alert(error.message);
+            toast.warn("Технические неполадки. Попробуйте позже.");
         }
     }
 
@@ -49,10 +50,9 @@ const EveningMovie = () => {
         };
         try {
             const response = await axios.patch(`http://127.0.0.1:8000/movie_relation/${movie.id}/`, data, config);
-            console.log(response)
-            alert("Успешно добавлено!")
+            toast.success("Фильм добавлен в альбом «Буду смотреть»!") 
         } catch (error) {
-            alert(error.message);
+            toast.warn("Технические неполадки. Попробуйте позже.");
         }
     }
 

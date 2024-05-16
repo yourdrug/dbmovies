@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.conf import settings
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, FileExtensionValidator
 from django.db import models
 
 User = settings.AUTH_USER_MODEL
@@ -38,6 +38,12 @@ class Movie(models.Model):
     watch_time = models.CharField(max_length=40, default="")
     poster = models.URLField(default="")
     world_premier = models.DateField(default=date.today)
+    movie_video = models.FileField(
+        blank=True,
+        null=True,
+        upload_to=f"video/{name}/",
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
+    )
 
     crew = models.ManyToManyField(Person, through='Profession', related_name='person_movies')
 

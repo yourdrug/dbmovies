@@ -149,7 +149,7 @@ const Profile = () => {
                   <LittleMovieCard key={movie.id} movie={movie} />
                 ))}
                   {bookmarkedMovies.length > 3 && 
-                  (<Link to={`/profile/${currentUser.id}/bookmarks`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
+                  (<Link to={`/profile/${currentUser.id}/bookmarks`} style={{textDecoration: "none"}} className='more-buttons'>. . .</Link>)}
             </div>
             {watchedMovies.length > 0 && <h2>Просмотренные фильмы</h2>}
             <div className='users-liked-movies'>
@@ -161,7 +161,7 @@ const Profile = () => {
                   <LittleMovieCard key={movie.id} movie={movie} />
                 ))}
                   {watchedMovies.length > 3 && 
-                  (<Link to={`/profile/${currentUser.id}/watched`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
+                  (<Link to={`/profile/${currentUser.id}/watched`} style={{textDecoration: "none"}} className='more-buttons'>. . .</Link>)}
             </div>
             {willWatchMovies.length > 0 && <h2>Буду смотреть</h2>}
             <div className='users-liked-movies'>
@@ -173,7 +173,7 @@ const Profile = () => {
                   <LittleMovieCard key={movie.id} movie={movie} />
                 ))}
                   {willWatchMovies.length > 3 && 
-                  (<Link to={`/profile/${currentUser.id}/will-watch`} style={{textDecoration: "none"}} className='control-buttons'>Смотреть еще</Link>)}
+                  (<Link to={`/profile/${currentUser.id}/will-watch`} style={{textDecoration: "none"}} className='more-buttons'>. . .</Link>)}
             </div>
           </div>
         </div>

@@ -90,7 +90,7 @@ class MovieSerializer(ModelSerializer):
                   'year', 'country', 'poster', 'world_premier',
                   'annotated_likes', 'rating', 'owner_name', 'crew',
                   'genres', 'annotated_count_rate', 'annotated_count_review', 'movies_reviews',
-                  'user_rating')
+                  'user_rating', 'movie_video')
 
 
 class ShortInfoMovieSerializer(ModelSerializer):

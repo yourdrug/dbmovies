@@ -7,9 +7,11 @@ import FilterSelect from '../../components/select/select';
 import { useParams } from 'react-router-dom';
 import './movies.css'
 
-const pageSize = 50;
+
 
 function Movies() {
+  const pageSize = 50;
+  
   const params = useParams();
   const genre = params.genre ? params.genre : "";
   const country = params.country ? params.country : "";

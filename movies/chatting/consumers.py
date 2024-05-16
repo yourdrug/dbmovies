@@ -17,7 +17,7 @@ class SocketActions(Enum):
 class ChatConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.global_chat_id = 3
+        self.global_chat_id = 11
 
     def getUser(self, user_id):
         return Account.objects.get(id=user_id)
@@ -73,19 +73,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.user_id = self.scope['url_route']['kwargs']['userId']
-        self.user = await database_sync_to_async(self.getUser)(self.user_id)
+        if self.user_id:
+            self.user = await database_sync_to_async(self.getUser)(self.user_id)
 
-        await self.add_to_global_chat_if_not_exists(user=self.user, global_chat_id=3)
+            await self.add_to_global_chat_if_not_exists(user=self.user, global_chat_id=11)
 
-        self.user_rooms = await database_sync_to_async(list)(ChatRoom.objects.filter(users=self.user_id))
-        for room in self.user_rooms:
-            await self.channel_layer.group_add(
-                str(room.id),
-                self.channel_name
-            )
-        await self.channel_layer.group_add('onlineUser', self.channel_name)
-
-        await database_sync_to_async(self.addOnlineUser)(self.user)
+            self.user_rooms = await database_sync_to_async(list)(ChatRoom.objects.filter(users=self.user_id))
+            for room in self.user_rooms:
+                await self.channel_layer.group_add(
+                    str(room.id),
+                    self.channel_name
+                )
+            await self.channel_layer.group_add('onlineUser', self.channel_name)
+            await database_sync_to_async(self.addOnlineUser)(self.user)
         await self.sendOnlineUserList()
         await self.send_online_users_count()
         await self.accept()

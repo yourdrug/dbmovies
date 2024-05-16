@@ -1,7 +1,7 @@
 import random
 
 from django.core.cache import cache
-from django.db.models import Count, Case, When, Sum, Q
+from django.db.models import Count, Case, When, Sum, Q, Max
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import status
@@ -30,7 +30,7 @@ class MovieViewSet(ModelViewSet):
     ).select_related('owner').prefetch_related('watchers', 'profession_set__person', 'genres').order_by('id')
     serializer_class = MovieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    permission_classes = [IsOwnerOrStaffOrReadOnly]
+    permission_classes = [AllowAny]
     authentication_classes = (TokenAuthentication,)
     filterset_fields = ['year', 'name', 'genres__name']
     search_fields = ['name', 'country', 'genres__name']
@@ -121,11 +121,11 @@ class MovieViewSet(ModelViewSet):
         serializer = MovieSerializer(random_movie, context={'request': request})
         return Response(serializer.data)
 
-    @action(detail=False, methods=['GET'])
+    @action(detail=True, methods=['GET'])
     @method_decorator(never_cache)
-    def getPred(self, request):
-        recommendations = 1
-        movie_id = 1
+    def get_prediction(self, request, *args, **kwargs):
+        recommendations = 10
+        movie_id = int(self.kwargs['pk'])
         recommend_list = []
         from movies_database.logic import prep_data, get_csr_data, train_model
         user_item_matrix = prep_data()
@@ -266,6 +266,42 @@ class ShortInfoMovieViewSet(ModelViewSet):
             Q(usermovierelation__user=user, usermovierelation__will_watch=True))
         serializer = self.get_serializer(movies, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['GET'])
+    def get_top_250(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        temp = queryset[:250]
+        paginator = MoviesPagination()
+        paginated_movies = paginator.paginate_queryset(temp, request)
+        serializer = self.get_serializer(paginated_movies, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def get_top_500(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        temp = queryset[:500]
+        paginator = MoviesPagination()
+        paginated_movies = paginator.paginate_queryset(temp, request)
+        serializer = self.get_serializer(paginated_movies, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def get_random_20(self, request, *args, **kwargs):
+        max_id = Movie.objects.all().aggregate(max_id=Max("id"))['max_id']
+        random_movies = []
+
+        while len(random_movies) < 21:
+            pk = random.randint(1, max_id)
+            if pk in random_movies:
+                continue
+            movie = Movie.objects.filter(pk=pk).first()
+            if movie:
+                random_movies.append(movie)
+
+        paginator = MoviesPagination()
+        paginated_movies = paginator.paginate_queryset(random_movies, request)
+        serializer = self.get_serializer(paginated_movies, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 class PersonInfoViewSet(ModelViewSet):

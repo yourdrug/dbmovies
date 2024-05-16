@@ -6,15 +6,15 @@ const Home = () => {
     const categories = [
         {
           id: 1,
-          title: 'Фильмы',
+          title: 'Все фильмы',
           imageUrl: 'https://www.megacritic.ru/images/luchshie-filmy-2021.jpg',
           slug: 'movies'
         },
         {
           id: 2,
-          title: 'Сериалы',
+          title: 'Подборка от админов',
           imageUrl: 'https://www.megacritic.ru/images/luchshie-filmy-2021.jpg',
-          slug: 'series'
+          slug: 'movies/lists/admins-top'
         }
       ];
     
@@ -24,14 +24,16 @@ const Home = () => {
         <div className='main-wrapper'>
             <Directory categories={categories} />
             <div className='album-choices'>
-              <Link style={{textDecoration: "none"}}>
+              <Link style={{textDecoration: "none"}} to={'movies/lists/top-250'}>
                 <div className='album-current-choice'>
                   ТОП 250
                 </div>
+              </Link >
+              <Link style={{textDecoration: "none"}} to={'movies/lists/top-500'}>
+                <div className='album-current-choice'>
+                  ТОП 500
+                </div>
               </Link>
-              <div className='album-current-choice'>
-                ТОП 500
-              </div>
             </div>
         </div>
     )

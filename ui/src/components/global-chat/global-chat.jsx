@@ -3,6 +3,7 @@ import { useContext, useState, useEffect } from 'react';
 import SocketActions from "../../lib/socketActions";
 import ServerUrl from "../../api/serverUrl";
 import CommonUtil from "../../util/commonUtil";
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
 import './global-chat.css'
@@ -15,33 +16,29 @@ const GlobalChat = ({active, setActive}) =>{
     const { socket, currentUser, token } = useContext(UserContext);
 
     const fetchChatMessage = async () => {
-      const currentRoomId = 3;
+      const currentRoomId = 11;
       const url = `http://127.0.0.1:8000/social/chats/${currentRoomId}/messages?limit=12&offset=0`
-      let config = {
-        headers: {
-          Authorization: "Token " + token,
-        },
-    };
-      const response =  await axios.get(url, config);
+      const response =  await axios.get(url);
       const chatMessages = response.data;
       setMessages(chatMessages);
     };
   
     useEffect(() => {
-      if(currentUser){
-        fetchChatMessage();
-      }
+      fetchChatMessage();
     }, [currentUser]);
 
     const messageSubmitHandler = (event) => {
       event.preventDefault();
-      if (inputMessage) {
+      if (!currentUser){
+        toast.warn("Войдите, чтобы отправлять сообщения.")
+      } 
+      else if (inputMessage) {
         socket.send(
           JSON.stringify({
             action: SocketActions.MESSAGE,
             message: inputMessage,
             user: currentUser.id,
-            roomId: 3,
+            roomId: 11,
           })
         );
       }

@@ -2,6 +2,8 @@ import { useEffect, useState, useContext, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 
 import CriticImage from '../../assets/critic.jpg'
+import ReactPlayer from 'react-player'
+import LittleMovieCard from "../movie-little-card/movie-little-card";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,6 +18,7 @@ import './movie-by-id.css'
 
 const MovieById = () => {
     const [movie, setMovie] = useState(null)
+    const [predictions, setPredictions] = useState(null)
     const [inputMessage, setInputMessage] = useState("");
     const { currentUser, token } = useContext(UserContext) 
     const [selectedRating, setSelectedRating] = useState(null);
@@ -89,11 +92,11 @@ const MovieById = () => {
     };
 
     const handleButtonClick = () => {
-        if(token !== null){
+        if(currentUser){
             setShowRatingOptions(!showRatingOptions); // Инвертируем видимость вариантов оценок
         }
         else{
-            setActive(true);
+            toast.info("Оценку можно выставить только после авторизации.")
         }
         
     };
@@ -115,12 +118,40 @@ const MovieById = () => {
             },
         };
         try {
+            if(currentUser){
+                const response = await axios.get(
+                    `http://127.0.0.1:8000/movie/${movieId}`, config
+                );
+                let movie = await response.data;
+                setMovie(movie);
+                setSelectedRating(movie.user_rating);
+            }
+            else{
+                const response = await axios.get(
+                    `http://127.0.0.1:8000/movie/${movieId}`
+                );
+                let movie = await response.data;
+                setMovie(movie);
+            }
+          
+        } catch (error) {
+            toast.warn('Технические неполадки. Попробуйте позже.');
+        }
+    }
+
+    async function getPredictions(){
+        let config = {
+            headers: {
+                Authorization: "Token " + token,
+            },
+        };
+        try {
           const response = await axios.get(
-            `http://127.0.0.1:8000/movie/${movieId}`, config
+            `http://127.0.0.1:8000/movie/1/get_prediction/`, config
           );
-          let movie = await response.data;
-          setMovie(movie);
-          setSelectedRating(movie.user_rating);
+          let movies = await response.data;
+          setPredictions(movies);
+          console.log(movies)
         } catch (error) {
             toast.warn('Технические неполадки. Попробуйте позже.');
         }
@@ -134,6 +165,9 @@ const MovieById = () => {
 
     useEffect(() => {
         getMovieById();
+        if (currentUser){
+            getPredictions();
+        }
     }, [movieId]);
 
     if (movie == null){
@@ -171,19 +205,6 @@ const MovieById = () => {
 
         return(
             <div className="main-wrapper">
-                <ToastContainer
-                    position="bottom-right"
-                    autoClose={5000}
-                    limit={10}
-                    hideProgressBar={false}
-                    newestOnTop
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss={false}
-                    draggable={false}
-                    pauseOnHover={false}
-                    theme="light"
-                />
                 <div className="wrapper">
                     <div className="wrapper-col-1">
                         <img className="poster-for-full-movie-info" src={movie.poster} alt={movie.name} />
@@ -403,6 +424,23 @@ const MovieById = () => {
                         </div>
                     </div>
                 </div>
+                <div className="react-player-container">
+                    <ReactPlayer
+                        height={"800px"}
+                        width={"1170px"}
+                        controls={true}
+                        url={movie.movie_video}
+                    />
+                </div>
+                {predictions && <h2 style={{marginLeft:'60px', marginTop:'40px'}}>Рекомендации для вас</h2>}
+                <div className='predictions-grid-movies'>
+                    {predictions && predictions.slice(1, 11).map((movie) => (
+                        <LittleMovieCard key={movie.id} movie={movie} />
+                    ))}
+                </div>
+
+                {movie && <h2 style={{marginLeft:'60px', marginTop:'80px'}}>Отзывы и комментарии</h2>}
+                
                 <div className="movies-reviews-for-full-page">
                     <div className="input-module-for-movie-review">
                         <textarea  type="text" placeholder="Введите ваш комментарий" 

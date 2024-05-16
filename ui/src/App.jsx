@@ -30,6 +30,7 @@ function App() {
           <Route path='profile/edit' element={<EditProfile/>}/>
           <Route path='person/:id' element={<PersonPage/>}/>
           <Route path='random-movie' element={<EveningMovie/>}/>
+          <Route path='movies/lists/:albumName' element={<AlbumMovies/>}/>
         </Route>
       </Routes>
     )
